@@ -1,0 +1,17 @@
+# Table of contents
+
+* [RumbleDB 1.24 "Lemon Ironwood"](README.md)
+* [Getting Started](<Getting started.md>)
+* [Run with docker](Docker.md)
+* [Run on a cluster](<Run on a cluster.md>)
+* [Run in Jupyter notebooks](HTTPServer.md)
+* [The JSONiq language](JSONiq.md)
+* [Reading data](Input.md)
+* [Function library](<Function library.md>)
+* [HTTP/CLI parameters](CLI.md)
+* [User-defined types](Types.md)
+* [RumbleML](RumbleML.md)
+* [Frequently asked questions and common issues](FAQ.md)
+* [Error codes](<Error codes.md>)
+* [Installing RumbleDB](install.md)
+* [Licenses](Licenses.md)
