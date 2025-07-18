@@ -31,7 +31,7 @@ A main or library module can be optionally prefixed with a JSONiq declaration wi
 
 Module
 
-![](images/Module.png)
+![](../.gitbook/assets/Module.png)
 
 ### Main modules {#mainModules.d12e180}
 
@@ -39,7 +39,7 @@ A JSONiq main module is made of two parts: an optional prolog, and an expression
 
 MainModule
 
-![](images/MainModule.png)
+![](../.gitbook/assets/MainModule.png)
 
 The result of the main JSONiq program is the result of its main query.
 
@@ -57,7 +57,7 @@ A library module is introduced with a module declaration, followed by the prolog
 
 LibraryModule
 
-![](images/LibraryModule.png)
+![](../.gitbook/assets/LibraryModule.png)
 
 ### Feature matrix {#featureMatrix.d12e236}
 
@@ -433,7 +433,7 @@ JSONiq defines the syntax *\(\)* for the empty sequence, rather than *empty-sequ
 
 SequenceType
 
-![](images/SequenceType.png)
+![](../.gitbook/assets/SequenceType.png)
 
 ### Item types {#itemTypes.d12e1415}
 
@@ -454,7 +454,7 @@ All items match the item type *js:item*, which is a JSONiq-specific synonym for 
 
 ItemType
 
-![](images/ItemType.png)
+![](../.gitbook/assets/ItemType.png)
 
 #### Atomic types {#atomicTypes.d12e1473}
 
@@ -512,7 +512,7 @@ The support of xs:ID, xs:IDREF, xs:IDREFS, xs:NOTATION, xs:Name, xs:NCName, xs:N
 
 AtomicType
 
-![](images/AtomicType.png)
+![](../.gitbook/assets/AtomicType.png)
 
 #### Structured types {#structuredTypes.d12e1620}
 
@@ -528,7 +528,7 @@ For engines that also support optionally XML, *js:structured-item* matches both 
 
 StructuredType
 
-![](images/StructuredType.png)
+![](../.gitbook/assets/StructuredType.png)
 
 #### Function types {#functionTypes.d12e1668}
 
@@ -536,15 +536,15 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-function-t
 
 FunctionType
 
-![](images/FunctionType.png)
+![](../.gitbook/assets/FunctionType.png)
 
 AnyFunctionType
 
-![](images/AnyFunctionType.png)
+![](../.gitbook/assets/AnyFunctionType.png)
 
 TypedFunctionType
 
-![](images/TypedFunctionType.png)
+![](../.gitbook/assets/TypedFunctionType.png)
 
 ## Expressions {#chapter-expressions}
 
@@ -656,23 +656,23 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-literals) 
 
 Literal
 
-![](images/Literal.png)
+![](../.gitbook/assets/Literal.png)
 
 NumericLiteral
 
-![](images/NumericLiteral.png)
+![](../.gitbook/assets/NumericLiteral.png)
 
 IntegerLiteral
 
-![](images/IntegerLiteral.png)
+![](../.gitbook/assets/IntegerLiteral.png)
 
 DecimalLiteral
 
-![](images/DecimalLiteral.png)
+![](../.gitbook/assets/DecimalLiteral.png)
 
 DoubleLiteral
 
-![](images/DoubleLiteral.png)
+![](../.gitbook/assets/DoubleLiteral.png)
 
 The syntax for creating numbers is identical to that of JSON \(it is actually a more flexible superset, for example leading 0s are allowed, and a decimal literal can begin with a dot\). Note that JSONiq distinguishes between integers \(no dot, no scientific notation\), decimals \(dot but no scientific notation\) and doubles \(scientific notation\). As expected, an integer literal creates an atomic of type integer, and so on.
 
@@ -712,7 +712,7 @@ The syntax for creating string items is conformant to [JSON](https://www.ecma-in
 
 StringLiteral
 
-![](images/StringLiteral.png)
+![](../.gitbook/assets/StringLiteral.png)
 
 ##### String literals { .example}
 
@@ -760,11 +760,11 @@ JSONiq also introduces three more literals for constructing booleans and nulls: 
 
 BooleanLiteral
 
-![](images/BooleanLiteral.png)
+![](../.gitbook/assets/BooleanLiteral.png)
 
 NullLiteral
 
-![](images/NullLiteral.png)
+![](../.gitbook/assets/NullLiteral.png)
 
 ##### Boolean literals \(true\) { .example}
 
@@ -806,11 +806,11 @@ Expressions constructing objects are JSONiq-specific and introduced in this spec
 
 ObjectConstructor
 
-![](images/ObjectConstructor.png)
+![](../.gitbook/assets/ObjectConstructor.png)
 
 PairConstructor
 
-![](images/PairConstructor.png)
+![](../.gitbook/assets/PairConstructor.png)
 
 The syntax for creating objects is identical to that of JSON. You can use for an object key any string literal, and for an object value any literal, object constructor or array constructor.
 
@@ -927,11 +927,11 @@ Expressions constructing arrays are JSONiq-specific and introduced in this speci
 
 ArrayConstructor
 
-![](images/ArrayConstructor.png)
+![](../.gitbook/assets/ArrayConstructor.png)
 
 Expr
 
-![](images/Expr.png)
+![](../.gitbook/assets/Expr.png)
 
 The syntax for creating arrays is identical to that of JSON: square brackets, comma separated literals, object constructors and arrays constructors.
 
@@ -975,7 +975,7 @@ Function items can be constructed in two ways: by definining its body directly \
 
 FunctionItemExpr
 
-![](images/FunctionItemExpr.png)
+![](../.gitbook/assets/FunctionItemExpr.png)
 
 ##### Inline function expression {#inlineFunctionExpression.d12e2321}
 
@@ -998,11 +998,11 @@ Result\(two function items\)
 
 InlineFunctionExpr
 
-![](images/InlineFunctionExpr.png)
+![](../.gitbook/assets/InlineFunctionExpr.png)
 
 ParamList
 
-![](images/ParamList.png)
+![](../.gitbook/assets/ParamList.png)
 
 ##### Named function reference {#namedFunctionReference.d12e2375}
 
@@ -1026,7 +1026,7 @@ Result\(a function items\)
 
 NamedFunctionRef
 
-![](images/NamedFunctionRef.png)
+![](../.gitbook/assets/NamedFunctionRef.png)
 
 ### Manipulating atomic values {#chapter-basic-operations}
 
@@ -1102,15 +1102,15 @@ Result \(run with Zorba\):
 
 AdditiveExpr
 
-![](images/AdditiveExpr.png)
+![](../.gitbook/assets/AdditiveExpr.png)
 
 MultiplicativeExpr
 
-![](images/MultiplicativeExpr.png)
+![](../.gitbook/assets/MultiplicativeExpr.png)
 
 UnaryExpr
 
-![](images/UnaryExpr.png)
+![](../.gitbook/assets/UnaryExpr.png)
 
 #### String concatenation {#stringConcatenation.d12e2536}
 
@@ -1142,7 +1142,7 @@ Result \(run with Zorba\):CaptainKirk
 
 StringConcatExpr
 
-![](images/StringConcatExpr.png)
+![](../.gitbook/assets/StringConcatExpr.png)
 
 #### Comparison {#comparison.d12e2585}
 
@@ -1176,7 +1176,7 @@ The following explanations, provided as an informal summary for convenience, are
 
 ComparisonExpr
 
-![](images/ComparisonExpr.png)
+![](../.gitbook/assets/ComparisonExpr.png)
 
 Atomics can be compared with the usual six comparison operators \(equality, non-equality, lower-than, greater-than, lower-or-equal, greater-or-equal\), and with the same two-letter symbols as in MongoDB.
 
@@ -1222,15 +1222,15 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-logical-ex
 
 OrExpr
 
-![](images/OrExpr.png)
+![](../.gitbook/assets/OrExpr.png)
 
 AndExpr
 
-![](images/AndExpr.png)
+![](../.gitbook/assets/AndExpr.png)
 
 NotExpr
 
-![](images/NotExpr.png)
+![](../.gitbook/assets/NotExpr.png)
 
 JSONiq logics support is based on two-valued logics: just true and false.
 
@@ -1349,7 +1349,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-quantified
 
 QuantifiedExpr
 
-![](images/QuantifiedExpr.png)
+![](../.gitbook/assets/QuantifiedExpr.png)
 
 It is possible to perform a conjunction or a disjunction on a predicate for each item in a sequence.
 
@@ -1395,7 +1395,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#construct_seq
 
 Expr
 
-![](images/Expr.png)
+![](../.gitbook/assets/Expr.png)
 
 Use a comma to concatenate two sequences, or even single items. This operator has the lowest precedence of all.
 
@@ -1427,7 +1427,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#construct_seq
 
 RangeExpr
 
-![](images/RangeExpr.png)
+![](../.gitbook/assets/RangeExpr.png)
 
 With the binary operator "to", you can generate larger sequences with just two integer operands.
 
@@ -1471,7 +1471,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-paren-expr
 
 ParenthesizedExpr
 
-![](images/ParenthesizedExpr.png)
+![](../.gitbook/assets/ParenthesizedExpr.png)
 
 Use parentheses to override the precedence of expressions.
 
@@ -1548,7 +1548,7 @@ JSONiq static function calls follow the [W3C specification](https://www.w3.org/T
 
 FunctionCall
 
-![](images/FunctionCall.png)
+![](../.gitbook/assets/FunctionCall.png)
 
 #### Dynamic function calls {#dynamicFunctionCalls.d12e3213}
 
@@ -1586,15 +1586,15 @@ JSONiq dynamic function calls follow the [W3C specification](https://www.w3.org/
 
 PostfixExpr
 
-![](images/PostfixExpr.png)
+![](../.gitbook/assets/PostfixExpr.png)
 
 ArgumentList
 
-![](images/ArgumentList.png)
+![](../.gitbook/assets/ArgumentList.png)
 
 Argument
 
-![](images/Argument.png)
+![](../.gitbook/assets/Argument.png)
 
 #### Partial application {#partialApplication.d12e3301}
 
@@ -1626,13 +1626,13 @@ JSONiq supports filtering items from a sequence, looking up the value associated
 
 PostfixExpr
 
-![](images/PostfixExpr.png)
+![](../.gitbook/assets/PostfixExpr.png)
 
 #### Object field selector {#objectFieldSelector.d12e3356}
 
 ObjectLookup
 
-![](images/ObjectLookup.png)
+![](../.gitbook/assets/ObjectLookup.png)
 
 The simplest way to navigate in an object is similar to JavaScript, using a dot. This will work as soon as you do not push it too much: alphanumerical characters, dashes, underscores - just like unquoted keys in object constructors, any NCName is allowed.
 
@@ -1751,7 +1751,7 @@ Result \(run with Zorba\):bar
 
 ArrayLookup
 
-![](images/ArrayLookup.png)
+![](../.gitbook/assets/ArrayLookup.png)
 
 Array lookup uses double square brackets.
 
@@ -1823,7 +1823,7 @@ Result \(run with Zorba\):bar
 
 ArrayUnboxing
 
-![](images/ArrayUnboxing.png)
+![](../.gitbook/assets/ArrayUnboxing.png)
 
 You can also extract all items from an array \(i.e., as a sequence\) with the \[\] syntax. The \[\] operator also implicitly iterates on the left-hand-side, returning the empty sequence for non-arrays.
 
@@ -1851,7 +1851,7 @@ Result \(run with Zorba\):foo bar 1 2 3
 
 Predicate
 
-![](images/Predicate.png)
+![](../.gitbook/assets/Predicate.png)
 
 A predicate allows filtering a sequence, keeping only items that fulfill it.
 
@@ -1859,7 +1859,7 @@ The predicate is evaluated once for each item in the left-hand-side sequence, wi
 
 ContextItemExpr
 
-![](images/ContextItemExpr.png)
+![](../.gitbook/assets/ContextItemExpr.png)
 
 If the predicate evaluates to an integer, it is matched against the item position in the left-hand side sequence automatically
 
@@ -1897,7 +1897,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-conditiona
 
 IfExpr
 
-![](images/IfExpr.png)
+![](../.gitbook/assets/IfExpr.png)
 
 A conditional expressions allows you to pick one or another value depending on a boolean value.
 
@@ -2001,11 +2001,11 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-switch) fo
 
 SwitchExpr
 
-![](images/SwitchExpr.png)
+![](../.gitbook/assets/SwitchExpr.png)
 
 SwitchCaseClause
 
-![](images/SwitchCaseClause.png)
+![](../.gitbook/assets/SwitchCaseClause.png)
 
 A switch expression evaluates the expression inside the switch. If it is an atomic, it compares it in turn to the provided atomic values \(with the semantics of the eq operator\) and returns the value associated with the first matching case clause.
 
@@ -2088,7 +2088,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-try-catch)
 
 TryCatchExpr
 
-![](images/TryCatchExpr.png)
+![](../.gitbook/assets/TryCatchExpr.png)
 
 A try catch expression evaluates the expression inside the try block and returns its resulting value.
 
@@ -2136,7 +2136,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-flwor-expr
 
 FLWORExpr
 
-![](images/FLWORExpr.png)
+![](../.gitbook/assets/FLWORExpr.png)
 
 FLWOR expressions are probably the most powerful JSONiq construct and correspond to SQL's SELECT-FROM-WHERE statements, but they are more general and more flexible. In particular, clauses can almost appear in any order \(apart that it must begin with a for or let clause, and end with a return clause\).
 
@@ -2156,7 +2156,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-xquery-for
 
 ForClause
 
-![](images/ForClause.png)
+![](../.gitbook/assets/ForClause.png)
 
 For clauses allow iteration on a sequence.
 
@@ -2273,7 +2273,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-where) for
 
 WhereClause
 
-![](images/WhereClause.png)
+![](../.gitbook/assets/WhereClause.png)
 
 Where clauses are used for filtering \(selection operator in the relational algebra\).
 
@@ -2299,7 +2299,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-order-by-c
 
 OrderByClause
 
-![](images/OrderByClause.png)
+![](../.gitbook/assets/OrderByClause.png)
 
 Order clauses are for reordering tuples.
 
@@ -2383,7 +2383,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-group-by) 
 
 GroupByClause
 
-![](images/GroupByClause.png)
+![](../.gitbook/assets/GroupByClause.png)
 
 Grouping is also supported, like in SQL.
 
@@ -2456,7 +2456,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-xquery-let
 
 LetClause
 
-![](images/LetClause.png)
+![](../.gitbook/assets/LetClause.png)
 
 Let bindings can be used to define aliases for any sequence, for convenience.
 
@@ -2504,7 +2504,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-count) for
 
 CountClause
 
-![](images/CountClause.png)
+![](../.gitbook/assets/CountClause.png)
 
 For each incoming tuple, a binding from the position of this tuple in the tuple stream to the count variable is added. The new tuple is then forwarded to the next clause.
 
@@ -2529,11 +2529,11 @@ The following explanations, provided as an informal summary for convenience, are
 
 SimpleMapExpr
 
-![](images/SimpleMapExpr.png)
+![](../.gitbook/assets/SimpleMapExpr.png)
 
 ContextItemExpr
 
-![](images/ContextItemExpr.png)
+![](../.gitbook/assets/ContextItemExpr.png)
 
 JSONiq provides a shortcut for a for-return construct, automatically binding each item in the left-hand-side sequence to the context item.
 
@@ -2593,11 +2593,11 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-unordered-
 
 OrderedExpr
 
-![](images/OrderedExpr.png)
+![](../.gitbook/assets/OrderedExpr.png)
 
 UnorderedExpr
 
-![](images/UnorderedExpr.png)
+![](../.gitbook/assets/UnorderedExpr.png)
 
 By default, the order in which a for clause binds its items is important.
 
@@ -2646,7 +2646,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-instance-o
 
 InstanceofExpr
 
-![](images/InstanceofExpr.png)
+![](../.gitbook/assets/InstanceofExpr.png)
 
 An instance expression can be used to tell whether a JSONiq value matches a given sequence type.
 
@@ -2726,7 +2726,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-treat) for
 
 TreatExpr
 
-![](images/TreatExpr.png)
+![](../.gitbook/assets/TreatExpr.png)
 
 A treat expression checks that a JSONiq value matches a given sequence type. If it is not the case, an error is raised.
 
@@ -2806,7 +2806,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-castable) 
 
 CastableExpr
 
-![](images/CastableExpr.png)
+![](../.gitbook/assets/CastableExpr.png)
 
 A castable expression checks whether a JSONiq value can be cast to a given atomic type and returns true or false accordingly. It can be used before actually casting to that type.
 
@@ -2878,7 +2878,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-cast) for 
 
 CastExpr
 
-![](images/CastExpr.png)
+![](../.gitbook/assets/CastExpr.png)
 
 A cast expression casts a JSONiq value to a given atomic type. The resulting value is annotated with this type.
 
@@ -2960,11 +2960,11 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-typeswitch
 
 TypeswitchExpr
 
-![](images/TypeswitchExpr.png)
+![](../.gitbook/assets/TypeswitchExpr.png)
 
 CaseClause
 
-![](images/CaseClause.png)
+![](../.gitbook/assets/CaseClause.png)
 
 A typeswitch expressions tests if the value resulting from the first operand matches a given list of types. The expression corresponding to the first matching case is finally evaluated. If there is no match, the expression in the default clause is evaluated.
 
@@ -3019,11 +3019,11 @@ This section introduces prologs, which allows declaring functions and global var
 
 MainModule
 
-![](images/MainModule.png)
+![](../.gitbook/assets/MainModule.png)
 
 Prolog
 
-![](images/Prolog.png)
+![](../.gitbook/assets/Prolog.png)
 
 The prolog appears before the main query and is optional. It can contain setters and module imports, followed by function and variable declarations.
 
@@ -3037,7 +3037,7 @@ Setters allow to specify a default behaviour for various aspects of the language
 
 DefaultCollationDecl
 
-![](images/DefaultCollationDecl.png)
+![](../.gitbook/assets/DefaultCollationDecl.png)
 
 This specifies the default collation used for grouping and ordering clauses in FLWOR expressions. It can be overriden with a collation directive in these clauses.
 
@@ -3045,7 +3045,7 @@ This specifies the default collation used for grouping and ordering clauses in F
 
 OrderingModeDecl
 
-![](images/OrderingModeDecl.png)
+![](../.gitbook/assets/OrderingModeDecl.png)
 
 This specifies the default behaviour of from clauses, i.e., if they bind tuples in the order in which items occur in the binding sequence. It can be overriden with ordered and unordered expressions.
 
@@ -3053,7 +3053,7 @@ This specifies the default behaviour of from clauses, i.e., if they bind tuples 
 
 EmptyOrderDecl
 
-![](images/EmptyOrderDecl.png)
+![](../.gitbook/assets/EmptyOrderDecl.png)
 
 This specifies whether empty sequences come first or last in an ordering clause. It can be overriden by the corresponding directives in such clauses.
 
@@ -3061,11 +3061,11 @@ This specifies whether empty sequences come first or last in an ordering clause.
 
 DecimalFormatDecl
 
-![](images/DecimalFormatDecl.png)
+![](../.gitbook/assets/DecimalFormatDecl.png)
 
 DFPropertyName
 
-![](images/DFPropertyName.png)
+![](../.gitbook/assets/DFPropertyName.png)
 
 This specifies a default decimal format for the builtin function format-number\(\).
 
@@ -3073,7 +3073,7 @@ This specifies a default decimal format for the builtin function format-number\(
 
 VarDecl
 
-![](images/VarDecl.png)
+![](../.gitbook/assets/VarDecl.png)
 
 Variables can be declared global. Global variables are declared in the prolog.
 
@@ -3140,7 +3140,7 @@ Result \(run with Zorba\):\{ "foo" : "bar" \}
 
 VarDecl
 
-![](images/FunctionDecl.png)
+![](../.gitbook/assets/FunctionDecl.png)
 
 You can define your own functions in the prolog. These user-defined functions must be prefixed with *local:*, both in the declaration and when called.
 
@@ -3196,19 +3196,19 @@ Result \(run with Zorba\):Hello, 1!
 
 Module
 
-![](images/Module.png)
+![](../.gitbook/assets/Module.png)
 
 You can group functions and variables in separate library modules.
 
 MainModule
 
-![](images/MainModule.png)
+![](../.gitbook/assets/MainModule.png)
 
 Up to now, everything we encountered were main modules, i.e., a prolog followed by a main query.
 
 LibraryModule
 
-![](images/LibraryModule.png)
+![](../.gitbook/assets/LibraryModule.png)
 
 A library module does not contain any query - just functions and variables that can be imported by other modules.
 
@@ -3227,7 +3227,7 @@ declare function my:function($i as integer) { $i * $i };
 
 ModuleImport
 
-![](images/ModuleImport.png)
+![](../.gitbook/assets/ModuleImport.png)
 
 Here is a main module which imports the former library module. An alias is given to the module namespace \(my\). Variables and functions from that module can be accessed by prefixing their names with this alias. The alias may be different than the internal alias defined in the imported module.
 
