@@ -15,3 +15,7 @@
 * [Error codes](<Error codes.md>)
 * [Installing RumbleDB](install.md)
 * [Licenses](Licenses.md)
+
+## Group 1
+
+* [JSONiq specification](group-1/jsoniq-specification.md)
