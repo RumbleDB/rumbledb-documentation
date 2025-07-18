@@ -186,7 +186,7 @@ Any JSONiq expression takes and returns sequences of items.
 
 Comma-separated JSON-like building blocks is all you need to begin building your own sequences. You can mix and match, as JSONiq supports heterogeneous sequences seamlessly.
 
-### A sequence { .example}
+### A sequence
 
 ```
 
@@ -198,7 +198,7 @@ Result:foo 2 true foo bar null \[ 1, 2, 3 \]
 
 Sequences are flat and cannot be nested. This makes streaming possible, which is very powerful.
 
-### Sequences are flat { .example}
+### Sequences are flat
 
 ```
 
@@ -210,7 +210,7 @@ Result:foo 2 true 4 null 6
 
 A sequence can be empty. The empty sequence can be constructed with empty parentheses.
 
-### The empty sequence { .example}
+### The empty sequence
 
 ```
 
@@ -222,7 +222,7 @@ Result:
 
 A sequence of just one item is considered the same as just this item. Whenever we say that an expression returns or takes one item, we really mean that it takes a singleton sequence of one item.
 
-### A sequence of one item { .example}
+### A sequence of one item
 
 ```
 
@@ -328,7 +328,7 @@ For the purpose of examples given in this specification, we assume that a hypoth
 
 We assume in particular that there are three example collections, shown below.
 
-### Collection 1 { .example}
+### Collection 1
 
 ```
 
@@ -342,7 +342,7 @@ Result
 { "foo" : "bar" }
 ```
 
-### Collection 2 { .example}
+### Collection 2
 
 ```
 
@@ -364,7 +364,7 @@ Result
       
 ```
 
-### Collection 3 { .example}
+### Collection 3
 
 ```
 collection("films")
@@ -558,7 +558,7 @@ The following examples are a few of many operators available in JSONiq: "to" for
 
 In an array, the operand expression will evaluated to a sequence of items, and these items will be copied and become members of the newly created array.
 
-#### Composable array constructors { .example}
+#### Composable array constructors
 
 ```
 
@@ -570,7 +570,7 @@ Result:\[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 \]
 
 In an object, the expression you use for the key must evaluate to an atomic - if it is not a string, it will just be cast to it.
 
-#### Composable object keys { .example}
+#### Composable object keys
 
 ```
 
@@ -582,7 +582,7 @@ Result:\{ "foobar" : true \}
 
 An error is raised if the key expressions is not an atomic.
 
-#### Non-atomic object keys { .example}
+#### Non-atomic object keys
 
 ```
 
@@ -596,7 +596,7 @@ If the value expression is empty, null will be used as a value, and if it contai
 
 If the colon is preceded with a question mark, then the pair will be omitted if the value expression evaluates to the empty sequence.
 
-#### Composable object values { .example}
+#### Composable object values
 
 ```
 
@@ -606,7 +606,7 @@ If the colon is preceded with a question mark, then the pair will be omitted if 
 
 Result:\{ "foo" : 2 \}
 
-#### Composable object values and automatic conversion { .example}
+#### Composable object values and automatic conversion
 
 ```
 
@@ -616,7 +616,7 @@ Result:\{ "foo" : 2 \}
 
 Result:\{ "foo" : null, "bar" : \[ 1, 2 \] \}
 
-#### Optional pair \(not implemented yet in Zorba\) { .example}
+#### Optional pair \(not implemented yet in Zorba\)
 
 ```
 
@@ -628,7 +628,7 @@ Result:An error was raised: invalid expression: syntax error, unexpected "?", ex
 
 The \{\| \|\} syntax can be used to merge several objects.
 
-#### Merging object constructor { .example}
+#### Merging object constructor
 
 ```
 
@@ -640,7 +640,7 @@ Result:\{ "foo" : "bar", "bar" : "foo" \}
 
 An error is raised if the operand expression does not evaluate to a sequence of objects.
 
-#### Merging object constructor with a type error { .example}
+#### Merging object constructor with a type error
 
 ```
 
@@ -676,7 +676,7 @@ DoubleLiteral
 
 The syntax for creating numbers is identical to that of JSON \(it is actually a more flexible superset, for example leading 0s are allowed, and a decimal literal can begin with a dot\). Note that JSONiq distinguishes between integers \(no dot, no scientific notation\), decimals \(dot but no scientific notation\) and doubles \(scientific notation\). As expected, an integer literal creates an atomic of type integer, and so on.
 
-##### Integer literals { .example}
+##### Integer literals
 
 ```
 
@@ -686,7 +686,7 @@ The syntax for creating numbers is identical to that of JSON \(it is actually a 
 
 Result:42
 
-##### Decimal literals { .example}
+##### Decimal literals
 
 ```
 
@@ -696,7 +696,7 @@ Result:42
 
 Result:3.14
 
-##### Double literals { .example}
+##### Double literals
 
 ```
 
@@ -714,7 +714,7 @@ StringLiteral
 
 ![](../.gitbook/assets/StringLiteral.png)
 
-##### String literals { .example}
+##### String literals
 
 ```
 
@@ -724,7 +724,7 @@ StringLiteral
 
 Result:foo
 
-##### String literals with escaping { .example}
+##### String literals with escaping
 
 ```
 
@@ -734,7 +734,7 @@ Result:foo
 
 Result:This is a line and this is a new line
 
-##### String literals with Unicode character escaping { .example}
+##### String literals with Unicode character escaping
 
 ```
 
@@ -744,7 +744,7 @@ Result:This is a line and this is a new line
 
 Result:&amp;\#x1;
 
-##### String literals with a nested quote { .example}
+##### String literals with a nested quote
 
 ```
 
@@ -766,7 +766,7 @@ NullLiteral
 
 ![](../.gitbook/assets/NullLiteral.png)
 
-##### Boolean literals \(true\) { .example}
+##### Boolean literals \(true\)
 
 ```
 
@@ -776,7 +776,7 @@ true
 
 Result:true
 
-##### Boolean literals \(false\) { .example}
+##### Boolean literals \(false\)
 
 ```
 
@@ -786,7 +786,7 @@ false
 
 Result:false
 
-##### Null literals { .example}
+##### Null literals
 
 ```
 
@@ -814,7 +814,7 @@ PairConstructor
 
 The syntax for creating objects is identical to that of JSON. You can use for an object key any string literal, and for an object value any literal, object constructor or array constructor.
 
-##### Empty object constructors { .example}
+##### Empty object constructors
 
 ```
 
@@ -824,7 +824,7 @@ The syntax for creating objects is identical to that of JSON. You can use for an
 
 Result:\{ \}
 
-##### Object constructors 1 { .example}
+##### Object constructors 1
 
 ```
 
@@ -834,7 +834,7 @@ Result:\{ \}
 
 Result:\{ "foo" : "bar" \}
 
-##### Object constructors 2 { .example}
+##### Object constructors 2
 
 ```
 
@@ -844,7 +844,7 @@ Result:\{ "foo" : "bar" \}
 
 Result:\{ "foo" : \[ 1, 2, 3, 4, 5, 6 \] \}
 
-##### Object constructors 3 { .example}
+##### Object constructors 3
 
 ```
 
@@ -854,7 +854,7 @@ Result:\{ "foo" : \[ 1, 2, 3, 4, 5, 6 \] \}
 
 Result:\{ "foo" : true, "bar" : false \}
 
-##### Nested object constructors { .example}
+##### Nested object constructors
 
 ```
 
@@ -866,7 +866,7 @@ Result:\{ "this is a key" : \{ "value" : "a value" \} \}
 
 As in JavaScript, if your key is simple enough \(like alphanumerics, underscores, dashes, this kind of things\), the quotes can be omitted. The strings for which quotes are not mandatory are called NCNames. This class of strings can be used for unquoted keys, for variable and function names, and for module aliases.
 
-##### Object constructors with unquoted key 1 { .example}
+##### Object constructors with unquoted key 1
 
 ```
 
@@ -876,7 +876,7 @@ As in JavaScript, if your key is simple enough \(like alphanumerics, underscores
 
 Result:\{ "foo" : "bar" \}
 
-##### Object constructors with unquoted key 2 { .example}
+##### Object constructors with unquoted key 2
 
 ```
 
@@ -886,7 +886,7 @@ Result:\{ "foo" : "bar" \}
 
 Result:\{ "foo" : \[ 1, 2, 3, 4, 5, 6 \] \}
 
-##### Object constructors with unquoted key 3 { .example}
+##### Object constructors with unquoted key 3
 
 ```
 
@@ -896,7 +896,7 @@ Result:\{ "foo" : \[ 1, 2, 3, 4, 5, 6 \] \}
 
 Result:\{ "foo" : "bar", "bar" : "foo" \}
 
-##### Object constructors with needed quotes around the key { .example}
+##### Object constructors with needed quotes around the key
 
 ```
 
@@ -908,7 +908,7 @@ Result:\{ "but you need the quotes here" : null \}
 
 Objects can be constructed more dynamically \(e.g., dynamic keys\) by constructing and merging smaller objects. Duplicate key names throw an error.
 
-##### Object constructors with needed quotes around the key { .example}
+##### Object constructors with needed quotes around the key
 
 ```
 
@@ -935,7 +935,7 @@ Expr
 
 The syntax for creating arrays is identical to that of JSON: square brackets, comma separated literals, object constructors and arrays constructors.
 
-##### Empty array constructors { .example}
+##### Empty array constructors
 
 ```
 
@@ -945,7 +945,7 @@ The syntax for creating arrays is identical to that of JSON: square brackets, co
 
 Result:\[ \]
 
-##### Array constructors { .example}
+##### Array constructors
 
 ```
 
@@ -955,7 +955,7 @@ Result:\[ \]
 
 Result:\[ 1, 2, 3, 4, 5, 6 \]
 
-##### Nested array constructors { .example}
+##### Nested array constructors
 
 ```
 
@@ -985,7 +985,7 @@ A function can be built directly by specifying its parameters and its body as ex
 
 Function items can also be produced with a partial function application.
 
-###### Inline function expression { .example}
+###### Inline function expression
 
 ```
 
@@ -1010,7 +1010,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-named-func
 
 If a function is builtin or declared in a prolog, in the same module or imported, then it is also possible to build a function item by referring to its name and arity.
 
-###### Named function reference { .example}
+###### Named function reference
 
 ```
 
@@ -1040,7 +1040,7 @@ JSONiq supports the basic four operations, integer division and modulo.
 
 Multiplicative operations have precedence over additive operations. Parentheses can override it.
 
-##### Basic arithmetic operations with precedence override { .example}
+##### Basic arithmetic operations with precedence override
 
 ```
 
@@ -1052,7 +1052,7 @@ Result \(run with Zorba\):8
 
 Dates, times and durations are also supported in a natural way.
 
-##### Using basic operations with dates. { .example}
+##### Using basic operations with dates.
 
 ```
 
@@ -1064,7 +1064,7 @@ Result \(run with Zorba\):P29D
 
 If any of the operands is a sequence of more than one item, an error is raised.
 
-##### Sequence of more than one number in an addition { .example}
+##### Sequence of more than one number in an addition
 
 ```
 
@@ -1076,7 +1076,7 @@ Result \(run with Zorba\):An error was raised: sequence of more than one item ca
 
 If any of the operands is not a number, a date, a time or a duration, an error is raised, which seamlessly includes raising errors for null with no need to extend the specification.
 
-##### Null in an addition { .example}
+##### Null in an addition
 
 ```
 
@@ -1090,7 +1090,7 @@ If one of the operands evaluates to the empty sequence, then the operation resul
 
 If the two operands do not have the same number type, JSONiq will do the adequate conversions.
 
-##### Basic arithmetic operations with an empty sequence { .example}
+##### Basic arithmetic operations with an empty sequence
 
 ```
 
@@ -1118,7 +1118,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-string-con
 
 Two strings or more can be concatenated using the concatenation operator.
 
-##### String concatenation { .example}
+##### String concatenation
 
 ```
 
@@ -1130,7 +1130,7 @@ Result \(run with Zorba\):Captain Kirk
 
 An empty sequence is treated like an empty string.
 
-##### String concatenation with the empty sequence { .example}
+##### String concatenation with the empty sequence
 
 ```
 
@@ -1150,7 +1150,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-comparison
 
 null can be compared for equality or inequality to anything - it is only equal to itself so that false is returned when comparing if for equality with any non-null atomic. True is returned when comparing it with non-equality with any non-null atomic.
 
-##### Equality and non-equality comparison with null { .example}
+##### Equality and non-equality comparison with null
 
 ```
 
@@ -1162,7 +1162,7 @@ Result \(run with Zorba\):false true true
 
 For ordering operators \(lt, le, gt, ge\), null is considered the smallest possible value \(like in JavaScript\).
 
-##### Ordering comparison with null { .example}
+##### Ordering comparison with null
 
 ```
 
@@ -1180,7 +1180,7 @@ ComparisonExpr
 
 Atomics can be compared with the usual six comparison operators \(equality, non-equality, lower-than, greater-than, lower-or-equal, greater-or-equal\), and with the same two-letter symbols as in MongoDB.
 
-##### Equality comparison { .example}
+##### Equality comparison
 
 ```
 
@@ -1192,7 +1192,7 @@ Result \(run with Zorba\):true true
 
 Comparison is only possible between two compatible types, otherwise, an error is raised.
 
-##### Comparisons with a type mismatch { .example}
+##### Comparisons with a type mismatch
 
 ```
 
@@ -1204,7 +1204,7 @@ Result \(run with Zorba\):An error was raised: "xs:string": invalid type: can no
 
 Like for arithmetic operations, if an operand is the empty sequence, the empty sequence is returned as well.
 
-##### Comparison with the empty sequence { .example}
+##### Comparison with the empty sequence
 
 ```
 
@@ -1251,7 +1251,7 @@ Non-boolean operands get automatically converted to either true or false, or an 
 
 JSONiq supports the most famous three boolean operations: conjunction, disjunction and negation. Negation has the highest precedence, then conjunction, then disjunction. Parentheses can override.
 
-##### Logics with booleans { .example}
+##### Logics with booleans
 
 ```
 
@@ -1261,7 +1261,7 @@ true and ( true or not true )
 
 Result \(run with Zorba\):true
 
-##### Logics with comparing operands { .example}
+##### Logics with comparing operands
 
 ```
 
@@ -1271,7 +1271,7 @@ Result \(run with Zorba\):true
 
 Result \(run with Zorba\):true
 
-##### Conversion of the empty sequence to false { .example}
+##### Conversion of the empty sequence to false
 
 ```
 
@@ -1281,7 +1281,7 @@ boolean(())
 
 Result \(run with Zorba\):false
 
-##### Conversion of null to false { .example}
+##### Conversion of null to false
 
 ```
 
@@ -1291,7 +1291,7 @@ boolean(null)
 
 Result \(run with Zorba\):false
 
-##### Conversion of a string to true { .example}
+##### Conversion of a string to true
 
 ```
 
@@ -1301,7 +1301,7 @@ boolean("foo"), boolean("")
 
 Result \(run with Zorba\):true false
 
-##### Conversion of a number to false { .example}
+##### Conversion of a number to false
 
 ```
 
@@ -1311,7 +1311,7 @@ Result \(run with Zorba\):true false
 
 Result \(run with Zorba\):false true
 
-##### Conversion of an object to a boolean \(not implemented in Zorba at this point\) { .example}
+##### Conversion of an object to a boolean \(not implemented in Zorba at this point\)
 
 ```
 
@@ -1323,7 +1323,7 @@ Result \(run with Zorba\):true
 
 If the input sequence has more than one item, and the first item is not an object or array, an error is raised.
 
-##### Error upon conversion of a sequence of more than one item, not beginning with a JSON item, to a boolean { .example}
+##### Error upon conversion of a sequence of more than one item, not beginning with a JSON item, to a boolean
 
 ```
 
@@ -1335,7 +1335,7 @@ Result \(run with Zorba\):An error was raised: invalid argument type for functio
 
 Unlike in C++ or Java, you cannot rely on the order of evaluation of the operands of a boolean operation. The following query may return true or may return an error.
 
-##### Non-determinism in presence of errors. { .example}
+##### Non-determinism in presence of errors.
 
 ```
 
@@ -1353,7 +1353,7 @@ QuantifiedExpr
 
 It is possible to perform a conjunction or a disjunction on a predicate for each item in a sequence.
 
-##### Universal quantifier { .example}
+##### Universal quantifier
 
 ```
 
@@ -1363,7 +1363,7 @@ every $i in 1 to 10 satisfies $i gt 0
 
 Result \(run with Zorba\):true
 
-##### Existential quantifier on several variables { .example}
+##### Existential quantifier on several variables
 
 ```
 
@@ -1375,7 +1375,7 @@ Result \(run with Zorba\):true
 
 Variables can be annotated with a type. If no type is specified, item\* is assumed. If the type does not match, an error is raised.
 
-##### Existential quantifier with type checking { .example}
+##### Existential quantifier with type checking
 
 ```
 
@@ -1399,7 +1399,7 @@ Expr
 
 Use a comma to concatenate two sequences, or even single items. This operator has the lowest precedence of all.
 
-##### Comma { .example}
+##### Comma
 
 ```
 
@@ -1409,7 +1409,7 @@ Use a comma to concatenate two sequences, or even single items. This operator ha
 
 Result \(run with Zorba\):1 2 3 4 5 6 7 8 9 10
 
-##### Comma { .example}
+##### Comma
 
 ```
 
@@ -1431,7 +1431,7 @@ RangeExpr
 
 With the binary operator "to", you can generate larger sequences with just two integer operands.
 
-##### Range operator { .example}
+##### Range operator
 
 ```
 
@@ -1443,7 +1443,7 @@ Result \(run with Zorba\):1 2 3 4 5 6 7 8 9 10
 
 If one operand evaluates to the empty sequence, then the range operator returns the empty sequence.
 
-##### Range operator with the empty sequence { .example}
+##### Range operator with the empty sequence
 
 ```
 
@@ -1455,7 +1455,7 @@ Result \(run with Zorba\):
 
 Otherwise, if an operand evaluates to something else than a single integer or an empty sequence, an error is raised.
 
-##### Range operator with a type inconsistency { .example}
+##### Range operator with a type inconsistency
 
 ```
 
@@ -1477,7 +1477,7 @@ Use parentheses to override the precedence of expressions.
 
 If the parentheses are empty, the empty sequence is produced.
 
-##### Empty sequence { .example}
+##### Empty sequence
 
 ```
 
@@ -1512,7 +1512,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-function-c
 
 A static function call consists of the name of the function and of expressions returning its parameters. An error is thrown if no function with the corresponding name and arity is found.
 
-##### A builtin function call. { .example}
+##### A builtin function call.
 
 ```
 
@@ -1522,7 +1522,7 @@ A static function call consists of the name of the function and of expressions r
 
 Result:foo bar
 
-##### A builtin function call. { .example}
+##### A builtin function call.
 
 ```
 
@@ -1534,7 +1534,7 @@ Result:foobar
 
 An error is raised if the actual types do not match the expected types.
 
-##### A type error in a function call. { .example}
+##### A type error in a function call.
 
 ```
 
@@ -1556,7 +1556,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-dynamic-fu
 
 A dynamic function call is a postfix expression. Its left-hand-side is an expression that must return a single function item \(see in the data model [Function items](#section-function-items)\). Its right-hand side is a list of parameters, each one of which is an arbitrary expression providing a sequence of items, one such sequence for each parameter.
 
-##### A dynamic function call. { .example}
+##### A dynamic function call.
 
 ```
 
@@ -1571,7 +1571,7 @@ If the number of parameters does not match the arity of the function, an error i
 
 Otherwise, the function is evaluated with the supplied parameters. If the result matches the return type of the function, it is returned, otherwise an error is raised.
 
-##### A dynamic function call with signature { .example}
+##### A dynamic function call with signature
 
 ```
 
@@ -1602,7 +1602,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#dt-partial-fu
 
 A static or dynamic function call also have placeholder parameters, represented with a question mark in the syntax. When this is the case, the function call returns a function item that is the partial application of the original function, and its arity is the number of remaining placeholders.
 
-##### A partial application. { .example}
+##### A partial application.
 
 ```
 
@@ -1636,7 +1636,7 @@ ObjectLookup
 
 The simplest way to navigate in an object is similar to JavaScript, using a dot. This will work as soon as you do not push it too much: alphanumerical characters, dashes, underscores - just like unquoted keys in object constructors, any NCName is allowed.
 
-##### Object lookup { .example}
+##### Object lookup
 
 ```
 
@@ -1648,7 +1648,7 @@ Result \(run with Zorba\):bar
 
 Since JSONiq expressions are composable, you can also use any expression for the left-hand side. You might need parentheses depending on the precedence.
 
-##### Lookup on a single-object collection. { .example}
+##### Lookup on a single-object collection.
 
 ```
 
@@ -1660,7 +1660,7 @@ Result \(run with Zorba\):bar
 
 The dot operator does an implicit mapping on the left-hand-side, i.e., it applies the lookup in turn on each item. Lookup on an object returns the value associated with the supplied key, or the empty sequence if there is none. Lookup on any item which is not an object \(arrays and atomics\) results in the empty sequence.
 
-##### Object lookup with an iteration on several objects { .example}
+##### Object lookup with an iteration on several objects
 
 ```
 
@@ -1670,7 +1670,7 @@ The dot operator does an implicit mapping on the left-hand-side, i.e., it applie
 
 Result \(run with Zorba\):bar bar2
 
-##### Object lookup with an iteration on a collection { .example}
+##### Object lookup with an iteration on a collection
 
 ```
 
@@ -1680,7 +1680,7 @@ collection("captains").name
 
 Result \(run with Zorba\):James T. Kirk Jean-Luc Picard Benjamin Sisko Kathryn Janeway Jonathan Archer Samantha Carter
 
-##### Object lookup on a mixed sequence { .example}
+##### Object lookup on a mixed sequence
 
 ```
 
@@ -1692,7 +1692,7 @@ Result \(run with Zorba\):bar1 bar2
 
 Of course, unquoted keys will not work for strings that are not NCNames, e.g., if the field contains a dot or begins with a digit. Then you will need quotes.
 
-##### Quotes for object lookup { .example}
+##### Quotes for object lookup
 
 ```
 
@@ -1704,7 +1704,7 @@ Result \(run with Zorba\):bar
 
 If you use an expression on the right side of the dot, it must always have parentheses. The result of the right-hand-side expression is cast to a string. An error is raised if the cast fails.
 
-##### Object lookup with a nested expression { .example}
+##### Object lookup with a nested expression
 
 ```
 
@@ -1714,7 +1714,7 @@ If you use an expression on the right side of the dot, it must always have paren
 
 Result \(run with Zorba\):bar
 
-##### Object lookup with a nested expression { .example}
+##### Object lookup with a nested expression
 
 ```
 
@@ -1724,7 +1724,7 @@ Result \(run with Zorba\):bar
 
 Result \(run with Zorba\):An error was raised: sequence of more than one item can not be treated as type xs:string
 
-##### Object lookup with a nested expression { .example}
+##### Object lookup with a nested expression
 
 ```
 
@@ -1736,7 +1736,7 @@ Result \(run with Zorba\):bar
 
 Variables, or a context item reference, do not need parentheses. Variables are introduced later, but here is a sneak peek:
 
-##### Object lookup with a variable { .example}
+##### Object lookup with a variable
 
 ```
 
@@ -1755,7 +1755,7 @@ ArrayLookup
 
 Array lookup uses double square brackets.
 
-##### Array lookup { .example}
+##### Array lookup
 
 ```
 
@@ -1767,7 +1767,7 @@ Result \(run with Zorba\):bar
 
 Since JSONiq expressions are composable, you can also use any expression for the left-hand side. You might need parentheses depending on the precedence.
 
-##### Array lookup after an object lookup { .example}
+##### Array lookup after an object lookup
 
 ```
 
@@ -1779,7 +1779,7 @@ Result \(run with Zorba\):bar
 
 The array lookup operator does an implicit mapping on the left-hand-side, i.e., it applies the lookup in turn on each item. Lookup on an array returns the item at that position in the array, or the empty sequence if there is none \(position larger than size or smaller than 1\). Lookup on any item which is not an array \(objects and atomics\) results in the empty sequence.
 
-##### Array lookup with an iteration on several arrays { .example}
+##### Array lookup with an iteration on several arrays
 
 ```
 
@@ -1789,7 +1789,7 @@ The array lookup operator does an implicit mapping on the left-hand-side, i.e., 
 
 Result \(run with Zorba\):2 5
 
-##### Array lookup with an iteration on a collection { .example}
+##### Array lookup with an iteration on a collection
 
 ```
 
@@ -1799,7 +1799,7 @@ collection("captains").series[[1]]
 
 Result \(run with Zorba\):The original series The next generation The next generation The next generation Entreprise Voyager
 
-##### Array lookup on a mixed sequence { .example}
+##### Array lookup on a mixed sequence
 
 ```
 
@@ -1811,7 +1811,7 @@ Result \(run with Zorba\):3 6
 
 The expression inside the double-square brackets may be any expression. The result of evaluating this expression is cast to an integer. An error is raised if the cast fails.
 
-##### Array lookup with a right-hand-side expression { .example}
+##### Array lookup with a right-hand-side expression
 
 ```
 
@@ -1827,7 +1827,7 @@ ArrayUnboxing
 
 You can also extract all items from an array \(i.e., as a sequence\) with the \[\] syntax. The \[\] operator also implicitly iterates on the left-hand-side, returning the empty sequence for non-arrays.
 
-##### Extracting all items from an array { .example}
+##### Extracting all items from an array
 
 ```
 
@@ -1837,7 +1837,7 @@ You can also extract all items from an array \(i.e., as a sequence\) with the \[
 
 Result \(run with Zorba\):foo bar
 
-##### Extracting all items from arrays in a mixed sequence { .example}
+##### Extracting all items from arrays in a mixed sequence
 
 ```
 
@@ -1863,7 +1863,7 @@ ContextItemExpr
 
 If the predicate evaluates to an integer, it is matched against the item position in the left-hand side sequence automatically
 
-##### Predicate expression { .example}
+##### Predicate expression
 
 ```
 
@@ -1877,7 +1877,7 @@ Otherwise, the result of the predicate is converted to a boolean.
 
 All items for which the converted predicate result evaluates to true are then output.
 
-##### Predicate expression { .example}
+##### Predicate expression
 
 ```
 
@@ -1901,7 +1901,7 @@ IfExpr
 
 A conditional expressions allows you to pick one or another value depending on a boolean value.
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -1913,7 +1913,7 @@ Result \(run with Zorba\):\{ "foo" : "yes" \}
 
 The behavior of the expression inside the if is similar to that of logical operations \(two-valued logics\), meaning that non-boolean values get converted to a boolean.
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -1923,7 +1923,7 @@ if (null) then { "foo" : "yes" } else { "foo" : "no" }
 
 Result \(run with Zorba\):\{ "foo" : "no" \}
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -1933,7 +1933,7 @@ if (1) then { "foo" : "yes" } else { "foo" : "no" }
 
 Result \(run with Zorba\):\{ "foo" : "yes" \}
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -1943,7 +1943,7 @@ if (0) then { "foo" : "yes" } else { "foo" : "no" }
 
 Result \(run with Zorba\):\{ "foo" : "no" \}
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -1953,7 +1953,7 @@ if ("foo") then { "foo" : "yes" } else { "foo" : "no" }
 
 Result \(run with Zorba\):\{ "foo" : "yes" \}
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -1963,7 +1963,7 @@ if ("") then { "foo" : "yes" } else { "foo" : "no" }
 
 Result \(run with Zorba\):\{ "foo" : "no" \}
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -1973,7 +1973,7 @@ if (()) then { "foo" : "yes" } else { "foo" : "no" }
 
 Result \(run with Zorba\):\{ "foo" : "no" \}
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -1985,7 +1985,7 @@ Result \(run with Zorba\):\{ "foo" : "yes" \}
 
 Note that the else clause is mandatory \(but can be the empty sequence\)
 
-##### A conditional expression { .example}
+##### A conditional expression
 
 ```
 
@@ -2011,7 +2011,7 @@ A switch expression evaluates the expression inside the switch. If it is an atom
 
 Note that if there is an object or array in the base switch expression or any case expression, a JSONiq-specific type error JNTY0004 will be raised, because objects and arrays cannot be atomized and the W3C standard requires atomization of the base and case expressions.
 
-##### A switch expression { .example}
+##### A switch expression
 
 ```
 
@@ -2026,7 +2026,7 @@ Result \(run with Zorba\):bar
 
 If it is not an atomic, an error is raised.
 
-##### A switch expression { .example}
+##### A switch expression
 
 ```
 
@@ -2041,7 +2041,7 @@ Result \(run with Zorba\):An error was raised: can not atomize an object item: a
 
 If no value matches, the default is used.
 
-##### A switch expression { .example}
+##### A switch expression
 
 ```
 
@@ -2056,7 +2056,7 @@ Result \(run with Zorba\):none
 
 The case clauses support composability of expressions as well.
 
-##### A switch expression { .example}
+##### A switch expression
 
 ```
 
@@ -2069,7 +2069,7 @@ default return "none"
 
 Result \(run with Zorba\):foo
 
-##### A switch expression { .example}
+##### A switch expression
 
 ```
 
@@ -2094,7 +2094,7 @@ A try catch expression evaluates the expression inside the try block and returns
 
 However, if an error is raised dynamically, the catch clause is evaluated and its result value returned.
 
-##### A try catch expression { .example}
+##### A try catch expression
 
 ```
 
@@ -2106,7 +2106,7 @@ Result \(run with Zorba\):division by zero!
 
 Only errors raised within the lexical scope of the try block are caught.
 
-##### A try catch expression { .example}
+##### A try catch expression
 
 ```
 
@@ -2120,7 +2120,7 @@ Result \(run with Zorba\):An error was raised: division by zero
 
 Errors that are detected statically within the try block are still reported statically.
 
-##### A try catch expression { .example}
+##### A try catch expression
 
 ```
 
@@ -2166,7 +2166,7 @@ The order in which items are bound by the for clause can be relaxed with unorder
 
 The following query, using a for and a return clause, is the counterpart of SQL's "SELECT name FROM captains". $x is bound in turn to each item in the captains collection.
 
-##### A for clause. { .example}
+##### A for clause.
 
 ```
 
@@ -2179,7 +2179,7 @@ Result \(run with Zorba\):James T. Kirk Jean-Luc Picard Benjamin Sisko Kathryn J
 
 For clause expressions are composable, there can be several of them.
 
-##### Two for clauses. { .example}
+##### Two for clauses.
 
 ```
 
@@ -2191,7 +2191,7 @@ return 10 * $x + $y
 
 Result \(run with Zorba\):11 12 13 21 22 23 31 32 33
 
-##### A for clause. { .example}
+##### A for clause.
 
 ```
 
@@ -2204,7 +2204,7 @@ Result \(run with Zorba\):11 12 13 21 22 23 31 32 33
 
 A for variable is visible to subsequence bindings.
 
-##### A for clause. { .example}
+##### A for clause.
 
 ```
 
@@ -2215,7 +2215,7 @@ return $y
 
 Result \(run with Zorba\):1 2 3 4 5 6 7 8 9
 
-##### A for clause. { .example}
+##### A for clause.
 
 ```
 
@@ -2228,7 +2228,7 @@ Result \(run with Zorba\):\{ "captain" : "James T. Kirk", "series" : "The origin
 
 It is also possible to bind the position of the current item in the sequence to a variable.
 
-##### A for clause. { .example}
+##### A for clause.
 
 ```
 
@@ -2241,7 +2241,7 @@ Result \(run with Zorba\):\{ "captain" : "James T. Kirk", "id" : 1 \} \{ "captai
 
 JSONiq supports joins. For example, the counterpart of "SELECT c.name AS captain, m.name AS movie FROM captains c JOIN movies m ON c.name = m.name" is:
 
-##### A join { .example}
+##### A join
 
 ```
 
@@ -2256,7 +2256,7 @@ Note how JSONiq handles semi-structured data in a flexible way.
 
 Outer joins are also possible with "allowing empty", i.e., output will also be produced if there is no matching movie for a captain. The following query is the counterpart of "SELECT c.name AS captain, m.name AS movie FROM captains c LEFT JOIN movies m ON c.name = m.captain".
 
-##### A join { .example}
+##### A join
 
 ```
 
@@ -2281,7 +2281,7 @@ For each incoming tuple, the expression in the where clause is evaluated to a bo
 
 The following query corresponds to "SELECT series FROM captains WHERE name = 'Kathryn Janeway'".
 
-##### A where clause. { .example}
+##### A where clause.
 
 ```
 
@@ -2309,7 +2309,7 @@ Like for ordering comparisons, null values are always considered the smallest.
 
 The following query is the counterpart of SQL's "SELECT \* FROM captains ORDER BY name".
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2323,7 +2323,7 @@ Result \(run with Zorba\):\{ "name" : "Benjamin Sisko", "series" : \[ "The next 
 
 Multiple sorting criteria can be given - they are treated like a lexicographic order \(most important criterium first\).
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2337,7 +2337,7 @@ Result \(run with Zorba\):\{ "name" : "Samantha Carter", "series" : \[ \], "cent
 
 It can be specified whether the order is ascending or descending. Empty sequences are allowed and it can be chosen whether to put them first or last.
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2351,7 +2351,7 @@ Result \(run with Zorba\):\{ "codename" : "Emergency Command Hologram", "surname
 
 An error is raised if the expression does not evaluate to an atomic or the empty sequence.
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2365,7 +2365,7 @@ Result \(run with Zorba\):An error was raised: can not atomize an object item: a
 
 Collations can be used to give a specific way of how strings are to be ordered. A collation is identified by a URI.
 
-##### Use of a collation in an order by clause. { .example}
+##### Use of a collation in an order by clause.
 
 ```
 
@@ -2391,7 +2391,7 @@ For each incoming tuple, the expression in the group clause is evaluated to an a
 
 For each group, a tuple is output, with a binding from the grouping variable to the key of the group.
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2407,7 +2407,7 @@ As for the other \(non-grouping\) variables, their values within one group are a
 
 The following query is equivalent to "SELECT century, COUNT\(\*\) FROM captains GROUP BY century".
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2421,7 +2421,7 @@ Result \(run with Zorba\):\{ "century" : 21, "count" : 1 \} \{ "century" : 22, "
 
 JSONiq's group by is more flexible than SQL and is fully composable.
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2437,7 +2437,7 @@ Unlike SQL, JSONiq does not need a having clause, because a where clause works p
 
 The following query is the counterpart of "SELECT century, COUNT\(\*\) FROM captains GROUP BY century HAVING COUNT\(\*\) &gt; 1"
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2462,7 +2462,7 @@ Let bindings can be used to define aliases for any sequence, for convenience.
 
 For each incoming tuple, the expression in the let clause is evaluated to a sequence. A binding is added from this sequence to the let variable in each tuple. A tuple is hence produced for each incoming tuple.
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2479,7 +2479,7 @@ Result \(run with Zorba\):\{ "century" : 24, "count" : 4 \}
 
 Note that it is perfectly fine to reuse a variable name and hide a variable binding.
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2508,7 +2508,7 @@ CountClause
 
 For each incoming tuple, a binding from the position of this tuple in the tuple stream to the count variable is added. The new tuple is then forwarded to the next clause.
 
-##### An order by clause. { .example}
+##### An order by clause.
 
 ```
 
@@ -2537,7 +2537,7 @@ ContextItemExpr
 
 JSONiq provides a shortcut for a for-return construct, automatically binding each item in the left-hand-side sequence to the context item.
 
-##### A simple map { .example}
+##### A simple map
 
 ```
 
@@ -2547,7 +2547,7 @@ JSONiq provides a shortcut for a for-return construct, automatically binding eac
 
 Result \(run with Zorba\):2 4 6 8 10 12 14 16 18 20
 
-##### An equivalent query { .example}
+##### An equivalent query
 
 ```
 
@@ -2566,7 +2566,7 @@ JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-variables)
 
 Like all other expressions, FLWOR expressions can be composed. In the following examples, a FLWOR is nested in a function call, nested in a FLWOR, nested in an array constructor:
 
-##### Nested FLWORs { .example}
+##### Nested FLWORs
 
 ```
 
@@ -2603,7 +2603,7 @@ By default, the order in which a for clause binds its items is important.
 
 This behaviour can be relaxed in order give the optimizer more leeway. An unordered expression relaxes ordering by for clauses within its operand scope:
 
-##### An unordered expression. { .example}
+##### An unordered expression.
 
 ```
 
@@ -2619,7 +2619,7 @@ Result \(run with Zorba\):\{ "name" : "Jean-Luc Picard", "series" : \[ "The next
 
 An ordered expression can be used to reactivate ordering behaviour in a subscope.
 
-##### An ordered expression. { .example}
+##### An ordered expression.
 
 ```
 
@@ -2650,7 +2650,7 @@ InstanceofExpr
 
 An instance expression can be used to tell whether a JSONiq value matches a given sequence type.
 
-##### Instance of expression { .example}
+##### Instance of expression
 
 ```
 
@@ -2660,7 +2660,7 @@ An instance expression can be used to tell whether a JSONiq value matches a give
 
 Result \(run with Zorba\):true
 
-##### Instance of expression { .example}
+##### Instance of expression
 
 ```
 
@@ -2670,7 +2670,7 @@ Result \(run with Zorba\):true
 
 Result \(run with Zorba\):false
 
-##### Instance of expression { .example}
+##### Instance of expression
 
 ```
 
@@ -2680,7 +2680,7 @@ Result \(run with Zorba\):false
 
 Result \(run with Zorba\):true
 
-##### Instance of expression { .example}
+##### Instance of expression
 
 ```
 
@@ -2690,7 +2690,7 @@ Result \(run with Zorba\):true
 
 Result \(run with Zorba\):true
 
-##### Instance of expression { .example}
+##### Instance of expression
 
 ```
 
@@ -2700,7 +2700,7 @@ Result \(run with Zorba\):true
 
 Result \(run with Zorba\):true
 
-##### Instance of expression { .example}
+##### Instance of expression
 
 ```
 
@@ -2710,7 +2710,7 @@ Result \(run with Zorba\):true
 
 Result \(run with Zorba\):true
 
-##### Instance of expression { .example}
+##### Instance of expression
 
 ```
 
@@ -2730,7 +2730,7 @@ TreatExpr
 
 A treat expression checks that a JSONiq value matches a given sequence type. If it is not the case, an error is raised.
 
-##### Treat as expression { .example}
+##### Treat as expression
 
 ```
 
@@ -2740,7 +2740,7 @@ A treat expression checks that a JSONiq value matches a given sequence type. If 
 
 Result \(run with Zorba\):1
 
-##### Treat as expression { .example}
+##### Treat as expression
 
 ```
 
@@ -2750,7 +2750,7 @@ Result \(run with Zorba\):1
 
 Result \(run with Zorba\):An error was raised: "xs:integer" cannot be treated as type xs:string
 
-##### Treat as expression { .example}
+##### Treat as expression
 
 ```
 
@@ -2760,7 +2760,7 @@ Result \(run with Zorba\):An error was raised: "xs:integer" cannot be treated as
 
 Result \(run with Zorba\):foo
 
-##### Treat as expression { .example}
+##### Treat as expression
 
 ```
 
@@ -2770,7 +2770,7 @@ Result \(run with Zorba\):foo
 
 Result \(run with Zorba\):\{ "foo" : "bar" \}
 
-##### Treat as expression { .example}
+##### Treat as expression
 
 ```
 
@@ -2780,7 +2780,7 @@ Result \(run with Zorba\):\{ "foo" : "bar" \}
 
 Result \(run with Zorba\):\{ "foo" : "bar" \} \{ "bar" : "foo" \}
 
-##### Treat as expression { .example}
+##### Treat as expression
 
 ```
 
@@ -2790,7 +2790,7 @@ Result \(run with Zorba\):\{ "foo" : "bar" \} \{ "bar" : "foo" \}
 
 Result \(run with Zorba\):\[ 1, 2, 3 \]
 
-##### Treat as expression { .example}
+##### Treat as expression
 
 ```
 
@@ -2810,7 +2810,7 @@ CastableExpr
 
 A castable expression checks whether a JSONiq value can be cast to a given atomic type and returns true or false accordingly. It can be used before actually casting to that type.
 
-##### Castable as expression { .example}
+##### Castable as expression
 
 ```
 
@@ -2820,7 +2820,7 @@ A castable expression checks whether a JSONiq value can be cast to a given atomi
 
 Result \(run with Zorba\):true
 
-##### Castable as expression { .example}
+##### Castable as expression
 
 ```
 
@@ -2830,7 +2830,7 @@ Result \(run with Zorba\):true
 
 Result \(run with Zorba\):false
 
-##### Castable as expression { .example}
+##### Castable as expression
 
 ```
 
@@ -2840,7 +2840,7 @@ Result \(run with Zorba\):false
 
 Result \(run with Zorba\):true
 
-##### Castable as expression { .example}
+##### Castable as expression
 
 ```
 
@@ -2850,7 +2850,7 @@ Result \(run with Zorba\):true
 
 Result \(run with Zorba\):false
 
-##### Castable as expression { .example}
+##### Castable as expression
 
 ```
 
@@ -2862,7 +2862,7 @@ Result \(run with Zorba\):false
 
 The question mark allows for an empty sequence.
 
-##### Castable as expression { .example}
+##### Castable as expression
 
 ```
 
@@ -2882,7 +2882,7 @@ CastExpr
 
 A cast expression casts a JSONiq value to a given atomic type. The resulting value is annotated with this type.
 
-##### Cast as expression { .example}
+##### Cast as expression
 
 ```
 
@@ -2892,7 +2892,7 @@ A cast expression casts a JSONiq value to a given atomic type. The resulting val
 
 Result \(run with Zorba\):1
 
-##### Cast as expression { .example}
+##### Cast as expression
 
 ```
 
@@ -2902,7 +2902,7 @@ Result \(run with Zorba\):1
 
 Result \(run with Zorba\):An error was raised: "foo": value of type xs:string is not castable to type xs:integer
 
-##### Cast as expression { .example}
+##### Cast as expression
 
 ```
 
@@ -2912,7 +2912,7 @@ Result \(run with Zorba\):An error was raised: "foo": value of type xs:string is
 
 Result \(run with Zorba\):2013-04-02
 
-##### Cast as expression { .example}
+##### Cast as expression
 
 ```
 
@@ -2922,7 +2922,7 @@ Result \(run with Zorba\):2013-04-02
 
 Result \(run with Zorba\):An error was raised: empty sequence can not be cast to type with quantifier '1'
 
-##### Cast as expression { .example}
+##### Cast as expression
 
 ```
 
@@ -2934,7 +2934,7 @@ Result \(run with Zorba\):An error was raised: sequence of more than one item ca
 
 The question mark allows for an empty sequence.
 
-##### Cast as expression { .example}
+##### Cast as expression
 
 ```
 
@@ -2944,7 +2944,7 @@ The question mark allows for an empty sequence.
 
 Result \(run with Zorba\):
 
-##### Cast as expression { .example}
+##### Cast as expression
 
 ```
 
@@ -2968,7 +2968,7 @@ CaseClause
 
 A typeswitch expressions tests if the value resulting from the first operand matches a given list of types. The expression corresponding to the first matching case is finally evaluated. If there is no match, the expression in the default clause is evaluated.
 
-##### Typeswitch expression { .example}
+##### Typeswitch expression
 
 ```
 
@@ -2984,7 +2984,7 @@ Result \(run with Zorba\):string
 
 In each clause, it is possible to bind the value of the first operand to a variable.
 
-##### Typeswitch expression { .example}
+##### Typeswitch expression
 
 ```
 
@@ -3000,7 +3000,7 @@ Result \(run with Zorba\):foofoo
 
 The vertical bar can be used to allow several types in the same case clause.
 
-##### Typeswitch expression { .example}
+##### Typeswitch expression
 
 ```
 
@@ -3077,7 +3077,7 @@ VarDecl
 
 Variables can be declared global. Global variables are declared in the prolog.
 
-#### Global variable { .example}
+#### Global variable
 
 ```
 
@@ -3088,7 +3088,7 @@ Variables can be declared global. Global variables are declared in the prolog.
 
 Result \(run with Zorba\):\{ "foo" : "bar" \}
 
-#### Global variable { .example}
+#### Global variable
 
 ```
 
@@ -3101,7 +3101,7 @@ Result \(run with Zorba\):\[ 1, 2, 3, 4, 5 \]
 
 You can specify a type for a variable. If the type does not match, an error is raised. Types will be explained later. In general, you do not need to worry too much about variable types except if you want to make sure that what you bind to a variable is really what you want. In most cases, the engine will take care of types for you.
 
-#### Global variable with a type { .example}
+#### Global variable with a type
 
 ```
 
@@ -3114,7 +3114,7 @@ Result \(run with Zorba\):\{ "foo" : "bar" \}
 
 An external variable allows you to pass a value from the outside environment, which can be very useful. Each implementation can choose their own way of passing a value to an external variable. A default value for an external variable can also be supplied in case none is provided outside.
 
-#### An external global variable { .example}
+#### An external global variable
 
 ```
 
@@ -3125,7 +3125,7 @@ An external variable allows you to pass a value from the outside environment, wh
 
 Result \(run with Zorba\):An error was raised: "obj": variable has no value
 
-#### An external global variable with a default value { .example}
+#### An external global variable with a default value
 
 ```
 
@@ -3146,7 +3146,7 @@ You can define your own functions in the prolog. These user-defined functions mu
 
 Remember than types are optional, and if you do not specify any, item\* is assumed, both for parameters and for the return type.
 
-#### An external global variable with a default value { .example}
+#### An external global variable with a default value
 
 ```
 
@@ -3157,7 +3157,7 @@ local:say-hello("Mister Spock")
 
 Result \(run with Zorba\):Hello, Mister Spock!
 
-#### An external global variable with a default value { .example}
+#### An external global variable with a default value
 
 ```
 
@@ -3168,7 +3168,7 @@ local:say-hello("Mister Spock")
 
 Result \(run with Zorba\):Hello, Mister Spock!
 
-#### An external global variable with a default value { .example}
+#### An external global variable with a default value
 
 ```
 
@@ -3181,7 +3181,7 @@ Result \(run with Zorba\):Hello, Mister Spock!
 
 If you do specify types, an error is raised in case of a mismatch
 
-#### An external global variable with a default value { .example}
+#### An external global variable with a default value
 
 ```
 
@@ -3214,7 +3214,7 @@ A library module does not contain any query - just functions and variables that 
 
 A library module must be assigned to a namespace. For convenience, this namespace is bound to an alias in the module declaration. All variables and functions in a library module must be prefixed with this alias.
 
-### A library module { .example}
+### A library module
 
 ```
 
@@ -3231,7 +3231,7 @@ ModuleImport
 
 Here is a main module which imports the former library module. An alias is given to the module namespace \(my\). Variables and functions from that module can be accessed by prefixing their names with this alias. The alias may be different than the internal alias defined in the imported module.
 
-### An importing main module { .example}
+### An importing main module
 
 ```
 
@@ -3256,7 +3256,7 @@ This function returns the distinct keys of all objects in the supplied sequence,
 
 `keys($o as item*) as string*`
 
-##### Getting all distinct key names in the supplied objects, ignoring non-objects. { .example}
+##### Getting all distinct key names in the supplied objects, ignoring non-objects.
 
 ```
 
@@ -3267,7 +3267,7 @@ return keys($o)
 
 Result \(run with Zorba\):a b c
 
-##### Retrieving all Pairs from an Object: { .example}
+##### Retrieving all Pairs from an Object:
 
 ```
 
@@ -3285,7 +3285,7 @@ This functions returns all members of all arrays of the supplied sequence.
 
 `members($a as item*) as item*`
 
-##### Retrieving the members of all supplied arrays, ignoring non-arrays. { .example}
+##### Retrieving the members of all supplied arrays, ignoring non-arrays.
 
 ```
 
@@ -3317,7 +3317,7 @@ The object optionally supplied as the second parameter may contain additional op
 
 If parsing is not successful, an error is raised. Parsing is considered in particular to be non-successful if the boolean associated with "jsoniq-multiple-top-level-items" in the additional parameters is false and there is extra content after parsing a single abject or array.
 
-##### Parsing a JSON document { .example}
+##### Parsing a JSON document
 
 ```
 
@@ -3327,7 +3327,7 @@ parse-json("{ \"foo\" : \"bar\" }", { "jsoniq-multiple-top-level-items" : false 
 
 Result \(run with Zorba\):\{ "foo" : "bar" \}
 
-##### Parsing multiple, whitespace-separated JSON documents { .example}
+##### Parsing multiple, whitespace-separated JSON documents
 
 ```
 
@@ -3343,7 +3343,7 @@ This function returns the size of the supplied array, or the empty sequence if t
 
 `size($a as array?) as integer?`
 
-##### Retrieving the size of an array { .example}
+##### Retrieving the size of an array
 
 ```
 
@@ -3423,7 +3423,7 @@ declare function descendant-pairs($seq as item*)
       
 ```
 
-##### Accessing all descendant pairs { .example}
+##### Accessing all descendant pairs
 
 ```
 
@@ -3498,7 +3498,7 @@ declare function project($seq as item*, $keys as string*) as item*
       
 ```
 
-##### Projecting an object 1 { .example}
+##### Projecting an object 1
 
 ```
 
@@ -3513,7 +3513,7 @@ return project($o, ("Captain", "First Officer"))
 
 Result \(run with Zorba\):\{ "Captain" : "Kirk", "First Officer" : "Spock" \}
 
-##### Projecting an object 2 { .example}
+##### Projecting an object 2
 
 ```
 
@@ -3550,7 +3550,7 @@ declare function remove-keys($seq as item*, $keys as string*) as item*
       
 ```
 
-##### Removing keys from an object \(not implemented yet\) { .example}
+##### Removing keys from an object \(not implemented yet\)
 
 ```
 
@@ -3642,7 +3642,7 @@ As in most language, one can distinguish between physical equality and logical e
 
 Atomics can only be compared logically. Their physically identity is totally opaque to you.
 
-### Logical comparison of two atomics { .example}
+### Logical comparison of two atomics
 
 ```
 
@@ -3652,7 +3652,7 @@ Atomics can only be compared logically. Their physically identity is totally opa
 
 Result \(run with Zorba\):true
 
-### Logical comparison of two atomics { .example}
+### Logical comparison of two atomics
 
 ```
 
@@ -3662,7 +3662,7 @@ Result \(run with Zorba\):true
 
 Result \(run with Zorba\):false
 
-### Logical comparison of two atomics { .example}
+### Logical comparison of two atomics
 
 ```
 
@@ -3672,7 +3672,7 @@ Result \(run with Zorba\):false
 
 Result \(run with Zorba\):false
 
-### Logical comparison of two atomics { .example}
+### Logical comparison of two atomics
 
 ```
 
@@ -3684,7 +3684,7 @@ Result \(run with Zorba\):true
 
 Two objects or arrays can be tested for logical equality as well, using deep-equal\(\), which performs a recursive comparison.
 
-### Logical comparison of two JSON items { .example}
+### Logical comparison of two JSON items
 
 ```
 
@@ -3694,7 +3694,7 @@ deep-equal({ "foo" : "bar" }, { "foo" : "bar" })
 
 Result \(run with Zorba\):true
 
-### Logical comparison of two JSON items { .example}
+### Logical comparison of two JSON items
 
 ```
 
@@ -3718,7 +3718,7 @@ Since sequences are flat, expressions of the JSONiq language just concatenate th
 
 This is crucial to allow streaming results, for example through an HTTP session.
 
-#### Flat sequences { .example}
+#### Flat sequences
 
 ```
 
@@ -3730,7 +3730,7 @@ Result \(run with Zorba\):1 2 3 4
 
 Arrays on the other side can contain nested arrays, like in JSON.
 
-#### Nesting arrays { .example}
+#### Nesting arrays
 
 ```
 
@@ -3742,7 +3742,7 @@ Result \(run with Zorba\):\[ \[ 1, 2 \], \[ 3, 4 \] \]
 
 Many expressions return single items - actually, they really return a singleton sequence, but a singleton sequence of one item is considered the same as this item.
 
-#### Singleton sequences { .example}
+#### Singleton sequences
 
 ```
 
@@ -3754,7 +3754,7 @@ Result \(run with Zorba\):2
 
 This is different for arrays: a singleton array is distinct from its unique member, like in JSON.
 
-#### Singleton sequences { .example}
+#### Singleton sequences
 
 ```
 
@@ -3766,7 +3766,7 @@ Result \(run with Zorba\):\[ 2 \]
 
 An array is a single item. A \(non-singleton\) sequence is not. This can be observed by counting the number of items in a sequence.
 
-#### count\(\) on an array { .example}
+#### count\(\) on an array
 
 ```
 
@@ -3776,7 +3776,7 @@ count([ 1, "foo", [ 1, 2, 3, 4 ], { "foo" : "bar" } ])
 
 Result \(run with Zorba\):1
 
-#### count\(\) on a sequence { .example}
+#### count\(\) on a sequence
 
 ```
 
@@ -3788,7 +3788,7 @@ Result \(run with Zorba\):4
 
 Other than that, arrays and sequences can contain exactly the same members \(atomics, arrays, objects\).
 
-#### Members of an array { .example}
+#### Members of an array
 
 ```
 
@@ -3798,7 +3798,7 @@ Other than that, arrays and sequences can contain exactly the same members \(ato
 
 Result \(run with Zorba\):\[ 1, "foo", \[ 1, 2, 3, 4 \], \{ "foo" : "bar" \} \]
 
-#### Members of an sequence { .example}
+#### Members of an sequence
 
 ```
 
@@ -3810,7 +3810,7 @@ Result \(run with Zorba\):1 foo \[ 1, 2, 3, 4 \] \{ "foo" : "bar" \}
 
 Arrays can be converted to sequences, and vice-versa.
 
-#### Converting an array to a sequence { .example}
+#### Converting an array to a sequence
 
 ```
 
@@ -3820,7 +3820,7 @@ Arrays can be converted to sequences, and vice-versa.
 
 Result \(run with Zorba\):1 foo \[ 1, 2, 3, 4 \] \{ "foo" : "bar" \}
 
-#### Converting a sequence to an array { .example}
+#### Converting a sequence to an array
 
 ```
 
@@ -3836,7 +3836,7 @@ Null and the empty sequence are two different concepts.
 
 Null is an item \(an atomic value\), and can be a member of an array or of a sequence, or the value associated with a key in an object. Sequences cannot, as they represent the absence of any item.
 
-#### Null values in an array { .example}
+#### Null values in an array
 
 ```
 
@@ -3846,7 +3846,7 @@ Null is an item \(an atomic value\), and can be a member of an array or of a seq
 
 Result \(run with Zorba\):\[ null, 1, null, 2 \]
 
-#### Null values in an object { .example}
+#### Null values in an object
 
 ```
 
@@ -3856,7 +3856,7 @@ Result \(run with Zorba\):\[ null, 1, null, 2 \]
 
 Result \(run with Zorba\):\{ "foo" : null \}
 
-#### Null values in a sequence { .example}
+#### Null values in a sequence
 
 ```
 
@@ -3868,7 +3868,7 @@ Result \(run with Zorba\):null 1 null 2
 
 If an empty sequence is found as an object value, it is automatically converted to null.
 
-#### Automatic conversion to null. { .example}
+#### Automatic conversion to null.
 
 ```
 
@@ -3880,7 +3880,7 @@ Result \(run with Zorba\):\{ "foo" : null \}
 
 In an arithmetic opration or a comparison, if an operand is an empty sequence, an empty sequence is returned. If an operand is a null, an error is raised except for equality and inequality.
 
-#### Empty sequence in an arithmetic operation. { .example}
+#### Empty sequence in an arithmetic operation.
 
 ```
 
@@ -3890,7 +3890,7 @@ In an arithmetic opration or a comparison, if an operand is an empty sequence, a
 
 Result \(run with Zorba\):
 
-#### Null in an arithmetic operation. { .example}
+#### Null in an arithmetic operation.
 
 ```
 
@@ -3900,7 +3900,7 @@ null + 2
 
 Result \(run with Zorba\):An error was raised: arithmetic operation not defined between types "js:null" and "xs:integer"
 
-#### Null and empty sequence in an arithmetic operation. { .example}
+#### Null and empty sequence in an arithmetic operation.
 
 ```
 
@@ -3910,7 +3910,7 @@ null + ()
 
 Result \(run with Zorba\):
 
-#### Empty sequence in a comparison. { .example}
+#### Empty sequence in a comparison.
 
 ```
 
@@ -3920,7 +3920,7 @@ Result \(run with Zorba\):
 
 Result \(run with Zorba\):
 
-#### Null in a comparison. { .example}
+#### Null in a comparison.
 
 ```
 
@@ -3930,7 +3930,7 @@ null eq 2
 
 Result \(run with Zorba\):false
 
-#### Null in a comparison. { .example}
+#### Null in a comparison.
 
 ```
 
@@ -3940,7 +3940,7 @@ null lt 2
 
 Result \(run with Zorba\):true
 
-#### Null and the empty sequence in a comparison. { .example}
+#### Null and the empty sequence in a comparison.
 
 ```
 
@@ -3950,7 +3950,7 @@ null eq ()
 
 Result \(run with Zorba\):
 
-#### Null and the empty sequence in a comparison. { .example}
+#### Null and the empty sequence in a comparison.
 
 ```
 
