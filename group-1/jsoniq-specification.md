@@ -1,2 +1,3968 @@
-# JSONiq specification
+# JSONiq {#jsoniq.d12e3}
+
+## Introduction {#chapter-introduction}
+
+JSONiq is a query and processing language specifically designed for the popular JSON data model. The main ideas behind JSONiq are based on lessons learned in more than 30 years of relational query systems and more than 15 years of experience with designing and implementing query languages for semi-structured data like XML and RDF.
+
+The main source of inspiration behind JSONiq is XQuery, which has been proven so far a successful and productive query language for semi-structured data \(in particular XML\). JSONiq borrowed a large numbers of ideas from XQuery, like the structure and semantics of a FLWOR construct, the functional aspect of the language, the semantics of comparisons in the face of data heterogeneity, the declarative, snapshot-based updates. However, unlike XQuery, JSON is not concerned with the peculiarities of XML, like mixed content, ordered children, the confusion between attributes and elements, the complexities of namespaces and QNames, or the complexities of XML Schema, and so on.
+
+The power of the XQuery's FLWOR construct and the functional aspect, combined with the simplicity of the JSON data model result in a clean, sleek and easy to understand data processing language. As a matter of fact, JSONiq is a language that can do more than queries: it can describe powerful data processing programs, from transformations, selections, joins of heterogeneous data sets, data enrichment, information extraction, information cleaning, and so on.
+
+Technically, the main characteristics of JSONiq \(and XQuery\) are the following:
+
+-   It is a *set-oriented language*. While most programming languages are designed to manipulate one object at a time, JSONiq is designed to process sets \(actually, sequences\) of data objects.
+
+-   It is a *functional language*. A JSONiq program is an expression; the result of the program is the result of the evaluation of the expression. Expressions have fundamental role in the language: every language construct is an expression, and expressions are fully composable.
+
+-   It is a *declarative language*. A program specifies what is the result being calculated, and does not specify low level algorithms like the sort algorithm, the fact that an algorithm is executed in main memory or is external, on a single machine or parallelized on several machines, or what access patterns \(aka indexes\) are being used during the evaluation of the program. Such implementation decisions should be taken automatically, by an optimizer, based on the physical characteristics of the data, and of the hardware environment. Just like a traditional database would do. The language has been designed from day one with optimizability in mind.
+
+-   It is designed for *nested, heterogeneous, semi-structured data*. Data structures in JSON can be nested with arbitrary depth, do not have a specific type pattern \(i.e. are heterogeneous\), and may or may not have one or more schemas that describe the data. Even in the case of a schema, such a schema can be open, and/or simply partially describe the data. Unlike SQL, which is designed to query tabular, flat, homogeneous structures. JSONiq has been designed from scratch as a query for nested and heterogeneous data.
+
+
+In this specification, we detail the JSONiq language. Historically, JSONiq was first created as an extension to XQuery. Later, a separate core syntax was created which makes it 100% tailored for JSON. It is the JSONiq core syntax that is detailed in this document.
+
+The functionality directly inherited from XQuery is described on a higher level and we explicitly refer for more in-depth details to the [W3C specification](https://www.w3.org/TR/xquery-30).
+
+### Structure of a JSONiq program. {#structureOfAJsoniqProgram.d12e158}
+
+A JSONiq program can either be a main module, which contains a query that can be executed, or a library module, which defines functions and variables that can be used in other modules.
+
+A main or library module can be optionally prefixed with a JSONiq declaration with a version \(currently 1.0\) and an encoding.
+
+Module
+
+![](images/Module.png)
+
+### Main modules {#mainModules.d12e180}
+
+A JSONiq main module is made of two parts: an optional prolog, and an expression, which is the main query.
+
+MainModule
+
+![](images/MainModule.png)
+
+The result of the main JSONiq program is the result of its main query.
+
+In the prolog, it is possible to declare global variables and functions. Mostly, you will recognize a prolog declaration by the semi-colon it ends with. The main query does not contain semi-colons \(at least in core JSONiq\).
+
+Global variables and functions can use and call each other arbitrarily, even if the dependency is further down in the prolog. If there a cycle, an error is thrown.
+
+JSONiq largely follows the W3C standard regarding modules. The detailed specification is found [here](https://www.w3.org/TR/xquery-30/#id-query-prolog).
+
+### Library modules {#libraryModules.d12e213}
+
+Library modules do not contain any main query, just global variables and functions. They can be imported by other modules.
+
+A library module is introduced with a module declaration, followed by the prolog containing its variables and functions.
+
+LibraryModule
+
+![](images/LibraryModule.png)
+
+### Feature matrix {#featureMatrix.d12e236}
+
+JSONiq is 99% reliant on XQuery, a W3C standard. For everything taken over from the W3C standard, a brief, non-normative explanation is provided with a link to the corresponding part in the W3C specification.
+
+|Feature|Specification status|
+|-------|--------------------|
+|JSONiq Data Model|
+|Atomic items|W3C-conformant|
+|Structured items|JSONiq-specific|
+|Function items|W3C-conformant|
+|Node items \(XML\)|Omitted \(optional support by some engines\)|
+|JSONiq Type System|
+|Atomic types|W3C-conformant, but support for xs:ID, xs:IDREF, xs:IDREFS, xs:Name, xs:NCName, xs:ENTITY, xs:ENTITIES, xs:NOTATION omitted \(except for engines also supporting XML\)|
+|js:null type|JSONiq-specific|
+|js:item, js:atomic types|JSONiq-specific synonyms for item\(\) and xs:anyAtomicType|
+|Structured types|JSONiq-specific|
+|Function types|W3C-conformant|
+|Empty sequence type|JSONiq-specific notation \(\) for empty-sequence\(\)|
+|XML node types|Omitted \(optional support by engines supporting XML\)|
+|Concepts|
+|Effective boolean value|W3C-conformant, extended with object, array and null semantics|
+|Atomization|Omitted \(optional support by engines supporting XML\)|
+|Expressions|
+|Numeric literals|W3C-conformant|
+|String literals|W3C-conformant, but escape is done with \\ not with &amp;|
+|Boolean and null literals|JSONiq-specific|
+|Variable reference|W3C-conformant|
+|Parenthesized expressions|W3C-conformant|
+|Context item expressions|W3C-conformant but $$ syntax instead of .|
+|Static function calls|W3C-conformant|
+|Named function reference|W3C-conformant|
+|Inline function expressions|W3C-conformant|
+|Filter expressions|W3C-conformant|
+|Dynamic function calls|W3C-conformant|
+|Path expressions \(XML\)|Omitted \(optional support by engines supporting XML, but relative paths must start with ./\)|
+|Object lookup|JSONiq-specific|
+|Array lookup|JSONiq-specific|
+|Array unboxing|JSONiq-specific|
+|Sequence expressions|W3C-conformant|
+|Arithmetic expressions|W3C-conformant, no atomization needed \(except for engines also supporting XML\)|
+|String concatenation expressions|W3C-conformant|
+|Comparison expressions|W3C-conformant, no need to atomize or convert from untyped and untypedAtomic \(except for engines also supporting XML\)|
+|Logical expressions|W3C-conformant|
+|XML constructors|Omitted \(optional support by engines supporting XML\)|
+|JSON \(object and array\) constructors|JSONiq-specific|
+|FLWOR expressions|W3C-conformant|
+|Unordered and ordered expressions|W3C-conformant|
+|Conditional expressions|W3C-conformant|
+|Switch expressions|W3C-conformant|
+|Quantified expressions|W3C-conformant|
+|Try-catch expressions|W3C-conformant|
+|Instance-of expressions|W3C-conformant|
+|Typeswitch expressions|W3C-conformant|
+|Cast expressions|W3C-conformant|
+|Castable expressions|W3C-conformant|
+|Constructor functions|W3C-conformant, additional constructor function for null\(\)|
+|Treat expressions|W3C-conformant|
+|Simple map operator|W3C-conformant|
+|Validate expressions|Omitted \(optional support by engines supporting XML\)|
+|Extension expressions|W3C-conformant|
+|Static context|
+|XPath 1.0 compatibility mode|Omitted \(optional support by engines supporting XML\)|
+|Statically known namespaces|W3C-conformant|
+|Default element/type namespace|W3C-conformant, strong recommendation for implementations to overwrite with the proxy namespace *http://jsoniq.org/default-type-namespace* to omit prefixes.|
+|Default function namespace|W3C-conformant, strong recommendation for implementations to overwrite with *http://jsoniq.org/default-function-namespace* to omit prefixes.|
+|In-scope schema definitions|Omitted \(optional support by engines supporting XML\)|
+|In-scope variables|W3C-conformant|
+|Context item static type|W3C-conformant|
+|Statically known function signatures|W3C-conformant, augmented with all JSONiq builtin functions|
+|Statically known collations|W3C-conformant|
+|Default collation|W3C-conformant|
+|Construction mode|Omitted \(optional support by engines supporting XML\)|
+|Ordering mode|W3C-conformant|
+|Default order for empty sequences|W3C-conformant|
+|Boundary-space policy|Omitted \(optional support by engines supporting XML\)|
+|Copy-namespaces mode|Omitted \(optional support by engines supporting XML\)|
+|Static Base URI|W3C-conformant|
+|Statically known documents|Omitted \(optional support by engines supporting XML\)|
+|Statically known collections|Omitted \(optional support by engines supporting XML\)|
+|Statically known default collection type|Omitted \(optional support by engines supporting XML\)|
+|Statically known decimal formats|W3C-conformant|
+|Dynamic context|
+|Context item|W3C-conformant \(but with syntax $$ not .\)|
+|Initial context item|W3C-conformant|
+|Context position|W3C-conformant|
+|Context size|W3C-conformant|
+|Variable values|W3C-conformant|
+|Named functions|W3C-conformant|
+|Current dateTime|W3C-conformant|
+|Implicit timezone|W3C-conformant|
+|Default language|W3C-conformant|
+|Default calendar|W3C-conformant|
+|Default place|W3C-conformant|
+|Available documents|Omitted \(optional support by engines supporting XML\)|
+|Available text resources|W3C-conformant|
+|Available node collections|Omitted \(optional support by engines supporting XML\)|
+|Default node collection|Omitted \(optional support by engines supporting XML\)|
+|Available resource collections|Omitted \(optional support by engines supporting XML\)|
+|Default resource collection|Omitted \(optional support by engines supporting XML\)|
+|Environment variables|W3C-conformant|
+
+### Namespaces {#namespaces.d12e941}
+
+The namespace *http://jsoniq.org/functions* is used for JSONiq builtin functions defined by this specification. This namespace is exposed to the user and is bound by default to the prefix *jn*. For instance, the function name *jn:keys\(\)* is in this namespace.
+
+The namespace *http://jsoniq.org/types* is used for JSONiq builtin types defined by this specification \(including synonyms for some XQuery types\). This namespace is exposed to the user and is bound by default to the prefix *js*. For instance, the type name *js:null* is in this namespace.
+
+The namespace *http://jsoniq.org/default-function-namespace* is a proxy namespace that maps to the *jn:* \(JSONiq\), *fn:* \(XQuery\) and *math:* \(XQuery\) namespaces. It is the default function namespace, allowing to call all these functions with no prefix.
+
+The namespace *http://jsoniq.org/default-type-namespace* is a proxy namespace that maps to the *js:* \(JSONiq\) and *xs:* \(XQuery\) namespaces. It is the default type namespace, allowing to use all builtin types with no prefix.
+
+Accessors used in JSONiq Data Model use the *jdm:* prefix. These functions are not exposed to the user and are for explanatory purposes of the data model within this document only. The *jdm:* prefix is not associated with a namespace.
+
+## The JSONiq data model {#chapter-data-model}
+
+JSONiq is a query language that was specifically designed for querying JSON, although its data model is powerful enough to handle more similar formats.
+
+As stated on json.org, JSON is a "lightweight data-interchange format. It is easy for humans to read and write. It is easy for machines to parse and generate."
+
+A JSON document is made of the following building blocks: objects, arrays, strings, numbers, booleans and nulls.
+
+JSONiq manipulates sequences of these building blocks, which are called items. Hence, a JSONiq value is a sequence of items.
+
+Any JSONiq expression takes and returns sequences of items.
+
+Comma-separated JSON-like building blocks is all you need to begin building your own sequences. You can mix and match, as JSONiq supports heterogeneous sequences seamlessly.
+
+### A sequence { .example}
+
+```
+
+"foo", 2, true, { "foo", "bar" }, null, [ 1, 2, 3 ]
+      
+```
+
+Result:foo 2 true foo bar null \[ 1, 2, 3 \]
+
+Sequences are flat and cannot be nested. This makes streaming possible, which is very powerful.
+
+### Sequences are flat { .example}
+
+```
+
+( ("foo", 2), ( (true, 4, null), 6 ) )
+      
+```
+
+Result:foo 2 true 4 null 6
+
+A sequence can be empty. The empty sequence can be constructed with empty parentheses.
+
+### The empty sequence { .example}
+
+```
+
+()
+      
+```
+
+Result:
+
+A sequence of just one item is considered the same as just this item. Whenever we say that an expression returns or takes one item, we really mean that it takes a singleton sequence of one item.
+
+### A sequence of one item { .example}
+
+```
+
+("foo")
+      
+```
+
+Result:foo
+
+JSONiq classifies the items mentioned above in three categories:
+
+-   Atomic items: strings, numbers, booleans and nulls, but also many other supported atomic values such as dates, binary, etc.
+
+-   Structured items: objects and arrays.
+
+-   Function items: items that can take parameters and, upon evaluation, return sequences of items.
+
+
+The JSONiq data model follows the [W3C specification](https://www.w3.org/TR/xpath-datamodel-30/#sequences), but, in core JSONiq, does not include XML nodes, and includes instead JSON objects and arrays. Engines are free, however, to optionally support XML nodes in addition to JSON objects and arrays.
+
+### Atomic items {#atomicItems.d12e1084}
+
+An atomic is a non-structured value that is annotated with a type.
+
+JSONiq atomic values follow the [W3C specification](https://www.w3.org/TR/xpath-datamodel-30/#AtomicValue).
+
+JSONiq supports most atomic values available in the [W3C specification](https://www.w3.org/TR/xpath-datamodel-30/#types-hierarchy). They are described in Chapter [The JSONiq type system](#chapter-type-system). JSONiq furthermore defines an additional atomic value, *null*, with a type of its own, *jn:null*, which does not exist in the W3C specification.
+
+In particular, JSONiq supports all core JSON values. Note that JSON numbers correspond to three different types in JSONiq.
+
+-   *string*: all JSON strings.
+
+-   *integer*: all JSON numbers that are integers \(no dot, no exponent\), infinite range.
+
+-   *decimal*: all JSON numbers that are decimals \(no exponent\), infinite range.
+
+-   *double*: IEEE double-precision 64-bit floating point numbers \(corresponds to JSON numbers with an exponent\).
+
+-   *boolean*: the JSON booleans true and false.
+
+-   *null*: the JSON null.
+
+
+### Structured items {#structuredItems.d12e1164}
+
+Structured items in JSONiq do not follow the XQuery 3.1 standard but are specific to JSONiq.
+
+In JSONiq, an object represents a JSON object, i.e., a collection of string/items pairs.
+
+Objects have the following property:
+
+-   pairs. A set of pairs. Each pair consists of an atomic value of type *xs:string* and of an item.
+
+    \[ Consistency constraint: no two pairs have the same name \(using fn:codepoint-equal\). \]
+
+
+The XQuery data model uses accessors to explain the data model. Accessors are not exposed to the user and are only used for convenience in this specification. Objects have the following accessors:
+
+-   *jdm:object-keys\($o as js:object\) as xs:string\**: returns all keys in the object $o.
+
+-   *jdm:object-value\($o as js:object, $s as xs:string\) as js:item*: returns the value associated with $s in the object $o.
+
+
+An object does not have a typed value.
+
+In JSONiq, an array represents a JSON array, i.e., a ordered list of items.
+
+Objects have the following property:
+
+-   members. An ordered list of items.
+
+
+Arrays have the following accessors:
+
+-   *jdm:array-size\($a as js:array\) as xs:nonNegativeInteger*: returns the number of values in the array $a.
+
+-   *jdm:array-value\($a as js:array, $i as xs:positiveInteger\) as js:item*: returns the value at position $i in the array $a..
+
+
+An array does not have a typed value.
+
+Unlike in the XQuery 3.1 standard, the values in arrays and objects are single items \(which disallows the empty sequence or a sequence of more than one item\). Also, object keys must be strings \(which disallows any other atomic value\).
+
+### Function items {#section-function-items}
+
+JSONiq also supports function items, also known as higher-order functions. A function item can be passed parameters and evaluated.
+
+A function item has an optional name and an arity. It also has a signature, which consists of the sequence type of each one of its parameters \(as many as its arity\), and the sequence type of the values it returns.
+
+The fact that functions are items means that they can be returned by expressions, and passed as parameters to other functions. This is why they are also often called higher-order functions.
+
+JSONiq function items follow the [W3C specification](https://www.w3.org/TR/xpath-datamodel-30/#function-items).
+
+## Input datasets {#chapter-collections}
+
+Even though you can build your own JSON values with JSONiq by copying-and-pasting JSON documents, most of the time, your JSON data will come from an external input dataset.
+
+How this dataset is access depends on the JSONiq implementation and of the context. Some engines can read the data from a file located on a file system, local or distributed \(HDFS, S3\); some others get data from the Web; some others are full-fledged datastores and have collections that can be created, queried, modified and persisted.
+
+It is up to each engine to document which functions should be used, and how, in order to read datasets into a JSONiq Data Model instance. These functions will take implementation-defined parameters and typically return sequences of objects, or sequences of strings, or sequences of items, etc.
+
+For the purpose of examples given in this specification, we assume that a hypothetical engine has collections that are sequences of objects, identified by a name which is a string. We assume that there is a collection\(\) function that returns all objects associated with the provided collection name.
+
+We assume in particular that there are three example collections, shown below.
+
+### Collection 1 { .example}
+
+```
+
+collection("one-object")
+    
+```
+
+Result
+
+```
+{ "foo" : "bar" }
+```
+
+### Collection 2 { .example}
+
+```
+
+collection("captains")
+    
+```
+
+Result
+
+```
+
+{ "name" : "James T. Kirk", "series" : [ "The original series" ], "century" : 23 }
+{ "name" : "Jean-Luc Picard", "series" : [ "The next generation" ], "century" : 24 }
+{ "name" : "Benjamin Sisko", "series" : [ "The next generation", "Deep Space 9" ], "century" : 24 }
+{ "name" : "Kathryn Janeway", "series" : [ "The next generation", "Voyager" ], "century" : 24  }
+{ "name" : "Jonathan Archer", "series" : [ "Entreprise" ], "century" : 22 }
+{ "codename" : "Emergency Command Hologram", "surname" : "The Doctor", "series" : [ "Voyager" ], "century" : 24 }
+{ "name" : "Samantha Carter", "series" : [ ], "century" : 21 }
+      
+```
+
+### Collection 3 { .example}
+
+```
+collection("films")
+```
+
+Result
+
+```
+
+{ "id" : "I", "name" : "The Motion Picture", "captain" : "James T. Kirk" }
+{ "id" : "II", "name" : "The Wrath of Kahn", "captain" : "James T. Kirk" }
+{ "id" : "III", "name" : "The Search for Spock", "captain" : "James T. Kirk" }
+{ "id" : "IV", "name" : "The Voyage Home", "captain" : "James T. Kirk" }
+{ "id" : "V", "name" : "The Final Frontier", "captain" : "James T. Kirk" }
+{ "id" : "VI", "name" : "The Undiscovered Country", "captain" : "James T. Kirk" }
+{ "id" : "VII", "name" : "Generations", "captain" : [ "James T. Kirk", "Jean-Luc Picard" ] }
+{ "id" : "VIII", "name" : "First Contact", "captain" : "Jean-Luc Picard" }
+{ "id" : "IX", "name" : "Insurrection", "captain" : "Jean-Luc Picard" }
+{ "id" : "X", "name" : "Nemesis", "captain" : "Jean-Luc Picard" }
+{ "id" : "XI", "name" : "Star Trek", "captain" : "Spock" }
+{ "id" : "XII", "name" : "Star Trek Into Darkness", "captain" : "Spock" }
+      
+```
+
+## The JSONiq type system {#chapter-type-system}
+
+This section describes JSONiq types as well as the sequence type syntax.
+
+JSONiq manipulates semi-structured data: in general, JSONiq allows you, but does not require you to specify types. So you have as much or as little type verification as you wish.
+
+JSONiq is still strongly typed, so that you will be told if there is a type inconsistency or mismatch in your programs.
+
+Whenever you do not specify the type of a variable or the type signature of a function, the most general type for any sequence of items, item\*, is assumed.
+
+Section [Expressions dealing with types](#section-type-expressions) introduces expressions which work with values of these types, as well as type operations \(variable types, casts, ...\).
+
+### Sequence types {#sequenceTypes.d12e1331}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-sequencetype-syntax) regarding sequence occurrence indicators. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+A sequence is an ordered list of items.
+
+All sequences match the sequence type *js:item\**.
+
+A sequence type is made of an item type followed by an occurrence indicator:
+
+-   \* stands for a sequence of any length \(zero or more\)
+
+-   + stands for a non-empty sequence \(one or more\)
+
+-   ? stands for an empty or a singleton sequence \(zero or one\)
+
+-   The absence of indicator stands for a singleton sequence \(one\).
+
+
+Examples:
+
+-   string matches any singleton sequence containing a string.
+
+-   item+ matches any non-empty sequence.
+
+-   object? matches the empty sequence and any sequence containing one object.
+
+
+JSONiq defines the syntax *\(\)* for the empty sequence, rather than *empty-sequence\(\)*.
+
+SequenceType
+
+![](images/SequenceType.png)
+
+### Item types {#itemTypes.d12e1415}
+
+Item types are the first component of a sequence type, together with the cardinality indicator. Thus, an item type matches \(or not\) a single item. For example, "foo" matches the item type xs:string.
+
+There are three categories of item types:
+
+-   Atomic types \(W3C-conformant, additional js:null and js:atomic\)
+
+-   Structured types \(JSONiq-specific\)
+
+-   Function types \(W3C-conformant\)
+
+
+JSONiq uses a JSONiq-specific, implementation-defined default type namespace that acts as a proxy namespace to all types \(xs: or js:\). As a consequence, buitin atomic types do not need to be prefixed in the JSONiq syntax \(*integer* instead of *xs:integer*, *null* instead of *js:null*\).
+
+All items match the item type *js:item*, which is a JSONiq-specific synonym for the W3C-confirmant *item\(\)*.
+
+ItemType
+
+![](images/ItemType.png)
+
+#### Atomic types {#atomicTypes.d12e1473}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-types) for atomic types except for modifications in the list of available atomic types and a simplified syntax for xs:anyAtomicType. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+Atomic types are organized in a tree hierarchy.
+
+JSONiq defines the following build-in types that have a direct relation with JSON:
+
+-   *xs:string*: the value space is all strings made of Unicode characters.
+
+    All string literals build an atomic which matches string.
+
+-   *xs:integer* \(W3C-conformant\): the value space is that of all mathematical integral numbers \(N\), with an infinite range. This is a subtype of *decimal*, so that all integers also match the item type *decimal*.
+
+    All integer literals build an atomic which matches integer.
+
+-   *xs:decimal* \(W3C-conformant\): the value space is that of all mathematical decimal numbers \(D\), with an infinite range.
+
+    All decimal literals build an atomic which matches decimal.
+
+-   *xs:double* \(W3C-conformant\): the value space is that of all IEEE double-precision 64-bit floating point numbers.
+
+    All double literals build an atomic which matches double.
+
+-   *xs:boolean* \(W3C-conformant\): the value space contains the booleans true and false.
+
+    All boolean literals build an atomic which matches boolean.
+
+-   *js:null* \(JSONiq-specific\): the value space is a singleton and only contains null.
+
+    All null literals build an atomic which matches null.
+
+-   *js:atomic* \(JSONiq-specific synonym of, and W3C-conformant with, *xs:anyAtomicType*\): all atomic types.
+
+    All literals build an atomic which matches atomic.
+
+
+JSONiq also supports further atomic types, which are conformant with [XML Schema](http://www.w3.org/TR/xmlschema11-2/#built-in-datatypes).
+
+These datatypes are already used as a set of atomic datatypes by the other two semi-structured data formats of the Web: XML and RDF, as well as by the corresponding query languages: XQuery and SPARQL, so it is natural for a complete JSON data model to reuse them.
+
+-   Further number types: xs:float, xs:long, xs:int, xs:short, xs:byte, xs:float, xs:positiveInteger, xs:negativeInteger, xs:nonPositiveInteger, xs:nonNegativeInteger, xs:unsignedLong, xs:unsignedInt, xs:unsignedShort, xs:unsignedByte.
+
+-   Date or time types: xs:date, xs:dateTime, xs:dateTimeStamp, xs:gDay, xs:gMonth, xs:gMonthDay, xs:gYear, xs:xs:gYearMonth, xs:time.
+
+-   Duration types: xs:duration, xs:dayTimeDuration, xs:yearMonthDuration.
+
+-   Binary types: xs:base64Binary, xs:hexBinary.
+
+-   An URI type: xs:anyURI.
+
+
+The support of xs:ID, xs:IDREF, xs:IDREFS, xs:NOTATION, xs:Name, xs:NCName, xs:NMTOKEN, xs:NMTOKENS, xs:ENTITY, xs:ENTITIES is not required by JSONiq, although engines that also support XML can support them.
+
+AtomicType
+
+![](images/AtomicType.png)
+
+#### Structured types {#structuredTypes.d12e1620}
+
+JSONiq introduces four more types for matching objects and arrays. Like atomic types, they do not need the *js:* prefix in the syntax \(*object* instead of *js:object*, etc.\).
+
+All objects match the item type *js:object*.
+
+All arrays match the item type *js:array*.
+
+All objects and arrays match the item type *js:json-item*.
+
+For engines that also support optionally XML, *js:structured-item* matches both XML nodes and JSON objects and arrays.
+
+StructuredType
+
+![](images/StructuredType.png)
+
+#### Function types {#functionTypes.d12e1668}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-function-test) regarding function types. The following explanations are non-normative.
+
+FunctionType
+
+![](images/FunctionType.png)
+
+AnyFunctionType
+
+![](images/AnyFunctionType.png)
+
+TypedFunctionType
+
+![](images/TypedFunctionType.png)
+
+## Expressions {#chapter-expressions}
+
+### Construction of items {#chapter-construction}
+
+In JSONiq, objects, arrays and basic atomic values \(string, number, boolean, null\) are constructed exactly as they are constructed in JSON. Any JSON document is also a valid JSONiq query which just "returns itself".
+
+Because JSONiq expressions are fully composable, however, in objects and arrays constructors, it is possible to put any JSONiq expression and not only atomic literals, object constructors and array constructors. Furthermore, JSONiq supports the construction of other W3C-standardized builtin types \(date, hexBinary, etc\).
+
+The following examples are a few of many operators available in JSONiq: "to" for creating arithmetic sequences, "\|\|" for concatenating strings, "+" for adding numbers, "," for appending sequences.
+
+In an array, the operand expression will evaluated to a sequence of items, and these items will be copied and become members of the newly created array.
+
+#### Composable array constructors { .example}
+
+```
+
+  [ 1 to 10 ]
+    
+```
+
+Result:\[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 \]
+
+In an object, the expression you use for the key must evaluate to an atomic - if it is not a string, it will just be cast to it.
+
+#### Composable object keys { .example}
+
+```
+
+  { "foo" || "bar" : true }
+      
+```
+
+Result:\{ "foobar" : true \}
+
+An error is raised if the key expressions is not an atomic.
+
+#### Non-atomic object keys { .example}
+
+```
+
+  { [ 1, 2 ] : true }
+      
+```
+
+Result:An error was raised: can not atomize an array item: an array has probably been passed where an atomic value is expected \(e.g., as a key, or to a function expecting an atomic item\)
+
+If the value expression is empty, null will be used as a value, and if it contains two items or more, they will be wrapped into an array.
+
+If the colon is preceded with a question mark, then the pair will be omitted if the value expression evaluates to the empty sequence.
+
+#### Composable object values { .example}
+
+```
+
+  { "foo" : 1 + 1 }
+      
+```
+
+Result:\{ "foo" : 2 \}
+
+#### Composable object values and automatic conversion { .example}
+
+```
+
+  { "foo" : (), "bar" : (1, 2) }
+      
+```
+
+Result:\{ "foo" : null, "bar" : \[ 1, 2 \] \}
+
+#### Optional pair \(not implemented yet in Zorba\) { .example}
+
+```
+
+  { "foo" ?: (), "bar" : (1, 2) }
+      
+```
+
+Result:An error was raised: invalid expression: syntax error, unexpected "?", expecting "end of file" or "," or "\}"
+
+The \{\| \|\} syntax can be used to merge several objects.
+
+#### Merging object constructor { .example}
+
+```
+
+  {| { "foo" : "bar" }, { "bar" : "foo" } |}
+      
+```
+
+Result:\{ "foo" : "bar", "bar" : "foo" \}
+
+An error is raised if the operand expression does not evaluate to a sequence of objects.
+
+#### Merging object constructor with a type error { .example}
+
+```
+
+  {| 1 |}
+      
+```
+
+Result:An error was raised: xs:integer can not be treated as type object\(\)\*
+
+#### Numbers {#numbers.d12e1832}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-literals) for constructing numbers. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+Literal
+
+![](images/Literal.png)
+
+NumericLiteral
+
+![](images/NumericLiteral.png)
+
+IntegerLiteral
+
+![](images/IntegerLiteral.png)
+
+DecimalLiteral
+
+![](images/DecimalLiteral.png)
+
+DoubleLiteral
+
+![](images/DoubleLiteral.png)
+
+The syntax for creating numbers is identical to that of JSON \(it is actually a more flexible superset, for example leading 0s are allowed, and a decimal literal can begin with a dot\). Note that JSONiq distinguishes between integers \(no dot, no scientific notation\), decimals \(dot but no scientific notation\) and doubles \(scientific notation\). As expected, an integer literal creates an atomic of type integer, and so on.
+
+##### Integer literals { .example}
+
+```
+
+42
+      
+```
+
+Result:42
+
+##### Decimal literals { .example}
+
+```
+
+3.14
+      
+```
+
+Result:3.14
+
+##### Double literals { .example}
+
+```
+
++6.022E23
+      
+```
+
+Result:6.022E23
+
+#### Strings {#strings.d12e1941}
+
+The syntax for creating string items is conformant to [JSON](https://www.ecma-international.org/publications/standards/Ecma-404.htm) rather than to the W3C standard for string literals. This means concretely that escaping is done with backslashes and not with ampersands. Also, like in JSON, double quotes are required and single quotes are forbidden.
+
+StringLiteral
+
+![](images/StringLiteral.png)
+
+##### String literals { .example}
+
+```
+
+  "foo"
+        
+```
+
+Result:foo
+
+##### String literals with escaping { .example}
+
+```
+
+  "This is a line\nand this is a new line"
+        
+```
+
+Result:This is a line and this is a new line
+
+##### String literals with Unicode character escaping { .example}
+
+```
+
+  "\u0001"
+        
+```
+
+Result:&amp;\#x1;
+
+##### String literals with a nested quote { .example}
+
+```
+
+  "This is a nested \"quote\""
+        
+```
+
+Result:This is a nested "quote"
+
+#### Booleans and null {#booleansAndNull.d12e2006}
+
+JSONiq also introduces three more literals for constructing booleans and nulls: true, false and null. This makes in particular the functions true\(\) and false\(\) superfluous.
+
+BooleanLiteral
+
+![](images/BooleanLiteral.png)
+
+NullLiteral
+
+![](images/NullLiteral.png)
+
+##### Boolean literals \(true\) { .example}
+
+```
+
+true
+      
+```
+
+Result:true
+
+##### Boolean literals \(false\) { .example}
+
+```
+
+false
+      
+```
+
+Result:false
+
+##### Null literals { .example}
+
+```
+
+null
+      
+```
+
+Result:null
+
+#### Other atomic values {#otherAtomicValues.d12e2070}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-constructor-functions) for constructing most atomic values with constructors. In JSONiq, the *xs* prefix is optional.
+
+#### Objects {#objects.d12e2084}
+
+Expressions constructing objects are JSONiq-specific and introduced in this specification.
+
+ObjectConstructor
+
+![](images/ObjectConstructor.png)
+
+PairConstructor
+
+![](images/PairConstructor.png)
+
+The syntax for creating objects is identical to that of JSON. You can use for an object key any string literal, and for an object value any literal, object constructor or array constructor.
+
+##### Empty object constructors { .example}
+
+```
+
+{}
+      
+```
+
+Result:\{ \}
+
+##### Object constructors 1 { .example}
+
+```
+
+{ "foo" : "bar" }
+      
+```
+
+Result:\{ "foo" : "bar" \}
+
+##### Object constructors 2 { .example}
+
+```
+
+{ "foo" : [ 1, 2, 3, 4, 5, 6 ] }
+      
+```
+
+Result:\{ "foo" : \[ 1, 2, 3, 4, 5, 6 \] \}
+
+##### Object constructors 3 { .example}
+
+```
+
+{ "foo" : true, "bar" : false }
+      
+```
+
+Result:\{ "foo" : true, "bar" : false \}
+
+##### Nested object constructors { .example}
+
+```
+
+{ "this is a key" : { "value" : "a value" } }
+      
+```
+
+Result:\{ "this is a key" : \{ "value" : "a value" \} \}
+
+As in JavaScript, if your key is simple enough \(like alphanumerics, underscores, dashes, this kind of things\), the quotes can be omitted. The strings for which quotes are not mandatory are called NCNames. This class of strings can be used for unquoted keys, for variable and function names, and for module aliases.
+
+##### Object constructors with unquoted key 1 { .example}
+
+```
+
+{ foo : "bar" }
+      
+```
+
+Result:\{ "foo" : "bar" \}
+
+##### Object constructors with unquoted key 2 { .example}
+
+```
+
+{ foo : [ 1, 2, 3, 4, 5, 6 ] }
+      
+```
+
+Result:\{ "foo" : \[ 1, 2, 3, 4, 5, 6 \] \}
+
+##### Object constructors with unquoted key 3 { .example}
+
+```
+
+{ foo : "bar", bar : "foo" }
+      
+```
+
+Result:\{ "foo" : "bar", "bar" : "foo" \}
+
+##### Object constructors with needed quotes around the key { .example}
+
+```
+
+{ "but you need the quotes here" : null }
+    
+```
+
+Result:\{ "but you need the quotes here" : null \}
+
+Objects can be constructed more dynamically \(e.g., dynamic keys\) by constructing and merging smaller objects. Duplicate key names throw an error.
+
+##### Object constructors with needed quotes around the key { .example}
+
+```
+
+{|
+  for $i in 1 to 3
+  return { "foo" || $i : $i }
+|}
+    
+```
+
+Result:\{ "foo1" : 1, "foo2" : 2, "foo3" : 3 \}
+
+#### Arrays {#arrays.d12e2225}
+
+Expressions constructing arrays are JSONiq-specific and introduced in this specification.
+
+ArrayConstructor
+
+![](images/ArrayConstructor.png)
+
+Expr
+
+![](images/Expr.png)
+
+The syntax for creating arrays is identical to that of JSON: square brackets, comma separated literals, object constructors and arrays constructors.
+
+##### Empty array constructors { .example}
+
+```
+
+[]
+      
+```
+
+Result:\[ \]
+
+##### Array constructors { .example}
+
+```
+
+[ 1, 2, 3, 4, 5, 6 ]
+      
+```
+
+Result:\[ 1, 2, 3, 4, 5, 6 \]
+
+##### Nested array constructors { .example}
+
+```
+
+[ "foo", 3.14, [ "Go", "Boldly", "When", "No", "Man", "Has", "Gone", "Before" ], { "foo" : "bar" }, true, false, null ]
+      
+```
+
+Result:\[ "foo", 3.14, \[ "Go", "Boldly", "When", "No", "Man", "Has", "Gone", "Before" \], \{ "foo" : "bar" \}, true, false, null \]
+
+Square brackets are mandatory. Do not push it.
+
+#### Functions {#functions.d12e2293}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-inline-func) for constructing function items with inline expressions or [named function references](https://www.w3.org/TR/xquery-30/#id-named-function-ref). The following explanations, provided as an informal summary for convenience, are non-normative.
+
+Function items can be constructed in two ways: by definining its body directly \(inline function expression\), or by referring by name to a function declared in a prolog.
+
+FunctionItemExpr
+
+![](images/FunctionItemExpr.png)
+
+##### Inline function expression {#inlineFunctionExpression.d12e2321}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-inline-func) for constructing function items with inline expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+A function can be built directly by specifying its parameters and its body as expression. Types are optional and by default, assumed to be item\*.
+
+Function items can also be produced with a partial function application.
+
+###### Inline function expression { .example}
+
+```
+
+           function ($x as integer, $y as integer) as integer { $x + 2 },
+           function ($x) { $x + 2 }
+       
+```
+
+Result\(two function items\)
+
+InlineFunctionExpr
+
+![](images/InlineFunctionExpr.png)
+
+ParamList
+
+![](images/ParamList.png)
+
+##### Named function reference {#namedFunctionReference.d12e2375}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-named-function-ref) for constructing function items with named function references. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+If a function is builtin or declared in a prolog, in the same module or imported, then it is also possible to build a function item by referring to its name and arity.
+
+###### Named function reference { .example}
+
+```
+
+           declare function local:sum($x as integer, $y as integer) as integer
+           {
+             $x + 2
+           };
+           local:sum#2
+       
+```
+
+Result\(a function items\)
+
+NamedFunctionRef
+
+![](images/NamedFunctionRef.png)
+
+### Manipulating atomic values {#chapter-basic-operations}
+
+We now introduce the expressions that manipulate atomic values: arithmetics, logics, comparison, string concatenation.
+
+#### Arithmetics {#arithmetics.d12e2420}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-arithmetic) for arithmetic expressions, and naturally extends to return errors for null values. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+JSONiq supports the basic four operations, integer division and modulo.
+
+Multiplicative operations have precedence over additive operations. Parentheses can override it.
+
+##### Basic arithmetic operations with precedence override { .example}
+
+```
+
+1 * ( 2 + 3 ) + 7 idiv 2 - (-8) mod 2
+      
+```
+
+Result \(run with Zorba\):8
+
+Dates, times and durations are also supported in a natural way.
+
+##### Using basic operations with dates. { .example}
+
+```
+
+date("2013-05-01") - date("2013-04-02")
+      
+```
+
+Result \(run with Zorba\):P29D
+
+If any of the operands is a sequence of more than one item, an error is raised.
+
+##### Sequence of more than one number in an addition { .example}
+
+```
+
+(1, 2) + 3
+      
+```
+
+Result \(run with Zorba\):An error was raised: sequence of more than one item can not be promoted to parameter type xs:anyAtomicType? of function add\(\)
+
+If any of the operands is not a number, a date, a time or a duration, an error is raised, which seamlessly includes raising errors for null with no need to extend the specification.
+
+##### Null in an addition { .example}
+
+```
+
+1 + null
+      
+```
+
+Result \(run with Zorba\):An error was raised: arithmetic operation not defined between types "xs:integer" and "js:null"
+
+If one of the operands evaluates to the empty sequence, then the operation results in the empty sequence.
+
+If the two operands do not have the same number type, JSONiq will do the adequate conversions.
+
+##### Basic arithmetic operations with an empty sequence { .example}
+
+```
+
+() + 2
+      
+```
+
+Result \(run with Zorba\):
+
+AdditiveExpr
+
+![](images/AdditiveExpr.png)
+
+MultiplicativeExpr
+
+![](images/MultiplicativeExpr.png)
+
+UnaryExpr
+
+![](images/UnaryExpr.png)
+
+#### String concatenation {#stringConcatenation.d12e2536}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-string-concat-expr) for string concatenation. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+Two strings or more can be concatenated using the concatenation operator.
+
+##### String concatenation { .example}
+
+```
+
+"Captain" || " " || "Kirk"
+      
+```
+
+Result \(run with Zorba\):Captain Kirk
+
+An empty sequence is treated like an empty string.
+
+##### String concatenation with the empty sequence { .example}
+
+```
+
+"Captain" || () || "Kirk"
+      
+```
+
+Result \(run with Zorba\):CaptainKirk
+
+StringConcatExpr
+
+![](images/StringConcatExpr.png)
+
+#### Comparison {#comparison.d12e2585}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-comparisons) for comparison, and only extends its semantics to null values as follows.
+
+null can be compared for equality or inequality to anything - it is only equal to itself so that false is returned when comparing if for equality with any non-null atomic. True is returned when comparing it with non-equality with any non-null atomic.
+
+##### Equality and non-equality comparison with null { .example}
+
+```
+
+1 eq null, "foo" ne null, null eq null
+      
+```
+
+Result \(run with Zorba\):false true true
+
+For ordering operators \(lt, le, gt, ge\), null is considered the smallest possible value \(like in JavaScript\).
+
+##### Ordering comparison with null { .example}
+
+```
+
+1 lt null
+      
+```
+
+Result \(run with Zorba\):false
+
+The following explanations, provided as an informal summary for convenience, are non-normative.
+
+ComparisonExpr
+
+![](images/ComparisonExpr.png)
+
+Atomics can be compared with the usual six comparison operators \(equality, non-equality, lower-than, greater-than, lower-or-equal, greater-or-equal\), and with the same two-letter symbols as in MongoDB.
+
+##### Equality comparison { .example}
+
+```
+
+1 + 1 eq 2, 1 lt 2
+      
+```
+
+Result \(run with Zorba\):true true
+
+Comparison is only possible between two compatible types, otherwise, an error is raised.
+
+##### Comparisons with a type mismatch { .example}
+
+```
+
+"foo" eq 1
+      
+```
+
+Result \(run with Zorba\):An error was raised: "xs:string": invalid type: can not compare for equality to type "xs:integer"
+
+Like for arithmetic operations, if an operand is the empty sequence, the empty sequence is returned as well.
+
+##### Comparison with the empty sequence { .example}
+
+```
+
+() eq 1
+      
+```
+
+Result \(run with Zorba\):
+
+Comparisons and logic operators are fundamental for a query language and for the implementation of a query processor as they impact query optimization greatly. The current comparison semantics for them is carefully chosen to have the right characteristics as to enable optimization.
+
+#### Logics {#logics.d12e2678}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-logical-expressions) for logical expressions; it introduces a prefix unary not operator as a synonym for fn:not, and extends the semantics of effective boolean values to objects, arrays and nulls. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+OrExpr
+
+![](images/OrExpr.png)
+
+AndExpr
+
+![](images/AndExpr.png)
+
+NotExpr
+
+![](images/NotExpr.png)
+
+JSONiq logics support is based on two-valued logics: just true and false.
+
+Non-boolean operands get automatically converted to either true or false, or an error is raised. The boolean\(\) function performs a manual conversion.
+
+-   An empty sequence is converted to false.
+
+-   A singleton sequence of one null is converted to false.
+
+-   A singleton sequence of one string is converted to true except the empty string which is converted to false.
+
+-   A singleton sequence of one number is converted to true except zero or NaN which are converted to false.
+
+-   An operand singleton sequence whose first item is an object or array is converted to true.
+
+-   Other operand sequences cannot be converted and an error is raised.
+
+
+JSONiq supports the most famous three boolean operations: conjunction, disjunction and negation. Negation has the highest precedence, then conjunction, then disjunction. Parentheses can override.
+
+##### Logics with booleans { .example}
+
+```
+
+true and ( true or not true )
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Logics with comparing operands { .example}
+
+```
+
+1 + 1 eq 2 or 1 + 1 eq 3
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Conversion of the empty sequence to false { .example}
+
+```
+
+boolean(())
+      
+```
+
+Result \(run with Zorba\):false
+
+##### Conversion of null to false { .example}
+
+```
+
+boolean(null)
+      
+```
+
+Result \(run with Zorba\):false
+
+##### Conversion of a string to true { .example}
+
+```
+
+boolean("foo"), boolean("")
+      
+```
+
+Result \(run with Zorba\):true false
+
+##### Conversion of a number to false { .example}
+
+```
+
+0 and true, not (not 1e42)
+      
+```
+
+Result \(run with Zorba\):false true
+
+##### Conversion of an object to a boolean \(not implemented in Zorba at this point\) { .example}
+
+```
+
+{ "foo" : "bar" } or false
+      
+```
+
+Result \(run with Zorba\):true
+
+If the input sequence has more than one item, and the first item is not an object or array, an error is raised.
+
+##### Error upon conversion of a sequence of more than one item, not beginning with a JSON item, to a boolean { .example}
+
+```
+
+( 1, 2, 3 ) or false
+      
+```
+
+Result \(run with Zorba\):An error was raised: invalid argument type for function fn:boolean\(\): effective boolean value not defined for sequence of more than one item that starts with "xs:integer"
+
+Unlike in C++ or Java, you cannot rely on the order of evaluation of the operands of a boolean operation. The following query may return true or may return an error.
+
+##### Non-determinism in presence of errors. { .example}
+
+```
+
+true or (1 div 0)
+      
+```
+
+Result \(run with Zorba\):true
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-quantified-expressions) for quantified expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+QuantifiedExpr
+
+![](images/QuantifiedExpr.png)
+
+It is possible to perform a conjunction or a disjunction on a predicate for each item in a sequence.
+
+##### Universal quantifier { .example}
+
+```
+
+every $i in 1 to 10 satisfies $i gt 0
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Existential quantifier on several variables { .example}
+
+```
+
+some $i in -5 to 5, $j in 1 to 10 satisfies $i eq $j
+      
+```
+
+Result \(run with Zorba\):true
+
+Variables can be annotated with a type. If no type is specified, item\* is assumed. If the type does not match, an error is raised.
+
+##### Existential quantifier with type checking { .example}
+
+```
+
+some $i as integer in -5 to 5, $j as integer in 1 to 10 satisfies $i eq $j
+      
+```
+
+Result \(run with Zorba\):true
+
+### Manipulating sequences {#chapter-manipulating-sequences}
+
+JSONiq can create sequences with concatenation \(comma\) or with a range. Parentheses can be used for overriding precedence.
+
+#### Comma operator {#commaOperator.d12e2926}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#construct_seq) for the concatenation of sequences with commas. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+Expr
+
+![](images/Expr.png)
+
+Use a comma to concatenate two sequences, or even single items. This operator has the lowest precedence of all.
+
+##### Comma { .example}
+
+```
+
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  
+```
+
+Result \(run with Zorba\):1 2 3 4 5 6 7 8 9 10
+
+##### Comma { .example}
+
+```
+
+{ "foo" : "bar" }, [ 1 ]
+  
+```
+
+Result \(run with Zorba\):\{ "foo" : "bar" \} \[ 1 \]
+
+Sequences do not nest. You need to use arrays in order to nest.
+
+#### Range operator {#rangeOperator.d12e2983}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#construct_seq) for range expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+RangeExpr
+
+![](images/RangeExpr.png)
+
+With the binary operator "to", you can generate larger sequences with just two integer operands.
+
+##### Range operator { .example}
+
+```
+
+1 to 10
+  
+```
+
+Result \(run with Zorba\):1 2 3 4 5 6 7 8 9 10
+
+If one operand evaluates to the empty sequence, then the range operator returns the empty sequence.
+
+##### Range operator with the empty sequence { .example}
+
+```
+
+() to 10, 1 to ()
+  
+```
+
+Result \(run with Zorba\):
+
+Otherwise, if an operand evaluates to something else than a single integer or an empty sequence, an error is raised.
+
+##### Range operator with a type inconsistency { .example}
+
+```
+
+(1, 2) to 10
+  
+```
+
+Result \(run with Zorba\):An error was raised: sequence of more than one item can not be promoted to parameter type xs:integer? of function to\(\)
+
+#### Parenthesized expression {#parenthesizedExpression.d12e3056}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-paren-expressions) for parenthesized expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+ParenthesizedExpr
+
+![](images/ParenthesizedExpr.png)
+
+Use parentheses to override the precedence of expressions.
+
+If the parentheses are empty, the empty sequence is produced.
+
+##### Empty sequence { .example}
+
+```
+
+()
+      
+```
+
+Result \(run with Zorba\):
+
+### Calling functions {#chapter-function-calls}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-eval-function-call) for function calls. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+Function calls in JSONiq can either be made statically, with a named function, or dynamically, by passing a function item on the fly.
+
+The syntax for function calls is similar to many other languages. JSONiq supports four sorts of functions:
+
+-   Builtin functions: these have no prefix and can be called without any import.
+
+-   Local functions: they are defined in the prolog, to be used in the main query. They have the prefix *local:*. Chapter [Prologs](#chapter-prolog) describes how to define your own local functions.
+
+-   Imported functions: they are defined in a library module. They have the prefix corresponding to the alias to which the imported module has been bound to. Chapter [Modules](#chapter-modules) describes how to define your own modules.
+
+-   Anonymous functions: they are defined on the fly, by inline function expressions or partial evaluation.
+
+
+The first three are named functions and can be called statictically. All four can be called dynamically, as a named function can be also passed as an item with a named function reference.
+
+#### Static function calls {#staticFunctionCalls.d12e3148}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-function-calls) for static function calls. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+A static function call consists of the name of the function and of expressions returning its parameters. An error is thrown if no function with the corresponding name and arity is found.
+
+##### A builtin function call. { .example}
+
+```
+
+       keys({ "foo" : "bar", "bar" : "foo" })
+     
+```
+
+Result:foo bar
+
+##### A builtin function call. { .example}
+
+```
+
+       concat("foo", "bar")
+     
+```
+
+Result:foobar
+
+An error is raised if the actual types do not match the expected types.
+
+##### A type error in a function call. { .example}
+
+```
+
+       sum({ "foo" : "bar" })
+     
+```
+
+Result:An error was raised: can not atomize an object item: an object has probably been passed where an atomic value is expected \(e.g., as a key, or to a function expecting an atomic item\)
+
+JSONiq static function calls follow the [W3C specification](https://www.w3.org/TR/xquery-30/#id-function-calls).
+
+FunctionCall
+
+![](images/FunctionCall.png)
+
+#### Dynamic function calls {#dynamicFunctionCalls.d12e3213}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-dynamic-function-invocation) for dynamic function calls. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+A dynamic function call is a postfix expression. Its left-hand-side is an expression that must return a single function item \(see in the data model [Function items](#section-function-items)\). Its right-hand side is a list of parameters, each one of which is an arbitrary expression providing a sequence of items, one such sequence for each parameter.
+
+##### A dynamic function call. { .example}
+
+```
+
+       let $f := function($x) { $x + 1 }
+       return $f(2)
+     
+```
+
+Result:3
+
+If the number of parameters does not match the arity of the function, an error is raised. An error is also raised if an argument value does not match the corresponding type in the function signature.
+
+Otherwise, the function is evaluated with the supplied parameters. If the result matches the return type of the function, it is returned, otherwise an error is raised.
+
+##### A dynamic function call with signature { .example}
+
+```
+
+       let $f := function($x as integer) as integer { $x + 1 }
+       return $f(2)
+     
+```
+
+Result:3
+
+JSONiq dynamic function calls follow the [W3C specification](https://www.w3.org/TR/xquery-30/#id-dynamic-function-invocation).
+
+PostfixExpr
+
+![](images/PostfixExpr.png)
+
+ArgumentList
+
+![](images/ArgumentList.png)
+
+Argument
+
+![](images/Argument.png)
+
+#### Partial application {#partialApplication.d12e3301}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#dt-partial-function-application) for partial application. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+A static or dynamic function call also have placeholder parameters, represented with a question mark in the syntax. When this is the case, the function call returns a function item that is the partial application of the original function, and its arity is the number of remaining placeholders.
+
+##### A partial application. { .example}
+
+```
+
+       let $f := function($x as integer, $y as integer) as integer { $x + $y }
+       let $g := $f(?, 2)
+       return $g(2)
+     
+```
+
+Result:4
+
+JSONiq dynamic function calls follow the [W3C specification](https://www.w3.org/TR/xquery-30/#dt-partial-function-application).
+
+### Navigating objects {#chapter-selectors}
+
+Like in JavaScript, it is possible to navigate through objects and arrays. This is a specific JSONiq extension.
+
+JSONiq also allows to filter sequences with a predicate and predicates are fully W3C-conformant.
+
+JSONiq supports filtering items from a sequence, looking up the value associated with a given key in an object, looking up the item at a given position in an array, and looking up all items in an array.
+
+PostfixExpr
+
+![](images/PostfixExpr.png)
+
+#### Object field selector {#objectFieldSelector.d12e3356}
+
+ObjectLookup
+
+![](images/ObjectLookup.png)
+
+The simplest way to navigate in an object is similar to JavaScript, using a dot. This will work as soon as you do not push it too much: alphanumerical characters, dashes, underscores - just like unquoted keys in object constructors, any NCName is allowed.
+
+##### Object lookup { .example}
+
+```
+
+{ "foo" : "bar" }.foo
+      
+```
+
+Result \(run with Zorba\):bar
+
+Since JSONiq expressions are composable, you can also use any expression for the left-hand side. You might need parentheses depending on the precedence.
+
+##### Lookup on a single-object collection. { .example}
+
+```
+
+collection("one-object").foo
+      
+```
+
+Result \(run with Zorba\):bar
+
+The dot operator does an implicit mapping on the left-hand-side, i.e., it applies the lookup in turn on each item. Lookup on an object returns the value associated with the supplied key, or the empty sequence if there is none. Lookup on any item which is not an object \(arrays and atomics\) results in the empty sequence.
+
+##### Object lookup with an iteration on several objects { .example}
+
+```
+
+({ "foo" : "bar" }, { "foo" : "bar2" }, { "bar" : "foo" }).foo
+        
+```
+
+Result \(run with Zorba\):bar bar2
+
+##### Object lookup with an iteration on a collection { .example}
+
+```
+
+collection("captains").name
+      
+```
+
+Result \(run with Zorba\):James T. Kirk Jean-Luc Picard Benjamin Sisko Kathryn Janeway Jonathan Archer Samantha Carter
+
+##### Object lookup on a mixed sequence { .example}
+
+```
+
+({ "foo" : "bar1" }, [ "foo", "bar" ], { "foo" : "bar2" }, "foo").foo
+      
+```
+
+Result \(run with Zorba\):bar1 bar2
+
+Of course, unquoted keys will not work for strings that are not NCNames, e.g., if the field contains a dot or begins with a digit. Then you will need quotes.
+
+##### Quotes for object lookup { .example}
+
+```
+
+{ "foo bar" : "bar" }."foo bar"
+      
+```
+
+Result \(run with Zorba\):bar
+
+If you use an expression on the right side of the dot, it must always have parentheses. The result of the right-hand-side expression is cast to a string. An error is raised if the cast fails.
+
+##### Object lookup with a nested expression { .example}
+
+```
+
+{ "foobar" : "bar" }.("foo" || "bar")
+      
+```
+
+Result \(run with Zorba\):bar
+
+##### Object lookup with a nested expression { .example}
+
+```
+
+{ "foobar" : "bar" }.("foo", "bar")
+      
+```
+
+Result \(run with Zorba\):An error was raised: sequence of more than one item can not be treated as type xs:string
+
+##### Object lookup with a nested expression { .example}
+
+```
+
+{ "1" : "bar" }.(1)
+      
+```
+
+Result \(run with Zorba\):bar
+
+Variables, or a context item reference, do not need parentheses. Variables are introduced later, but here is a sneak peek:
+
+##### Object lookup with a variable { .example}
+
+```
+
+let $field := "foo" || "bar"
+return { "foobar" : "bar" }.$field
+      
+```
+
+Result \(run with Zorba\):bar
+
+#### Array member selector {#arrayMemberSelector.d12e3489}
+
+ArrayLookup
+
+![](images/ArrayLookup.png)
+
+Array lookup uses double square brackets.
+
+##### Array lookup { .example}
+
+```
+
+[ "foo", "bar" ] [[2]]
+      
+```
+
+Result \(run with Zorba\):bar
+
+Since JSONiq expressions are composable, you can also use any expression for the left-hand side. You might need parentheses depending on the precedence.
+
+##### Array lookup after an object lookup { .example}
+
+```
+
+{ field : [ "one",  { "foo" : "bar" } ] }.field[[2]].foo
+      
+```
+
+Result \(run with Zorba\):bar
+
+The array lookup operator does an implicit mapping on the left-hand-side, i.e., it applies the lookup in turn on each item. Lookup on an array returns the item at that position in the array, or the empty sequence if there is none \(position larger than size or smaller than 1\). Lookup on any item which is not an array \(objects and atomics\) results in the empty sequence.
+
+##### Array lookup with an iteration on several arrays { .example}
+
+```
+
+([ 1, 2, 3 ], [ 4, 5, 6 ])[[2]]
+        
+```
+
+Result \(run with Zorba\):2 5
+
+##### Array lookup with an iteration on a collection { .example}
+
+```
+
+collection("captains").series[[1]]
+      
+```
+
+Result \(run with Zorba\):The original series The next generation The next generation The next generation Entreprise Voyager
+
+##### Array lookup on a mixed sequence { .example}
+
+```
+
+([ 1, 2, 3 ], [ 4, 5, 6 ], { "foo" : "bar" }, true)[[3]]
+      
+```
+
+Result \(run with Zorba\):3 6
+
+The expression inside the double-square brackets may be any expression. The result of evaluating this expression is cast to an integer. An error is raised if the cast fails.
+
+##### Array lookup with a right-hand-side expression { .example}
+
+```
+
+[ "foo", "bar" ] [[ 1 + 1 ]]
+      
+```
+
+Result \(run with Zorba\):bar
+
+ArrayUnboxing
+
+![](images/ArrayUnboxing.png)
+
+You can also extract all items from an array \(i.e., as a sequence\) with the \[\] syntax. The \[\] operator also implicitly iterates on the left-hand-side, returning the empty sequence for non-arrays.
+
+##### Extracting all items from an array { .example}
+
+```
+
+[ "foo", "bar" ][]
+      
+```
+
+Result \(run with Zorba\):foo bar
+
+##### Extracting all items from arrays in a mixed sequence { .example}
+
+```
+
+([ "foo", "bar" ], { "foo" : "bar" }, true, [ 1, 2, 3 ] )[]
+      
+```
+
+Result \(run with Zorba\):foo bar 1 2 3
+
+#### Sequence predicates {#sequencePredicates.d12e3612}
+
+Predicate
+
+![](images/Predicate.png)
+
+A predicate allows filtering a sequence, keeping only items that fulfill it.
+
+The predicate is evaluated once for each item in the left-hand-side sequence, with the context item set to that item. The predicate expression can use $$ to access this context item.
+
+ContextItemExpr
+
+![](images/ContextItemExpr.png)
+
+If the predicate evaluates to an integer, it is matched against the item position in the left-hand side sequence automatically
+
+##### Predicate expression { .example}
+
+```
+
+(1 to 10)[2]
+      
+```
+
+Result \(run with Zorba\):2
+
+Otherwise, the result of the predicate is converted to a boolean.
+
+All items for which the converted predicate result evaluates to true are then output.
+
+##### Predicate expression { .example}
+
+```
+
+(1 to 10)[$$ mod 2 eq 0]
+      
+```
+
+Result \(run with Zorba\):2 4 6 8 10
+
+### Control flow expressions {#chapter-control-flow}
+
+JSONiq supports control flow expressions such as if-then-else, switch and typeswitch following the W3C standard.
+
+#### Conditional expressions {#conditionalExpressions.d12e3681}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-conditionals) for conditional expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+IfExpr
+
+![](images/IfExpr.png)
+
+A conditional expressions allows you to pick one or another value depending on a boolean value.
+
+##### A conditional expression { .example}
+
+```
+
+if (1 + 1 eq 2) then { "foo" : "yes" } else { "foo" : "false" }
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "yes" \}
+
+The behavior of the expression inside the if is similar to that of logical operations \(two-valued logics\), meaning that non-boolean values get converted to a boolean.
+
+##### A conditional expression { .example}
+
+```
+
+if (null) then { "foo" : "yes" } else { "foo" : "no" }
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "no" \}
+
+##### A conditional expression { .example}
+
+```
+
+if (1) then { "foo" : "yes" } else { "foo" : "no" }
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "yes" \}
+
+##### A conditional expression { .example}
+
+```
+
+if (0) then { "foo" : "yes" } else { "foo" : "no" }
+        
+```
+
+Result \(run with Zorba\):\{ "foo" : "no" \}
+
+##### A conditional expression { .example}
+
+```
+
+if ("foo") then { "foo" : "yes" } else { "foo" : "no" }
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "yes" \}
+
+##### A conditional expression { .example}
+
+```
+
+if ("") then { "foo" : "yes" } else { "foo" : "no" }
+        
+```
+
+Result \(run with Zorba\):\{ "foo" : "no" \}
+
+##### A conditional expression { .example}
+
+```
+
+if (()) then { "foo" : "yes" } else { "foo" : "no" }
+        
+```
+
+Result \(run with Zorba\):\{ "foo" : "no" \}
+
+##### A conditional expression { .example}
+
+```
+
+if (({ "foo" : "bar" }, [ 1, 2, 3, 4])) then { "foo" : "yes" } else { "foo" : "no" }
+        
+```
+
+Result \(run with Zorba\):\{ "foo" : "yes" \}
+
+Note that the else clause is mandatory \(but can be the empty sequence\)
+
+##### A conditional expression { .example}
+
+```
+
+if (1+1 eq 2) then { "foo" : "yes" } else ()
+        
+```
+
+Result \(run with Zorba\):\{ "foo" : "yes" \}
+
+#### Switch expressions {#switchExpressions.d12e3839}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-switch) for switch expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+SwitchExpr
+
+![](images/SwitchExpr.png)
+
+SwitchCaseClause
+
+![](images/SwitchCaseClause.png)
+
+A switch expression evaluates the expression inside the switch. If it is an atomic, it compares it in turn to the provided atomic values \(with the semantics of the eq operator\) and returns the value associated with the first matching case clause.
+
+Note that if there is an object or array in the base switch expression or any case expression, a JSONiq-specific type error JNTY0004 will be raised, because objects and arrays cannot be atomized and the W3C standard requires atomization of the base and case expressions.
+
+##### A switch expression { .example}
+
+```
+
+switch ("foo")
+case "bar" return "foo"
+case "foo" return "bar"
+default return "none"
+        
+```
+
+Result \(run with Zorba\):bar
+
+If it is not an atomic, an error is raised.
+
+##### A switch expression { .example}
+
+```
+
+switch ({ "foo" : "bar" })
+case "bar" return "foo"
+case "foo" return "bar"
+default return "none"
+        
+```
+
+Result \(run with Zorba\):An error was raised: can not atomize an object item: an object has probably been passed where an atomic value is expected \(e.g., as a key, or to a function expecting an atomic item\)
+
+If no value matches, the default is used.
+
+##### A switch expression { .example}
+
+```
+
+switch ("no-match")
+case "bar" return "foo"
+case "foo" return "bar"
+default return "none"
+        
+```
+
+Result \(run with Zorba\):none
+
+The case clauses support composability of expressions as well.
+
+##### A switch expression { .example}
+
+```
+
+switch (2)
+case 1 + 1 return "foo"
+case 2 + 2 return "bar"
+default return "none"
+        
+```
+
+Result \(run with Zorba\):foo
+
+##### A switch expression { .example}
+
+```
+
+switch (true)
+case 1 + 1 eq 2 return "1 + 1 is 2"
+case 2 + 2 eq 5 return "2 + 2 is 5"
+default return "none of the above is true"
+        
+```
+
+Result \(run with Zorba\):1 + 1 is 2
+
+#### Try-catch expressions {#trycatchExpressions.d12e3958}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-try-catch) for try-catch expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+TryCatchExpr
+
+![](images/TryCatchExpr.png)
+
+A try catch expression evaluates the expression inside the try block and returns its resulting value.
+
+However, if an error is raised dynamically, the catch clause is evaluated and its result value returned.
+
+##### A try catch expression { .example}
+
+```
+
+try { 1 div 0 } catch * { "division by zero!" } 
+      
+```
+
+Result \(run with Zorba\):division by zero!
+
+Only errors raised within the lexical scope of the try block are caught.
+
+##### A try catch expression { .example}
+
+```
+
+let $x := 1 div 0
+return try { $x }
+       catch * { "division by zero!" } 
+      
+```
+
+Result \(run with Zorba\):An error was raised: division by zero
+
+Errors that are detected statically within the try block are still reported statically.
+
+##### A try catch expression { .example}
+
+```
+
+try { x } catch * { "syntax error" } 
+      
+```
+
+Result \(run with Zorba\):syntax error
+
+### FLWOR expressions {#chapter-flwor}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-flwor-expressions) for FLWOR expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+FLWORExpr
+
+![](images/FLWORExpr.png)
+
+FLWOR expressions are probably the most powerful JSONiq construct and correspond to SQL's SELECT-FROM-WHERE statements, but they are more general and more flexible. In particular, clauses can almost appear in any order \(apart that it must begin with a for or let clause, and end with a return clause\).
+
+Here is a bit of theory on how it works.
+
+A clause binds values to some variables according to its own semantics, possibly several times. Each time, a tuple of variable bindings \(mapping variable names to sequences\) is passed on to the next clause.
+
+This goes all the way down, until the return clause. The return clause is eventually evaluated for each tuple of variable bindings, resulting in a sequence of items for each tuple.
+
+These sequences of items are concatenated, in the order of the incoming tuples, and the obtained sequence is returned by the FLWOR expression.
+
+We are now giving practical examples with a hint on how it maps to SQL.
+
+#### For clauses {#forClauses.d12e4070}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-xquery-for-clause) for for clauses. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+ForClause
+
+![](images/ForClause.png)
+
+For clauses allow iteration on a sequence.
+
+For each incoming tuple, the expression in the for clause is evaluated to a sequence. Each item in this sequence is in turn bound to the for variable. A tuple is hence produced for each incoming tuple, and for each item in the sequence produced by the for clause for this tuple.
+
+The order in which items are bound by the for clause can be relaxed with unordered expressions, as described later in this section.
+
+The following query, using a for and a return clause, is the counterpart of SQL's "SELECT name FROM captains". $x is bound in turn to each item in the captains collection.
+
+##### A for clause. { .example}
+
+```
+
+for $x in collection("captains")
+return $x.name
+      
+```
+
+Result \(run with Zorba\):James T. Kirk Jean-Luc Picard Benjamin Sisko Kathryn Janeway Jonathan Archer Samantha Carter
+
+For clause expressions are composable, there can be several of them.
+
+##### Two for clauses. { .example}
+
+```
+
+for $x in ( 1, 2, 3 )
+for $y in ( 1, 2, 3 )
+return 10 * $x + $y
+      
+```
+
+Result \(run with Zorba\):11 12 13 21 22 23 31 32 33
+
+##### A for clause. { .example}
+
+```
+
+for $x in ( 1, 2, 3 ), $y in ( 1, 2, 3 )
+return 10 * $x + $y
+      
+```
+
+Result \(run with Zorba\):11 12 13 21 22 23 31 32 33
+
+A for variable is visible to subsequence bindings.
+
+##### A for clause. { .example}
+
+```
+
+for $x in ( [ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8, 9 ] ), $y in $x[]
+return $y
+      
+```
+
+Result \(run with Zorba\):1 2 3 4 5 6 7 8 9
+
+##### A for clause. { .example}
+
+```
+
+for $x in collection("captains"), $y in $x.series[]
+return { "captain" : $x.name, "series" : $y }
+      
+```
+
+Result \(run with Zorba\):\{ "captain" : "James T. Kirk", "series" : "The original series" \} \{ "captain" : "Jean-Luc Picard", "series" : "The next generation" \} \{ "captain" : "Benjamin Sisko", "series" : "The next generation" \} \{ "captain" : "Benjamin Sisko", "series" : "Deep Space 9" \} \{ "captain" : "Kathryn Janeway", "series" : "The next generation" \} \{ "captain" : "Kathryn Janeway", "series" : "Voyager" \} \{ "captain" : "Jonathan Archer", "series" : "Entreprise" \} \{ "captain" : null, "series" : "Voyager" \}
+
+It is also possible to bind the position of the current item in the sequence to a variable.
+
+##### A for clause. { .example}
+
+```
+
+for $x at $position in collection("captains")
+return { "captain" : $x.name, "id" : $position }
+        
+```
+
+Result \(run with Zorba\):\{ "captain" : "James T. Kirk", "id" : 1 \} \{ "captain" : "Jean-Luc Picard", "id" : 2 \} \{ "captain" : "Benjamin Sisko", "id" : 3 \} \{ "captain" : "Kathryn Janeway", "id" : 4 \} \{ "captain" : "Jonathan Archer", "id" : 5 \} \{ "captain" : null, "id" : 6 \} \{ "captain" : "Samantha Carter", "id" : 7 \}
+
+JSONiq supports joins. For example, the counterpart of "SELECT c.name AS captain, m.name AS movie FROM captains c JOIN movies m ON c.name = m.name" is:
+
+##### A join { .example}
+
+```
+
+for $captain in collection("captains"), $movie in collection("movies")[ try { $$.captain eq $captain.name } catch * { false } ]
+return { "captain" : $captain.name, "movie" : $movie.name }
+        
+```
+
+Result \(run with Zorba\):\{ "captain" : "James T. Kirk", "movie" : "The Motion Picture" \} \{ "captain" : "James T. Kirk", "movie" : "The Wrath of Kahn" \} \{ "captain" : "James T. Kirk", "movie" : "The Search for Spock" \} \{ "captain" : "James T. Kirk", "movie" : "The Voyage Home" \} \{ "captain" : "James T. Kirk", "movie" : "The Final Frontier" \} \{ "captain" : "James T. Kirk", "movie" : "The Undiscovered Country" \} \{ "captain" : "Jean-Luc Picard", "movie" : "First Contact" \} \{ "captain" : "Jean-Luc Picard", "movie" : "Insurrection" \} \{ "captain" : "Jean-Luc Picard", "movie" : "Nemesis" \}
+
+Note how JSONiq handles semi-structured data in a flexible way.
+
+Outer joins are also possible with "allowing empty", i.e., output will also be produced if there is no matching movie for a captain. The following query is the counterpart of "SELECT c.name AS captain, m.name AS movie FROM captains c LEFT JOIN movies m ON c.name = m.captain".
+
+##### A join { .example}
+
+```
+
+for $captain in collection("captains"), $movie allowing empty in collection("movies")[ try { $$.captain eq $captain.name } catch * { false } ]
+return { "captain" : $captain.name, "movie" : $movie.name }
+        
+```
+
+Result \(run with Zorba\):\{ "captain" : "James T. Kirk", "movie" : "The Motion Picture" \} \{ "captain" : "James T. Kirk", "movie" : "The Wrath of Kahn" \} \{ "captain" : "James T. Kirk", "movie" : "The Search for Spock" \} \{ "captain" : "James T. Kirk", "movie" : "The Voyage Home" \} \{ "captain" : "James T. Kirk", "movie" : "The Final Frontier" \} \{ "captain" : "James T. Kirk", "movie" : "The Undiscovered Country" \} \{ "captain" : "Jean-Luc Picard", "movie" : "First Contact" \} \{ "captain" : "Jean-Luc Picard", "movie" : "Insurrection" \} \{ "captain" : "Jean-Luc Picard", "movie" : "Nemesis" \} \{ "captain" : "Benjamin Sisko", "movie" : null \} \{ "captain" : "Kathryn Janeway", "movie" : null \} \{ "captain" : "Jonathan Archer", "movie" : null \} \{ "captain" : null, "movie" : null \} \{ "captain" : "Samantha Carter", "movie" : null \}
+
+#### Where clauses {#whereClauses.d12e4197}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-where) for where clauses. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+WhereClause
+
+![](images/WhereClause.png)
+
+Where clauses are used for filtering \(selection operator in the relational algebra\).
+
+For each incoming tuple, the expression in the where clause is evaluated to a boolean \(possibly converting an atomic to a boolean\). if this boolean is true, the tuple is forwarded to the next clause, otherwise it is dropped.
+
+The following query corresponds to "SELECT series FROM captains WHERE name = 'Kathryn Janeway'".
+
+##### A where clause. { .example}
+
+```
+
+for $x in collection("captains")
+where $x.name eq "Kathryn Janeway"
+return $x.series
+      
+```
+
+Result \(run with Zorba\):\[ "The next generation", "Voyager" \]
+
+#### Order clauses {#orderClauses.d12e4239}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-order-by-clause) for order by clauses. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+OrderByClause
+
+![](images/OrderByClause.png)
+
+Order clauses are for reordering tuples.
+
+For each incoming tuple, the expression in the where clause is evaluated to an atomic. The tuples are then sorted based on the atomics they are associated with, and then forwarded to the next clause.
+
+Like for ordering comparisons, null values are always considered the smallest.
+
+The following query is the counterpart of SQL's "SELECT \* FROM captains ORDER BY name".
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+order by $x.name
+return $x
+      
+```
+
+Result \(run with Zorba\):\{ "name" : "Benjamin Sisko", "series" : \[ "The next generation", "Deep Space 9" \], "century" : 24 \} \{ "name" : "James T. Kirk", "series" : \[ "The original series" \], "century" : 23 \} \{ "name" : "Jean-Luc Picard", "series" : \[ "The next generation" \], "century" : 24 \} \{ "name" : "Jonathan Archer", "series" : \[ "Entreprise" \], "century" : 22 \} \{ "name" : "Kathryn Janeway", "series" : \[ "The next generation", "Voyager" \], "century" : 24 \} \{ "name" : "Samantha Carter", "series" : \[ \], "century" : 21 \} \{ "codename" : "Emergency Command Hologram", "surname" : "The Doctor", "series" : \[ "Voyager" \], "century" : 24 \}
+
+Multiple sorting criteria can be given - they are treated like a lexicographic order \(most important criterium first\).
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+order by size($x.series), $x.name
+return $x
+      
+```
+
+Result \(run with Zorba\):\{ "name" : "Samantha Carter", "series" : \[ \], "century" : 21 \} \{ "name" : "James T. Kirk", "series" : \[ "The original series" \], "century" : 23 \} \{ "name" : "Jean-Luc Picard", "series" : \[ "The next generation" \], "century" : 24 \} \{ "name" : "Jonathan Archer", "series" : \[ "Entreprise" \], "century" : 22 \} \{ "codename" : "Emergency Command Hologram", "surname" : "The Doctor", "series" : \[ "Voyager" \], "century" : 24 \} \{ "name" : "Benjamin Sisko", "series" : \[ "The next generation", "Deep Space 9" \], "century" : 24 \} \{ "name" : "Kathryn Janeway", "series" : \[ "The next generation", "Voyager" \], "century" : 24 \}
+
+It can be specified whether the order is ascending or descending. Empty sequences are allowed and it can be chosen whether to put them first or last.
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+order by $x.name descending empty greatest
+return $x
+      
+```
+
+Result \(run with Zorba\):\{ "codename" : "Emergency Command Hologram", "surname" : "The Doctor", "series" : \[ "Voyager" \], "century" : 24 \} \{ "name" : "Samantha Carter", "series" : \[ \], "century" : 21 \} \{ "name" : "Kathryn Janeway", "series" : \[ "The next generation", "Voyager" \], "century" : 24 \} \{ "name" : "Jonathan Archer", "series" : \[ "Entreprise" \], "century" : 22 \} \{ "name" : "Jean-Luc Picard", "series" : \[ "The next generation" \], "century" : 24 \} \{ "name" : "James T. Kirk", "series" : \[ "The original series" \], "century" : 23 \} \{ "name" : "Benjamin Sisko", "series" : \[ "The next generation", "Deep Space 9" \], "century" : 24 \}
+
+An error is raised if the expression does not evaluate to an atomic or the empty sequence.
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+order by $x
+return $x.name
+      
+```
+
+Result \(run with Zorba\):An error was raised: can not atomize an object item: an object has probably been passed where an atomic value is expected \(e.g., as a key, or to a function expecting an atomic item\)
+
+Collations can be used to give a specific way of how strings are to be ordered. A collation is identified by a URI.
+
+##### Use of a collation in an order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+order by $x.name collation "http://www.w3.org/2005/xpath-functions/collation/codepoint"
+return $x.name
+      
+```
+
+Result \(run with Zorba\):Benjamin Sisko James T. Kirk Jean-Luc Picard Jonathan Archer Kathryn Janeway Samantha Carter
+
+#### Group clauses {#groupClauses.d12e4331}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-group-by) for group by clauses. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+GroupByClause
+
+![](images/GroupByClause.png)
+
+Grouping is also supported, like in SQL.
+
+For each incoming tuple, the expression in the group clause is evaluated to an atomic \(a grouping key\). The incoming tuples are then grouped according to the key they are associated with.
+
+For each group, a tuple is output, with a binding from the grouping variable to the key of the group.
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+group by $century := $x.century
+return { "century" : $century  }
+      
+```
+
+Result \(run with Zorba\):\{ "century" : 21 \} \{ "century" : 22 \} \{ "century" : 23 \} \{ "century" : 24 \}
+
+As for the other \(non-grouping\) variables, their values within one group are all concatenated, keeping the same name. Aggregations can be done on these variables.
+
+The following query is equivalent to "SELECT century, COUNT\(\*\) FROM captains GROUP BY century".
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+group by $century := $x.century
+return { "century" : $century, "count" : count($x) }
+      
+```
+
+Result \(run with Zorba\):\{ "century" : 21, "count" : 1 \} \{ "century" : 22, "count" : 1 \} \{ "century" : 23, "count" : 1 \} \{ "century" : 24, "count" : 4 \}
+
+JSONiq's group by is more flexible than SQL and is fully composable.
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+group by $century := $x.century
+return { "century" : $century, "captains" : [ $x.name ] }
+      
+```
+
+Result \(run with Zorba\):\{ "century" : 21, "captains" : \[ "Samantha Carter" \] \} \{ "century" : 22, "captains" : \[ "Jonathan Archer" \] \} \{ "century" : 23, "captains" : \[ "James T. Kirk" \] \} \{ "century" : 24, "captains" : \[ "Jean-Luc Picard", "Benjamin Sisko", "Kathryn Janeway" \] \}
+
+Unlike SQL, JSONiq does not need a having clause, because a where clause works perfectly after grouping as well.
+
+The following query is the counterpart of "SELECT century, COUNT\(\*\) FROM captains GROUP BY century HAVING COUNT\(\*\) &gt; 1"
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+group by $century := $x.century
+where count($x) gt 1
+return { "century" : $century, "count" : count($x) }
+      
+```
+
+Result \(run with Zorba\):\{ "century" : 24, "count" : 4 \}
+
+#### Let clauses {#letClauses.d12e4413}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-xquery-let-clause) for let clauses. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+LetClause
+
+![](images/LetClause.png)
+
+Let bindings can be used to define aliases for any sequence, for convenience.
+
+For each incoming tuple, the expression in the let clause is evaluated to a sequence. A binding is added from this sequence to the let variable in each tuple. A tuple is hence produced for each incoming tuple.
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+let $century := $x.century
+group by $century
+let $number := count($x)
+where $number gt 1
+return { "century" : $century, "count" : $number }
+      
+```
+
+Result \(run with Zorba\):\{ "century" : 24, "count" : 4 \}
+
+Note that it is perfectly fine to reuse a variable name and hide a variable binding.
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+let $century := $x.century
+group by $century
+let $number := count($x)
+let $number := count(distinct-values(for $series in $x.series
+                                     return typeswitch($series)
+                                            case array return $series()
+                                            default return $series ))
+where $number gt 1
+return { "century" : $century, "number of series" : $number }
+      
+```
+
+Result \(run with Zorba\):\{ "century" : 24, "number of series" : 3 \}
+
+#### Count clauses {#countClauses.d12e4464}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-count) for count clauses. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+CountClause
+
+![](images/CountClause.png)
+
+For each incoming tuple, a binding from the position of this tuple in the tuple stream to the count variable is added. The new tuple is then forwarded to the next clause.
+
+##### An order by clause. { .example}
+
+```
+
+for $x in collection("captains")
+order by $x.name
+count $c
+return { "id" : $c, "captain" : $x }
+      
+```
+
+Result \(run with Zorba\):\{ "id" : 1, "captain" : \{ "name" : "Benjamin Sisko", "series" : \[ "The next generation", "Deep Space 9" \], "century" : 24 \} \} \{ "id" : 2, "captain" : \{ "name" : "James T. Kirk", "series" : \[ "The original series" \], "century" : 23 \} \} \{ "id" : 3, "captain" : \{ "name" : "Jean-Luc Picard", "series" : \[ "The next generation" \], "century" : 24 \} \} \{ "id" : 4, "captain" : \{ "name" : "Jonathan Archer", "series" : \[ "Entreprise" \], "century" : 22 \} \} \{ "id" : 5, "captain" : \{ "name" : "Kathryn Janeway", "series" : \[ "The next generation", "Voyager" \], "century" : 24 \} \} \{ "id" : 6, "captain" : \{ "name" : "Samantha Carter", "series" : \[ \], "century" : 21 \} \} \{ "id" : 7, "captain" : \{ "codename" : "Emergency Command Hologram", "surname" : "The Doctor", "series" : \[ "Voyager" \], "century" : 24 \} \}
+
+#### Map operator {#mapOperator.d12e4500}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-map-operator) for the map operator, except that it changes the syntax for the context item to *$$* instead of the *.* syntax.
+
+The following explanations, provided as an informal summary for convenience, are non-normative.
+
+SimpleMapExpr
+
+![](images/SimpleMapExpr.png)
+
+ContextItemExpr
+
+![](images/ContextItemExpr.png)
+
+JSONiq provides a shortcut for a for-return construct, automatically binding each item in the left-hand-side sequence to the context item.
+
+##### A simple map { .example}
+
+```
+
+(1 to 10) ! ($$ * 2)
+      
+```
+
+Result \(run with Zorba\):2 4 6 8 10 12 14 16 18 20
+
+##### An equivalent query { .example}
+
+```
+
+for $i in 1 to 10
+return $i * 2
+      
+```
+
+Result \(run with Zorba\):2 4 6 8 10 12 14 16 18 20
+
+#### Variable references {#variableReferences.d12e4566}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-variables) for variable references, except that it disallows the character *.* in variable names, which is instead used for object lookup.
+
+#### Composing FLWOR expressions {#composingFlworExpressions.d12e4580}
+
+Like all other expressions, FLWOR expressions can be composed. In the following examples, a FLWOR is nested in a function call, nested in a FLWOR, nested in an array constructor:
+
+##### Nested FLWORs { .example}
+
+```
+
+        [
+          for $c in collection("captains")
+          where exists(for $m in collection("movies")
+                       where some $moviecaptain in let $captain := $m.captain
+                                                   return typeswitch ($captain)
+                                                          case array return $captain()
+                                                          default return $captain
+                             satisfies
+                             $moviecaptain eq $c.name
+                       return $m)
+          return $c.name
+        ]
+      
+```
+
+Result \(run with Zorba\):\[ "James T. Kirk", "Jean-Luc Picard" \]
+
+#### Ordered and Unordered expressions {#orderedAndUnorderedExpressions.d12e4597}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-unordered-expressions) for ordered and unordered expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+OrderedExpr
+
+![](images/OrderedExpr.png)
+
+UnorderedExpr
+
+![](images/UnorderedExpr.png)
+
+By default, the order in which a for clause binds its items is important.
+
+This behaviour can be relaxed in order give the optimizer more leeway. An unordered expression relaxes ordering by for clauses within its operand scope:
+
+##### An unordered expression. { .example}
+
+```
+
+unordered {
+  for $captain in collection("captains")
+  where $captain.century eq 24
+  return $captain
+}
+      
+```
+
+Result \(run with Zorba\):\{ "name" : "Jean-Luc Picard", "series" : \[ "The next generation" \], "century" : 24 \} \{ "name" : "Benjamin Sisko", "series" : \[ "The next generation", "Deep Space 9" \], "century" : 24 \} \{ "name" : "Kathryn Janeway", "series" : \[ "The next generation", "Voyager" \], "century" : 24 \} \{ "codename" : "Emergency Command Hologram", "surname" : "The Doctor", "series" : \[ "Voyager" \], "century" : 24 \}
+
+An ordered expression can be used to reactivate ordering behaviour in a subscope.
+
+##### An ordered expression. { .example}
+
+```
+
+unordered {
+  for $captain in collection("captains")
+  where ordered { exists(for $movie at $i in collection("movies")
+                         where $i eq 5
+                         where $movie.captain eq $captain.name
+                         return $movie) }
+  return $captain
+}
+      
+```
+
+Result \(run with Zorba\):\{ "name" : "James T. Kirk", "series" : \[ "The original series" \], "century" : 23 \}
+
+### Expressions dealing with types {#section-type-expressions}
+
+This section describes JSONiq types as well as the sequence type syntax.
+
+#### Instance-of expressions {#instanceofExpressions.d12e4668}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-instance-of) for ordered and unordered expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+InstanceofExpr
+
+![](images/InstanceofExpr.png)
+
+An instance expression can be used to tell whether a JSONiq value matches a given sequence type.
+
+##### Instance of expression { .example}
+
+```
+
+1 instance of integer
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Instance of expression { .example}
+
+```
+
+1 instance of string
+      
+```
+
+Result \(run with Zorba\):false
+
+##### Instance of expression { .example}
+
+```
+
+"foo" instance of string
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Instance of expression { .example}
+
+```
+
+{ "foo" : "bar" } instance of object
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Instance of expression { .example}
+
+```
+
+({ "foo" : "bar" }, { "bar" : "foo" }) instance of json-item+
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Instance of expression { .example}
+
+```
+
+[ 1, 2, 3 ] instance of array?
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Instance of expression { .example}
+
+```
+
+() instance of ()
+      
+```
+
+Result \(run with Zorba\):true
+
+#### Treat expressions {#treatExpressions.d12e4765}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-treat) for ordered and unordered expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+TreatExpr
+
+![](images/TreatExpr.png)
+
+A treat expression checks that a JSONiq value matches a given sequence type. If it is not the case, an error is raised.
+
+##### Treat as expression { .example}
+
+```
+
+1 treat as integer
+      
+```
+
+Result \(run with Zorba\):1
+
+##### Treat as expression { .example}
+
+```
+
+1 treat as string
+      
+```
+
+Result \(run with Zorba\):An error was raised: "xs:integer" cannot be treated as type xs:string
+
+##### Treat as expression { .example}
+
+```
+
+"foo" treat as string
+      
+```
+
+Result \(run with Zorba\):foo
+
+##### Treat as expression { .example}
+
+```
+
+{ "foo" : "bar" } treat as object
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "bar" \}
+
+##### Treat as expression { .example}
+
+```
+
+({ "foo" : "bar" }, { "bar" : "foo" }) treat as json-item+
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "bar" \} \{ "bar" : "foo" \}
+
+##### Treat as expression { .example}
+
+```
+
+[ 1, 2, 3 ] treat as array?
+      
+```
+
+Result \(run with Zorba\):\[ 1, 2, 3 \]
+
+##### Treat as expression { .example}
+
+```
+
+() treat as ()
+      
+```
+
+Result \(run with Zorba\):
+
+#### Castable expressions {#castableExpressions.d12e4862}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-castable) for ordered and unordered expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+CastableExpr
+
+![](images/CastableExpr.png)
+
+A castable expression checks whether a JSONiq value can be cast to a given atomic type and returns true or false accordingly. It can be used before actually casting to that type.
+
+##### Castable as expression { .example}
+
+```
+
+"1" castable as integer
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Castable as expression { .example}
+
+```
+
+"foo" castable as integer
+      
+```
+
+Result \(run with Zorba\):false
+
+##### Castable as expression { .example}
+
+```
+
+"2013-04-02" castable as date
+      
+```
+
+Result \(run with Zorba\):true
+
+##### Castable as expression { .example}
+
+```
+
+() castable as date
+      
+```
+
+Result \(run with Zorba\):false
+
+##### Castable as expression { .example}
+
+```
+
+("2013-04-02", "2013-04-03") castable as date
+      
+```
+
+Result \(run with Zorba\):false
+
+The question mark allows for an empty sequence.
+
+##### Castable as expression { .example}
+
+```
+
+() castable as date?
+      
+```
+
+Result \(run with Zorba\):true
+
+#### Cast expressions {#castExpressions.d12e4952}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-cast) for ordered and unordered expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+CastExpr
+
+![](images/CastExpr.png)
+
+A cast expression casts a JSONiq value to a given atomic type. The resulting value is annotated with this type.
+
+##### Cast as expression { .example}
+
+```
+
+"1" cast as integer
+      
+```
+
+Result \(run with Zorba\):1
+
+##### Cast as expression { .example}
+
+```
+
+"foo" cast as integer
+      
+```
+
+Result \(run with Zorba\):An error was raised: "foo": value of type xs:string is not castable to type xs:integer
+
+##### Cast as expression { .example}
+
+```
+
+"2013-04-02" cast as date
+      
+```
+
+Result \(run with Zorba\):2013-04-02
+
+##### Cast as expression { .example}
+
+```
+
+() cast as date
+      
+```
+
+Result \(run with Zorba\):An error was raised: empty sequence can not be cast to type with quantifier '1'
+
+##### Cast as expression { .example}
+
+```
+
+("2013-04-02", "2013-04-03") cast as date
+      
+```
+
+Result \(run with Zorba\):An error was raised: sequence of more than one item can not be cast to type with quantifier '1' or '?'
+
+The question mark allows for an empty sequence.
+
+##### Cast as expression { .example}
+
+```
+
+() cast as date?
+      
+```
+
+Result \(run with Zorba\):
+
+##### Cast as expression { .example}
+
+```
+
+"2013-04-02" cast as date?
+      
+```
+
+Result \(run with Zorba\):2013-04-02
+
+#### Typeswitch expressions {#typeswitchExpressions.d12e5052}
+
+JSONiq follows the [W3C standard](https://www.w3.org/TR/xquery-30/#id-typeswitch) for ordered and unordered expressions. The following explanations, provided as an informal summary for convenience, are non-normative.
+
+TypeswitchExpr
+
+![](images/TypeswitchExpr.png)
+
+CaseClause
+
+![](images/CaseClause.png)
+
+A typeswitch expressions tests if the value resulting from the first operand matches a given list of types. The expression corresponding to the first matching case is finally evaluated. If there is no match, the expression in the default clause is evaluated.
+
+##### Typeswitch expression { .example}
+
+```
+
+typeswitch("foo")
+case integer return "integer"
+case string return "string"
+case object return "object"
+default return "other"
+      
+```
+
+Result \(run with Zorba\):string
+
+In each clause, it is possible to bind the value of the first operand to a variable.
+
+##### Typeswitch expression { .example}
+
+```
+
+typeswitch("foo")
+case $i as integer return $i + 1
+case $s as string return $s || "foo"
+case $o as object return [ $o ]
+default $d return $d
+      
+```
+
+Result \(run with Zorba\):foofoo
+
+The vertical bar can be used to allow several types in the same case clause.
+
+##### Typeswitch expression { .example}
+
+```
+
+typeswitch("foo")
+case $a as integer | string return { "integer or string" : $a }
+case $o as object return [ $o ]
+default $d return $d
+      
+```
+
+Result \(run with Zorba\):\{ "integer or string" : "foo" \}
+
+## Prologs {#chapter-prolog}
+
+This section introduces prologs, which allows declaring functions and global variables that can then be used in the main query. A prolog also allows setting some default behaviour.
+
+MainModule
+
+![](images/MainModule.png)
+
+Prolog
+
+![](images/Prolog.png)
+
+The prolog appears before the main query and is optional. It can contain setters and module imports, followed by function and variable declarations.
+
+Module imports are explained in the next chapter.
+
+### Setters. {#setters.d12e5165}
+
+Setters allow to specify a default behaviour for various aspects of the language.
+
+#### Default collation {#defaultCollation.d12e5173}
+
+DefaultCollationDecl
+
+![](images/DefaultCollationDecl.png)
+
+This specifies the default collation used for grouping and ordering clauses in FLWOR expressions. It can be overriden with a collation directive in these clauses.
+
+#### Default ordering mode {#defaultOrderingMode.d12e5193}
+
+OrderingModeDecl
+
+![](images/OrderingModeDecl.png)
+
+This specifies the default behaviour of from clauses, i.e., if they bind tuples in the order in which items occur in the binding sequence. It can be overriden with ordered and unordered expressions.
+
+#### Default ordering behaviour for empty sequences {#defaultOrderingBehaviourForEmptySequences.d12e5214}
+
+EmptyOrderDecl
+
+![](images/EmptyOrderDecl.png)
+
+This specifies whether empty sequences come first or last in an ordering clause. It can be overriden by the corresponding directives in such clauses.
+
+#### Default decimal format {#defaultDecimalFormat.d12e5234}
+
+DecimalFormatDecl
+
+![](images/DecimalFormatDecl.png)
+
+DFPropertyName
+
+![](images/DFPropertyName.png)
+
+This specifies a default decimal format for the builtin function format-number\(\).
+
+### Global variables {#globalVariables.d12e5268}
+
+VarDecl
+
+![](images/VarDecl.png)
+
+Variables can be declared global. Global variables are declared in the prolog.
+
+#### Global variable { .example}
+
+```
+
+  declare variable $obj := { "foo" : "bar" };
+  $obj
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "bar" \}
+
+#### Global variable { .example}
+
+```
+
+  declare variable $numbers := (1, 2, 3, 4, 5);
+  [ $numbers ]
+      
+```
+
+Result \(run with Zorba\):\[ 1, 2, 3, 4, 5 \]
+
+You can specify a type for a variable. If the type does not match, an error is raised. Types will be explained later. In general, you do not need to worry too much about variable types except if you want to make sure that what you bind to a variable is really what you want. In most cases, the engine will take care of types for you.
+
+#### Global variable with a type { .example}
+
+```
+
+  declare variable $obj as object := { "foo" : "bar" };
+  $obj
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "bar" \}
+
+An external variable allows you to pass a value from the outside environment, which can be very useful. Each implementation can choose their own way of passing a value to an external variable. A default value for an external variable can also be supplied in case none is provided outside.
+
+#### An external global variable { .example}
+
+```
+
+  declare variable $obj external;
+  $obj
+      
+```
+
+Result \(run with Zorba\):An error was raised: "obj": variable has no value
+
+#### An external global variable with a default value { .example}
+
+```
+
+  declare variable $obj external := { "foo" : "bar" };
+  $obj
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : "bar" \}
+
+### Functions {#functions.d12e5343}
+
+VarDecl
+
+![](images/FunctionDecl.png)
+
+You can define your own functions in the prolog. These user-defined functions must be prefixed with *local:*, both in the declaration and when called.
+
+Remember than types are optional, and if you do not specify any, item\* is assumed, both for parameters and for the return type.
+
+#### An external global variable with a default value { .example}
+
+```
+
+declare function local:say-hello($x) { "Hello, " || $x || "!" };
+local:say-hello("Mister Spock")
+      
+```
+
+Result \(run with Zorba\):Hello, Mister Spock!
+
+#### An external global variable with a default value { .example}
+
+```
+
+declare function local:say-hello($x as string) { "Hello, " || $x || "!" };
+local:say-hello("Mister Spock")
+      
+```
+
+Result \(run with Zorba\):Hello, Mister Spock!
+
+#### An external global variable with a default value { .example}
+
+```
+
+declare function local:say-hello($x as string) as string { "Hello, " || $x || "!" };
+local:say-hello("Mister Spock")
+      
+```
+
+Result \(run with Zorba\):Hello, Mister Spock!
+
+If you do specify types, an error is raised in case of a mismatch
+
+#### An external global variable with a default value { .example}
+
+```
+
+declare function local:say-hello($x) { "Hello, " || $x || "!" }; 
+local:say-hello(1)
+      
+```
+
+Result \(run with Zorba\):Hello, 1!
+
+## Modules {#chapter-modules}
+
+Module
+
+![](images/Module.png)
+
+You can group functions and variables in separate library modules.
+
+MainModule
+
+![](images/MainModule.png)
+
+Up to now, everything we encountered were main modules, i.e., a prolog followed by a main query.
+
+LibraryModule
+
+![](images/LibraryModule.png)
+
+A library module does not contain any query - just functions and variables that can be imported by other modules.
+
+A library module must be assigned to a namespace. For convenience, this namespace is bound to an alias in the module declaration. All variables and functions in a library module must be prefixed with this alias.
+
+### A library module { .example}
+
+```
+
+module namespace my = "http://www.example.com/my-module";
+declare variable $my:variable := { "foo" : "bar" };
+declare variable $my:n := 42;
+declare function my:function($i as integer) { $i * $i };
+    
+```
+
+ModuleImport
+
+![](images/ModuleImport.png)
+
+Here is a main module which imports the former library module. An alias is given to the module namespace \(my\). Variables and functions from that module can be accessed by prefixing their names with this alias. The alias may be different than the internal alias defined in the imported module.
+
+### An importing main module { .example}
+
+```
+
+import module namespace other= "http://www.example.com/my-module";
+other:function($other:n)
+    
+```
+
+Result \(run with Zorba\):1764
+
+## Function Library {#chapter-functions}
+
+JSONiq provides a rich set of functions.
+
+### JSON specific functions. {#jsonSpecificFunctions.d12e5506}
+
+Some functions are specific to JSON.
+
+#### keys {#keys.d12e5512}
+
+This function returns the distinct keys of all objects in the supplied sequence, in an implementation-dependent order.
+
+`keys($o as item*) as string*`
+
+##### Getting all distinct key names in the supplied objects, ignoring non-objects. { .example}
+
+```
+
+let $o := ("foo", [ 1, 2, 3 ], { "a" : 1, "b" : 2 }, { "a" : 3, "c" : 4 })
+return keys($o)
+        
+```
+
+Result \(run with Zorba\):a b c
+
+##### Retrieving all Pairs from an Object: { .example}
+
+```
+
+let $map := { "eyes" : "blue", "hair" : "fuchsia" }
+for $key in keys($map)
+return { $key : $map.$key }
+        
+```
+
+Result \(run with Zorba\):\{ "eyes" : "blue" \} \{ "hair" : "fuchsia" \}
+
+#### members {#members.d12e5544}
+
+This functions returns all members of all arrays of the supplied sequence.
+
+`members($a as item*) as item*`
+
+##### Retrieving the members of all supplied arrays, ignoring non-arrays. { .example}
+
+```
+
+let $planets :=  ( "foo", { "foo" : "bar "}, [ "mercury", "venus", "earth", "mars" ], [ 1, 2, 3 ])
+return members($planets)
+        
+```
+
+Result \(run with Zorba\):mercury venus earth mars 1 2 3
+
+#### null {#null.d12e5566}
+
+This function returns the JSON null.
+
+`null() as null`
+
+#### parse-json {#parsejson.d12e5579}
+
+This function parses its first parameter \(a string\) as JSON, and returns the resulting sequence of objects and arrays.
+
+`parse-json($arg as string?) as json-item*`
+
+`parse-json($arg as string?, $options as object) as json-item*`
+
+The object optionally supplied as the second parameter may contain additional options:
+
+-   `jsoniq-multiple-top-level-items` \(boolean\): indicates whether parsing to zero, or several objects is allowed. An error is raised if this value is false and there is not exactly one object that was parsed.
+
+
+If parsing is not successful, an error is raised. Parsing is considered in particular to be non-successful if the boolean associated with "jsoniq-multiple-top-level-items" in the additional parameters is false and there is extra content after parsing a single abject or array.
+
+##### Parsing a JSON document { .example}
+
+```
+
+parse-json("{ \"foo\" : \"bar\" }", { "jsoniq-multiple-top-level-items" : false })
+        
+```
+
+Result \(run with Zorba\):\{ "foo" : "bar" \}
+
+##### Parsing multiple, whitespace-separated JSON documents { .example}
+
+```
+
+parse-json("{ \"foo\" : \"bar\" } { \"bar\" : \"foo\" }")
+        
+```
+
+Result \(run with Zorba\):\{ "foo" : "bar" \} \{ "bar" : "foo" \}
+
+#### size {#size.d12e5631}
+
+This function returns the size of the supplied array, or the empty sequence if the empty sequence is provided.
+
+`size($a as array?) as integer?`
+
+##### Retrieving the size of an array { .example}
+
+```
+
+let $a := [1 to 10]
+return size($a)
+        
+```
+
+Result \(run with Zorba\):10
+
+#### accumulate {#accumulate.d12e5653}
+
+This function dynamically builds an object, like the \{\| \|\} syntax, except that it does not throw an error upon pair collision. Instead, it accumulates them, wrapping into an array if necessary. Non-objects are ignored.
+
+```
+
+declare function accumulate($seq as item*) as object
+{
+  {|
+    keys($seq) ! { $$ : $seq.$$ }
+  |}
+};
+      
+```
+
+#### descendant-arrays {#descendantarrays.d12e5662}
+
+This function returns all arrays contained within the supplied items, regardless of depth.
+
+```
+
+declare function descendant-arrays($seq as item*) as array*
+{
+  for $i in $seq
+  return typeswitch ($i)
+  case array return ($i, descendant-arrays($i[])
+  case object return descendant-arrays(values($i))
+  default return ()
+};
+      
+```
+
+#### descendant-objects {#descendantobjects.d12e5671}
+
+This function returns all objects contained within the supplied items, regardless of depth.
+
+```
+
+declare function descendant-objects($seq as item*) as object*
+{
+  for $i in $seq
+  return typeswitch ($i)
+  case object return ($i, descendant-objects(values($i)))
+  case array return descendant-objects($i[])
+  default return ()
+};
+      
+```
+
+#### descendant-pairs {#descendantpairs.d12e5680}
+
+This function returns all descendant pairs within the supplied items.
+
+```
+
+declare function descendant-pairs($seq as item*)
+{
+  for $i in $seq
+  return typeswitch ($i)
+  case object return
+    for $k in keys($o)
+    let $v := $o.$k
+    return ({ $k : $v }, descendant-pairs($v))
+  case array return descendant-pairs($i[])
+  default return ()
+};
+      
+```
+
+##### Accessing all descendant pairs { .example}
+
+```
+
+let $o := 
+{
+  "first" : 1,
+  "second" : { 
+    "first" : "a", 
+    "second" : "b" 
+  }
+}
+return descendant-pairs($o)
+        
+```
+
+Result \(run with Zorba\):An error was raised: "descendant-pairs": function with arity 1 not declared
+
+#### flatten {#flatten.d12e5700}
+
+This function recursively flattens arrays in the input sequence, leaving non-arrays intact.
+
+```
+
+declare function flatten($seq as item*) as item*
+{
+  for $value in $seq
+  return typeswitch ($value)
+         case array return flatten($value[])
+         default return $value
+};
+	  
+```
+
+#### intersect {#intersect.d12e5709}
+
+This function returns the intersection of the supplied objects, and aggregates values corresponding to the same name into an array. Non-objects are ignored.
+
+```
+
+declare function intersect($seq as item*)
+{
+  {|
+    let $objects := $seq[. instance of object()]
+    for $key in keys(head($objects))
+    where every $object in tail($objects)
+          satisfies exists(index-of(keys($object), $key))
+    return { $key : $objects.$key }
+  |}
+};
+      
+```
+
+#### project {#project.d12e5718}
+
+This function iterates on the input sequence. It projects objects by filtering their pairs and leaves non-objects intact.
+
+```
+
+declare function project($seq as item*, $keys as string*) as item*
+{
+  for $item in $seq
+  return typeswitch ($item)
+         case $object as object return
+         {|
+           for $key in keys($object)
+           where some $to-project in $keys satisfies $to-project eq $key
+           let $value := $object.$key
+           return { $key : $value }
+         |}
+         default return $item
+};
+      
+```
+
+##### Projecting an object 1 { .example}
+
+```
+
+let $o := {
+  "Captain" : "Kirk",
+  "First Officer" : "Spock",
+  "Engineer" : "Scott"
+  }
+return project($o, ("Captain", "First Officer"))
+        
+```
+
+Result \(run with Zorba\):\{ "Captain" : "Kirk", "First Officer" : "Spock" \}
+
+##### Projecting an object 2 { .example}
+
+```
+
+let $o := {
+  "Captain" : "Kirk",
+  "First Officer" : "Spock",
+  "Engineer" : "Scott"
+  }
+return project($o, "XQuery Evangelist")
+        
+```
+
+Result \(run with Zorba\):\{ \}
+
+#### remove-keys {#removekeys.d12e5747}
+
+This function iterates on the input sequence. It removes the pairs with the given keys from all objects and leaves non-objects intact.
+
+```
+
+declare function remove-keys($seq as item*, $keys as string*) as item*
+{
+  for $item in $seq
+  return typeswitch ($item)
+         case $object as object return
+         {|
+           for $key in keys($object)
+           where every $to-remove in $keys satisfies $to-remove ne $key
+           let $value := $object.$key
+           return { $key : $value }
+         |}
+         default return $item
+};
+      
+```
+
+##### Removing keys from an object \(not implemented yet\) { .example}
+
+```
+
+let $o := {
+  "Captain" : "Kirk",
+  "First Officer" : "Spock",
+  "Engineer" : "Scott"
+  }
+return remove-keys($o, ("Captain", "First Officer"))
+        
+```
+
+Result \(run with Zorba\):An error was raised: "remove-keys": function with arity 2 not declared
+
+#### values {#values.d12e5766}
+
+This function returns all values in the supplied objects. Non-objects are ignored.
+
+```
+
+declare function values($seq as item*) as item* {
+  for $i in $seq
+  for $k in jn:keys($i)
+  return $i($k)
+};
+      
+```
+
+#### encode-for-roundtrip {#encodeforroundtrip.d12e5775}
+
+This function encodes any sequence of items, even containing non-JSON types, to a sequence of JSON items that can be serialized as pure JSON, in a way that it can be parsed and decoded back using decode-from-roundtrip. JSON features are left intact, while atomic items annotated with a non-JSON type are converted to objects embedding all necessary information.
+
+`encode-for-roundtrip($items as item*) as json-item*`
+
+#### decode-from-roundtrip {#decodefromroundtrip.d12e5788}
+
+This function decodes a sequence previously encoded with encode-for-roundtrip.
+
+`decode-from-roundtrip($items as json-item*) as item*`
+
+### Functions taken from XQuery {#functionsTakenFromXquery.d12e5801}
+
+-   Access to the external environment: [collection\#1](https://www.w3.org/TR/xpath-functions-30/#func-collection)
+
+-   Function to turn atomics into booleans for use in two-valued logics: [boolean\#1](https://www.w3.org/TR/xpath-functions-30/#func-boolean)
+
+-   Raising errors: [error\#0](https://www.w3.org/TR/xpath-functions-30/#func-error), [error\#1](https://www.w3.org/TR/xpath-functions-30/#func-error), [error\#2](https://www.w3.org/TR/xpath-functions-30/#func-error), [error\#3](https://www.w3.org/TR/xpath-functions-30/#func-error).
+
+-   Functions on numeric values: [abs\#1](https://www.w3.org/TR/xpath-functions-30/#func-abs), [ceilingabs\#1](https://www.w3.org/TR/xpath-functions-30/#func-ceilingabs), [floorabs\#1](https://www.w3.org/TR/xpath-functions-30/#func-floorabs), [roundabs\#1](https://www.w3.org/TR/xpath-functions-30/#func-roundabs), [round-half-to-even\#1](https://www.w3.org/TR/xpath-functions-30/#func-round-half-to-even)
+
+-   Parsing numbers: [number\#0](https://www.w3.org/TR/xpath-functions-30/#func-number), [number\#1](https://www.w3.org/TR/xpath-functions-30/#func-number)
+
+-   Formatting integers: [format-integer\#2](https://www.w3.org/TR/xpath-functions-30/#func-format-integer), [format-integer\#3](https://www.w3.org/TR/xpath-functions-30/#func-format-integer)
+
+-   Formatting numbers: [format-numberreturn r\#2](https://www.w3.org/TR/xpath-functions-30/#func-format-number), [format-number\#3](https://www.w3.org/TR/xpath-functions-30/#func-format-number)
+
+-   Trigonometric and exponential functions: [pi\#0](https://www.w3.org/TR/xpath-functions-30/#func-pi), [exp\#1](https://www.w3.org/TR/xpath-functions-30/#func-exp), [exp10\#1](https://www.w3.org/TR/xpath-functions-30/#func-exp10), [log\#1](https://www.w3.org/TR/xpath-functions-30/#func-log), [log10\#1](https://www.w3.org/TR/xpath-functions-30/#func-log10), [pow\#2](https://www.w3.org/TR/xpath-functions-30/#func-pow), [sqrt\#1](https://www.w3.org/TR/xpath-functions-30/#func-sqrt), [sin\#1](https://www.w3.org/TR/xpath-functions-30/#func-sin), [cos\#1](https://www.w3.org/TR/xpath-functions-30/#func-cos), [tan\#1](https://www.w3.org/TR/xpath-functions-30/#func-tan), [asin\#1](https://www.w3.org/TR/xpath-functions-30/#func-asin), [acos\#1](https://www.w3.org/TR/xpath-functions-30/#func-acos), [atan\#1](https://www.w3.org/TR/xpath-functions-30/#func-atan), [atan2\#1](https://www.w3.org/TR/xpath-functions-30/#func-atan2)
+
+-   Functions to assemble and disassemble strings: [codepoints-to-string\#1](https://www.w3.org/TR/xpath-functions-30/#func-codepoints-to-string), [string-to-codepoints\#1](https://www.w3.org/TR/xpath-functions-30/#func-string-to-codepoints)
+
+-   Comparison of strings: [compare\#2](https://www.w3.org/TR/xpath-functions-30/#func-compare), [compare\#3](https://www.w3.org/TR/xpath-functions-30/#func-compare), [codepoint-equal\#2](https://www.w3.org/TR/xpath-functions-30/#func-codepoint-equal)
+
+-   Functions on string values: [concat\#2](https://www.w3.org/TR/xpath-functions-30/#func-concat), [string-join\#1](https://www.w3.org/TR/xpath-functions-30/#func-string-join), [string-join\#2](https://www.w3.org/TR/xpath-functions-30/#func-string-join), [substring\#2](https://www.w3.org/TR/xpath-functions-30/#func-substring), [substring\#3](https://www.w3.org/TR/xpath-functions-30/#func-substring), [string-length\#0](https://www.w3.org/TR/xpath-functions-30/#func-string-length), [string-length\#1](https://www.w3.org/TR/xpath-functions-30/#func-string-length), [normalize-space\#0](https://www.w3.org/TR/xpath-functions-30/#func-normalize-space), [normalize-space\#1](https://www.w3.org/TR/xpath-functions-30/#func-normalize-space), [normalize-unicode\#1](https://www.w3.org/TR/xpath-functions-30/#func-normalize-unicode), [normalize-unicode\#2](https://www.w3.org/TR/xpath-functions-30/#func-normalize-unicode), [upper-case\#1](https://www.w3.org/TR/xpath-functions-30/#func-upper-case), [lower-case\#1](https://www.w3.org/TR/xpath-functions-30/#func-lower-case), [translate\#3](https://www.w3.org/TR/xpath-functions-30/#func-translate)
+
+-   Functions based on substring matching: [contains\#2](https://www.w3.org/TR/xpath-functions-30/#func-contains), [contains\#3](https://www.w3.org/TR/xpath-functions-30/#func-contains), [starts-with\#2](https://www.w3.org/TR/xpath-functions-30/#func-starts-with), [starts-with\#3](https://www.w3.org/TR/xpath-functions-30/#func-starts-with), [ends-with\#2](https://www.w3.org/TR/xpath-functions-30/#func-ends-with), [ends-with\#3](https://www.w3.org/TR/xpath-functions-30/#func-ends-with), [substring-before\#2](https://www.w3.org/TR/xpath-functions-30/#func-substring-before), [substring-before\#3](https://www.w3.org/TR/xpath-functions-30/#func-substring-before), [substring-after\#2](https://www.w3.org/TR/xpath-functions-30/#func-substring-after), [substring-after\#3](https://www.w3.org/TR/xpath-functions-30/#func-substring-after)
+
+-   String functions that use regular expressions: [matches\#2](https://www.w3.org/TR/xpath-functions-30/#func-matches), [matches\#3](https://www.w3.org/TR/xpath-functions-30/#func-matches), [replace\#3](https://www.w3.org/TR/xpath-functions-30/#func-replace), [replace\#4](https://www.w3.org/TR/xpath-functions-30/#func-replace), [tokenize\#2](https://www.w3.org/TR/xpath-functions-30/#func-tokenize), [tokenize\#3](https://www.w3.org/TR/xpath-functions-30/#func-tokenize)
+
+-   Functions that manipulate URIs: [resolve-uri\#1](https://www.w3.org/TR/xpath-functions-30/#func-resolve-uri), [resolve-uri\#2](https://www.w3.org/TR/xpath-functions-30/#func-resolve-uri), [encode-for-uri\#1](https://www.w3.org/TR/xpath-functions-30/#func-encode-for-uri), [iri-to-uri\#1](https://www.w3.org/TR/xpath-functions-30/#func-iri-to-uri), [escape-html-uri\#1](https://www.w3.org/TR/xpath-functions-30/#func-escape-html-uri)
+
+-   General functions on sequences: [empty\#1](https://www.w3.org/TR/xpath-functions-30/#func-empty), [exists\#1](https://www.w3.org/TR/xpath-functions-30/#func-exists), [head\#1](https://www.w3.org/TR/xpath-functions-30/#func-head), [tail\#1](https://www.w3.org/TR/xpath-functions-30/#func-tail), [insert-before\#3](https://www.w3.org/TR/xpath-functions-30/#func-insert-before), [remove\#2](https://www.w3.org/TR/xpath-functions-30/#func-remove), [reverse\#1](https://www.w3.org/TR/xpath-functions-30/#func-reverse), [subsequence\#2](https://www.w3.org/TR/xpath-functions-30/#func-subsequence), [subsequence\#3](https://www.w3.org/TR/xpath-functions-30/#func-subsequence), [unordered\#1](https://www.w3.org/TR/xpath-functions-30/#func-unordered)
+
+-   Function that compare values in sequences: [distinct-values\#1](https://www.w3.org/TR/xpath-functions-30/#func-distinct-values), [distinct-values\#2](https://www.w3.org/TR/xpath-functions-30/#func-distinct-values), [index-of\#2](https://www.w3.org/TR/xpath-functions-30/#func-index-of), [index-of\#3](https://www.w3.org/TR/xpath-functions-30/#func-index-of), [deep-equal\#2](https://www.w3.org/TR/xpath-functions-30/#func-deep-equal). [deep-equal\#3](https://www.w3.org/TR/xpath-functions-30/#func-deep-equal)
+
+-   Functions that test the cardinality of sequences: [zero-or-one\#1](https://www.w3.org/TR/xpath-functions-30/#func-zero-or-one), [one-or-more\#1](https://www.w3.org/TR/xpath-functions-30/#func-one-or-more), [exactly-one\#1](https://www.w3.org/TR/xpath-functions-30/#func-exactly-one)
+
+-   Aggregate functions: [count\#1](https://www.w3.org/TR/xpath-functions-30/#func-count), [avg\#1](https://www.w3.org/TR/xpath-functions-30/#func-avg), [max\#1](https://www.w3.org/TR/xpath-functions-30/#func-max), [min\#1](https://www.w3.org/TR/xpath-functions-30/#func-min), [sum\#1](https://www.w3.org/TR/xpath-functions-30/#func-sum)
+
+-   Serializing functions: [serialize\#1](https://www.w3.org/TR/xpath-functions-30/#func-serialize) \(unary\)
+
+-   Context information: [current-dateTime\#1](https://www.w3.org/TR/xpath-functions-30/#func-current-dateTime), [current-date\#1](https://www.w3.org/TR/xpath-functions-30/#func-current-date), [current-time\#1](https://www.w3.org/TR/xpath-functions-30/#func-current-time), [implicit-timezone\#1](https://www.w3.org/TR/xpath-functions-30/#func-implicit-timezone), [default-collation\#1](https://www.w3.org/TR/xpath-functions-30/#func-default-collation)
+
+-   Constructor functions: for all builtin types, with the name of the builtin type and unary. Equivalent to a cast expression.
+
+
+## Equality and identity {#chapter-equality-and-identity}
+
+As in most language, one can distinguish between physical equality and logical equality.
+
+Atomics can only be compared logically. Their physically identity is totally opaque to you.
+
+### Logical comparison of two atomics { .example}
+
+```
+
+1 eq 1
+    
+```
+
+Result \(run with Zorba\):true
+
+### Logical comparison of two atomics { .example}
+
+```
+
+1 eq 2
+    
+```
+
+Result \(run with Zorba\):false
+
+### Logical comparison of two atomics { .example}
+
+```
+
+"foo" eq "bar"
+    
+```
+
+Result \(run with Zorba\):false
+
+### Logical comparison of two atomics { .example}
+
+```
+
+"foo" ne "bar"
+    
+```
+
+Result \(run with Zorba\):true
+
+Two objects or arrays can be tested for logical equality as well, using deep-equal\(\), which performs a recursive comparison.
+
+### Logical comparison of two JSON items { .example}
+
+```
+
+deep-equal({ "foo" : "bar" }, { "foo" : "bar" })
+    
+```
+
+Result \(run with Zorba\):true
+
+### Logical comparison of two JSON items { .example}
+
+```
+
+deep-equal({ "foo" : "bar" }, { "bar" : "foo" })
+    
+```
+
+Result \(run with Zorba\):false
+
+The physical identity of objects and arrays is not exposed to the user in the core JSONiq language itself. Some library modules might be able to reveal it, though.
+
+## Notes {#chapter-areas-of-confusion}
+
+### Sequences vs. Arrays {#sequencesVsArrays.d12e6309}
+
+Even though JSON supports arrays, JSONiq uses a different construct as its first class citizens: sequences. Any value returned by or passed to an expression is a sequence.
+
+The main difference between sequences and arrays is that sequences are completely flat, meaning they cannot contain other sequences.
+
+Since sequences are flat, expressions of the JSONiq language just concatenate them to form bigger sequences.
+
+This is crucial to allow streaming results, for example through an HTTP session.
+
+#### Flat sequences { .example}
+
+```
+
+( (1, 2), (3, 4) )
+      
+```
+
+Result \(run with Zorba\):1 2 3 4
+
+Arrays on the other side can contain nested arrays, like in JSON.
+
+#### Nesting arrays { .example}
+
+```
+
+[ [ 1, 2 ], [ 3, 4 ] ]
+      
+```
+
+Result \(run with Zorba\):\[ \[ 1, 2 \], \[ 3, 4 \] \]
+
+Many expressions return single items - actually, they really return a singleton sequence, but a singleton sequence of one item is considered the same as this item.
+
+#### Singleton sequences { .example}
+
+```
+
+1 + 1
+      
+```
+
+Result \(run with Zorba\):2
+
+This is different for arrays: a singleton array is distinct from its unique member, like in JSON.
+
+#### Singleton sequences { .example}
+
+```
+
+[ 1 + 1 ]
+      
+```
+
+Result \(run with Zorba\):\[ 2 \]
+
+An array is a single item. A \(non-singleton\) sequence is not. This can be observed by counting the number of items in a sequence.
+
+#### count\(\) on an array { .example}
+
+```
+
+count([ 1, "foo", [ 1, 2, 3, 4 ], { "foo" : "bar" } ])
+      
+```
+
+Result \(run with Zorba\):1
+
+#### count\(\) on a sequence { .example}
+
+```
+
+count( ( 1, "foo", [ 1, 2, 3, 4 ], { "foo" : "bar" } ) )
+      
+```
+
+Result \(run with Zorba\):4
+
+Other than that, arrays and sequences can contain exactly the same members \(atomics, arrays, objects\).
+
+#### Members of an array { .example}
+
+```
+
+[ 1, "foo", [ 1, 2, 3, 4 ], { "foo" : "bar" } ]
+      
+```
+
+Result \(run with Zorba\):\[ 1, "foo", \[ 1, 2, 3, 4 \], \{ "foo" : "bar" \} \]
+
+#### Members of an sequence { .example}
+
+```
+
+( 1, "foo", [ 1, 2, 3, 4 ], { "foo" : "bar" } )
+      
+```
+
+Result \(run with Zorba\):1 foo \[ 1, 2, 3, 4 \] \{ "foo" : "bar" \}
+
+Arrays can be converted to sequences, and vice-versa.
+
+#### Converting an array to a sequence { .example}
+
+```
+
+[ 1, "foo", [ 1, 2, 3, 4 ], { "foo" : "bar" } ] []
+      
+```
+
+Result \(run with Zorba\):1 foo \[ 1, 2, 3, 4 \] \{ "foo" : "bar" \}
+
+#### Converting a sequence to an array { .example}
+
+```
+
+[ ( 1, "foo", [ 1, 2, 3, 4 ], { "foo" : "bar" } ) ]
+      
+```
+
+Result \(run with Zorba\):\[ 1, "foo", \[ 1, 2, 3, 4 \], \{ "foo" : "bar" \} \]
+
+### Null vs. empty sequence {#nullVsEmptySequence.d12e6437}
+
+Null and the empty sequence are two different concepts.
+
+Null is an item \(an atomic value\), and can be a member of an array or of a sequence, or the value associated with a key in an object. Sequences cannot, as they represent the absence of any item.
+
+#### Null values in an array { .example}
+
+```
+
+[ null, 1, null, 2 ]
+      
+```
+
+Result \(run with Zorba\):\[ null, 1, null, 2 \]
+
+#### Null values in an object { .example}
+
+```
+
+{ "foo" : null }
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : null \}
+
+#### Null values in a sequence { .example}
+
+```
+
+(null, 1, null, 2)
+      
+```
+
+Result \(run with Zorba\):null 1 null 2
+
+If an empty sequence is found as an object value, it is automatically converted to null.
+
+#### Automatic conversion to null. { .example}
+
+```
+
+{ "foo" : () }
+      
+```
+
+Result \(run with Zorba\):\{ "foo" : null \}
+
+In an arithmetic opration or a comparison, if an operand is an empty sequence, an empty sequence is returned. If an operand is a null, an error is raised except for equality and inequality.
+
+#### Empty sequence in an arithmetic operation. { .example}
+
+```
+
+() + 2
+      
+```
+
+Result \(run with Zorba\):
+
+#### Null in an arithmetic operation. { .example}
+
+```
+
+null + 2
+      
+```
+
+Result \(run with Zorba\):An error was raised: arithmetic operation not defined between types "js:null" and "xs:integer"
+
+#### Null and empty sequence in an arithmetic operation. { .example}
+
+```
+
+null + ()
+      
+```
+
+Result \(run with Zorba\):
+
+#### Empty sequence in a comparison. { .example}
+
+```
+
+() eq 2
+      
+```
+
+Result \(run with Zorba\):
+
+#### Null in a comparison. { .example}
+
+```
+
+null eq 2
+      
+```
+
+Result \(run with Zorba\):false
+
+#### Null in a comparison. { .example}
+
+```
+
+null lt 2
+      
+```
+
+Result \(run with Zorba\):true
+
+#### Null and the empty sequence in a comparison. { .example}
+
+```
+
+null eq ()
+      
+```
+
+Result \(run with Zorba\):
+
+#### Null and the empty sequence in a comparison. { .example}
+
+```
+
+null lt ()
+      
+```
+
+Result \(run with Zorba\):
+
+## Open Issues {#chapter-open-issues}
+
+The [JSON update syntax](http://jsoniq.org/docs/JSONiqExtensionToXQuery/html/section-json-updates.html) was not integrated yet into the core language. This is planned, and the syntax will be simplified \(no json keyword, dot lookup allowed here as well\).
+
+The semantics for the [JSON serialization method](http://jsoniq.org/docs/JSONiqExtensionToXQuery/html/section-json-serialization.html) is the same as in the JSONiq Extension to XQuery. It is still under discussion how to escape special characters with the Text output method.
 
