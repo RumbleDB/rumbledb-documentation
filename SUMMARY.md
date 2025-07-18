@@ -1,6 +1,6 @@
 # Table of contents
 
-* [RumbleDB 1.24 "Lemon Ironwood"](README.md)
+* [RumbleDB 1.23 "Mountain Ash"](README.md)
 * [Getting Started](<Getting started.md>)
 * [Run with docker](Docker.md)
 * [Run on a cluster](<Run on a cluster.md>)
