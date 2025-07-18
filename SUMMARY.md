@@ -5,13 +5,6 @@
 * [Run with docker](Docker.md)
 * [Run on a cluster](<Run on a cluster.md>)
 * [Run in Jupyter notebooks](HTTPServer.md)
-
-## Reference
-
-* [Reference](reference/reference.md)
-
-***
-
 * [The JSONiq language](JSONiq.md)
 * [Reading data](Input.md)
 * [Function library](<Function library.md>)
