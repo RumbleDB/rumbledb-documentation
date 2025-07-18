@@ -16,6 +16,6 @@
 * [Installing RumbleDB](install.md)
 * [Licenses](Licenses.md)
 
-## Group 1
+## The JSONiq language
 
-* [JSONiq specification](group-1/jsoniq-specification.md)
+* [JSONiq specification](the-jsoniq-language/jsoniq-specification.md)

@@ -1,10 +1,10 @@
-# JSONiq
+# The JSONiq language
 
 RumbleDB relies on the JSONiq language.
 
 ## JSONiq reference
 
-The complete specification can be found [here](http://www.jsoniq.org/docs/JSONiq/webhelp/index.html) on the [JSONiq.org](http://www.jsoniq.org) website. The implementation is now in a very advanced stage and there remain only few unsupported core JSONiq features.
+The complete specification can be found [here](the-jsoniq-language/jsoniq-specification.md) and on the [JSONiq.org](http://www.jsoniq.org) website. The implementation is now in a very advanced stage and there remain only few unsupported core JSONiq features.
 
 ## JSONiq tutorial
 
@@ -35,7 +35,6 @@ let $z := for $y in json-lines("file2.json")
 return count($z)
 ```
 
-
 ## Expressions pushed down to Spark
 
 Many expressions are pushed down to Spark out of the box. For example, this will work on a large file leveraging the parallelism of Spark:
@@ -46,12 +45,12 @@ count(json-lines("file.json")[$$.field eq "foo"].bar[].foo[[1]])
 
 What is pushed down so far is:
 
-- FLWOR expressions (as soon as a for clause is encountered, binding a variable to a sequence generated with json-lines() or parallelize())
-- aggregation functions such as count
-- JSON navigation expressions: object lookup (as well as keys() call), array lookup, array unboxing, filtering predicates
-- predicates on positions, include use of context-dependent functions position() and last(), e.g.,
-- type checking (instance of, treat as)
-- many builtin function calls (head, tail, exist, etc)
+* FLWOR expressions (as soon as a for clause is encountered, binding a variable to a sequence generated with json-lines() or parallelize())
+* aggregation functions such as count
+* JSON navigation expressions: object lookup (as well as keys() call), array lookup, array unboxing, filtering predicates
+* predicates on positions, include use of context-dependent functions position() and last(), e.g.,
+* type checking (instance of, treat as)
+* many builtin function calls (head, tail, exist, etc)
 
 ```
 json-lines("file.json")[position() ge 10 and position() le last() - 2]
@@ -65,9 +64,7 @@ When an expression does not support pushdown, it will materialize automaticaly. 
 
 ## External global variables.
 
-Prologs with user-defined functions and global variables are supported. Global external variables are supported (use "--variable:foo bar" on the command line to assign values to them). If the declared type is not string, then the literal supplied
-on the command line is cast. If the declared type is anyURI, the path supplied on the command line is also resolved against
-the working directory to an absolute URI. Thus, anyURI should be used to supply paths dynamically through an external variable.
+Prologs with user-defined functions and global variables are supported. Global external variables are supported (use "--variable:foo bar" on the command line to assign values to them). If the declared type is not string, then the literal supplied on the command line is cast. If the declared type is anyURI, the path supplied on the command line is also resolved against the working directory to an absolute URI. Thus, anyURI should be used to supply paths dynamically through an external variable.
 
 Context item declarations are supported and a global context item value can be passed with the "--context-item" or "-I" parameter on the command line.
 
@@ -105,15 +102,12 @@ Try/catch expressions are supported. Error codes are in the default, RumbleDB na
 try { 1 div 0 } catch FOAR0001 { "Division by zero!" }
 ```
 
-
 ### Supported types
 
-The JSONiq type system is fully supported. Below is a complete list of JSONiq types and their support status. All builtin types are in the default type namespace, so that no prefix is needed. These types are defined in the XML Schema standard. Note that some
-types specific to XML (e.g., NOTATION, NMTOKENS, NMTOKEN, ID, IDREF, ENTITY, etc) are not part of the JSONiq standard and
-not supported by RumbleDB.
+The JSONiq type system is fully supported. Below is a complete list of JSONiq types and their support status. All builtin types are in the default type namespace, so that no prefix is needed. These types are defined in the XML Schema standard. Note that some types specific to XML (e.g., NOTATION, NMTOKENS, NMTOKEN, ID, IDREF, ENTITY, etc) are not part of the JSONiq standard and not supported by RumbleDB.
 
 | Type               | Status          |
-|--------------------|-----------------|
+| ------------------ | --------------- |
 | atomic             | JSONiq 1.0 only |
 | anyAtomicType      | supported       |
 | anyURI             | supported       |
@@ -172,8 +166,7 @@ Function annotations are not supported (%public, %private...), but this is plann
 
 ### Builtin functions
 
-Most JSONiq and XQuery builtin functions are now supported (see function documentation), except XML-specific functions. A few are
-still missing, do not hesitate to reach out if you need them.
+Most JSONiq and XQuery builtin functions are now supported (see function documentation), except XML-specific functions. A few are still missing, do not hesitate to reach out if you need them.
 
 Constructors for atomic types are fully supported.
 
