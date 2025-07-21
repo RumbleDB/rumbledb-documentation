@@ -1,4 +1,7 @@
-# RumbleDB ML
+# RumbleML
+
+## RumbleDB ML
+
 RumbleDB ML is a Machine Learning library built on top of the RumbleDB engine that makes it more productive and easier to perform ML tasks thanks to the abstraction layer provided by JSONiq.
 
 The machine learning capabilities are exposed through JSONiq function items. The concepts of "estimator" and "transformer", which are core to Machine Learning, are naturally function items and fit seamlessly in the JSONiq data model.
@@ -7,27 +10,26 @@ Training sets, test sets, and validation sets, which contain features and labels
 
 The names of the estimators and of the transformers, as well as the functionality they encapsulate, are directly inherited from the [SparkML](https://spark.apache.org/docs/latest/ml-guide.html) library which RumbleDB ML is based on: we chose not to reinvent the wheel.
 
-## Transformers
+### Transformers
 
 A **transformer** is a function item that maps a sequence of objects to a sequence of objects.
 
 It is an abstraction that either performs a feature transformation or generates predictions based on trained models. For example:
 
-- _Tokenizer_ is a feature transformer that receives textual input data and splits it into individual terms (usually words), which are called tokens.
+* _Tokenizer_ is a feature transformer that receives textual input data and splits it into individual terms (usually words), which are called tokens.
+* _KMeansModel_ is a trained model and a transformer that can read a dataset containing features and generate predictions as its output.
 
-- _KMeansModel_ is a trained model and a transformer that can read a dataset containing features and generate predictions as its output.
-
-## Estimators
+### Estimators
 
 An **estimator** is a function item that maps a sequence of objects to a transformer (yes, you got it right: that's a function item returned by a function item. This is why they are also called higher-order functions!).
 
 Estimators abstract the concept of a Machine Learning algorithm or any algorithm that fits or trains on data. For example, a learning algorithm such as _KMeans_ is implemented as an Estimator. Calling this estimator on data essentially trains a KMeansModel, which is a Model and hence a Transformer.
 
-## Parameters
+### Parameters
 
 Transformers and estimators are function items in the RumbleDB Data Model. Their first argument is the sequence of objects that represents, for example, the training set or test set. Parameters can be provided as their second argument. This second argument is expected to be an object item. The machine learning parameters form the fields of the said object item as key-value pairs.
 
-## Type Annotations
+### Type Annotations
 
 RumbleDB ML works on highly structured data, because it requires full type information for all the fields in the training set or test set. It is on our development plan to automate the detection of these types when the sequence of objects gets created in the fly.
 
@@ -35,10 +37,10 @@ RumbleDB supports a user-defined type system with which you can validate and ann
 
 This annotation is required to be applied on any dataset that must be used as input to RumbleDB ML, but it is superfluous if the data was directly read from a structured input format such as Parquet, CSV, Avro, SVM or ROOT.
 
+### Examples
 
-## Examples
+* Tokenizer Example:
 
-- Tokenizer Example:
 ```
 
 declare type local:id-and-sentence as {
@@ -67,7 +69,8 @@ return $i
 // { "id" : 3, "sentence" : "Logistic regression models are neat", "output" : [ "logistic", "regression", "models", "are", "neat" ] }
 ```
 
-- KMeans Example:
+* KMeans Example:
+
 ```
 declare type local:col-1-2-3 as {
   "id": "integer",
@@ -113,10 +116,14 @@ return $i
 // { "id" : 5, "col1" : 9.2, "col2" : 9.2, "col3" : 9.2, "prediction" : 1 }
 ```
 
-# RumbleDB ML Functionality Overview:
-## RumblDB eML - Catalogue of Estimators:
-### [AFTSurvivalRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/AFTSurvivalRegression.html)
-#### Parameters:
+## RumbleDB ML Functionality Overview:
+
+### RumblDB eML - Catalogue of Estimators:
+
+#### [AFTSurvivalRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/AFTSurvivalRegression.html)
+
+**Parameters:**
+
 ```
 - aggregationDepth: integer
 - censorCol: string
@@ -129,8 +136,11 @@ return $i
 - quantilesCol: string
 - tol: double
 ```
-### [ALS](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/recommendation/ALS.html)
-#### Parameters:
+
+#### [ALS](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/recommendation/ALS.html)
+
+**Parameters:**
+
 ```
 - alpha: double
 - checkpointInterval: integer
@@ -151,8 +161,11 @@ return $i
 - seed: double
 - userCol: string
 ```
-### [BisectingKMeans](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/BisectingKMeans.html)
-#### Parameters:
+
+#### [BisectingKMeans](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/BisectingKMeans.html)
+
+**Parameters:**
+
 ```
 - distanceMeasure: string
 - featuresCol: string
@@ -162,8 +175,11 @@ return $i
 - predictionCol: string
 - seed: double
 ```
-### [BucketedRandomProjectionLSH](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/BucketedRandomProjectionLSH.html)
-#### Parameters:
+
+#### [BucketedRandomProjectionLSH](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/BucketedRandomProjectionLSH.html)
+
+**Parameters:**
+
 ```
 - bucketLength: double
 - inputCol: string
@@ -171,8 +187,11 @@ return $i
 - outputCol: string
 - seed: double
 ```
-### [ChiSqSelector](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ChiSqSelector.html)
-#### Parameters:
+
+#### [ChiSqSelector](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ChiSqSelector.html)
+
+**Parameters:**
+
 ```
 - fdr: double
 - featuresCol: string
@@ -184,8 +203,11 @@ return $i
 - percentile: double
 - selectorType: string
 ```
-### [CountVectorizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/CountVectorizer.html)
-#### Parameters:
+
+#### [CountVectorizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/CountVectorizer.html)
+
+**Parameters:**
+
 ```
 - binary: boolean
 - inputCol: string
@@ -195,8 +217,11 @@ return $i
 - outputCol: string
 - vocabSize: integer
 ```
-### [CrossValidator](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/tuning/CrossValidator.html)
-#### Parameters:
+
+#### [CrossValidator](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/tuning/CrossValidator.html)
+
+**Parameters:**
+
 ```
 - collectSubModels: boolean
 - estimator: estimator (i.e., function(object*, object) as function(object*, object) as object*)
@@ -204,8 +229,11 @@ return $i
 - parallelism: integer
 - seed: double
 ```
-### [DecisionTreeClassifier](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/DecisionTreeClassifier.html)
-#### Parameters:
+
+#### [DecisionTreeClassifier](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/DecisionTreeClassifier.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -223,8 +251,11 @@ return $i
 - seed: double
 - thresholds: array (of double)
 ```
-### [DecisionTreeRegressor](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/DecisionTreeRegressor.html)
-#### Parameters:
+
+#### [DecisionTreeRegressor](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/DecisionTreeRegressor.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -240,8 +271,11 @@ return $i
 - seed: double
 - varianceCol: string
 ```
-### [FPGrowth](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/fpm/FPGrowth.html)
-#### Parameters:
+
+#### [FPGrowth](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/fpm/FPGrowth.html)
+
+**Parameters:**
+
 ```
 - itemsCol: string
 - minConfidence: double
@@ -249,8 +283,11 @@ return $i
 - numPartitions: integer
 - predictionCol: string
 ```
-### [GBTClassifier](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/GBTClassifier.html)
-#### Parameters:
+
+#### [GBTClassifier](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/GBTClassifier.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -274,8 +311,11 @@ return $i
 - thresholds: array (of double)
 - validationIndicatorCol: string
 ```
-### [GBTRegressor](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/GBTRegressor.html)
-#### Parameters:
+
+#### [GBTRegressor](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/GBTRegressor.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -296,8 +336,11 @@ return $i
 - subsamplingRate: double
 - validationIndicatorCol: string
 ```
-### [GaussianMixture](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/GaussianMixture.html)
-#### Parameters:
+
+#### [GaussianMixture](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/GaussianMixture.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - k: integer
@@ -307,8 +350,11 @@ return $i
 - seed: double
 - tol: double
 ```
-### [GeneralizedLinearRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/GeneralizedLinearRegression.html)
-#### Parameters:
+
+#### [GeneralizedLinearRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/GeneralizedLinearRegression.html)
+
+**Parameters:**
+
 ```
 - family: string
 - featuresCol: string
@@ -326,23 +372,32 @@ return $i
 - variancePower: double
 - weightCol: string
 ```
-### [IDF](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/IDF.html)
-#### Parameters:
+
+#### [IDF](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/IDF.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - minDocFreq: integer
 - outputCol: string
 ```
-### [Imputer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Imputer.html)
-#### Parameters:
+
+#### [Imputer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Imputer.html)
+
+**Parameters:**
+
 ```
 - inputCols: array (of string)
 - missingValue: double
 - outputCols: array (of string)
 - strategy: string
 ```
-### [IsotonicRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/IsotonicRegression.html)
-#### Parameters:
+
+#### [IsotonicRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/IsotonicRegression.html)
+
+**Parameters:**
+
 ```
 - featureIndex: integer
 - featuresCol: string
@@ -351,8 +406,11 @@ return $i
 - predictionCol: string
 - weightCol: string
 ```
-### [KMeans](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/KMeans.html)
-#### Parameters:
+
+#### [KMeans](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/KMeans.html)
+
+**Parameters:**
+
 ```
 - distanceMeasure: string
 - featuresCol: string
@@ -364,8 +422,11 @@ return $i
 - seed: double
 - tol: double
 ```
-### [LDA](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/LDA.html)
-#### Parameters:
+
+#### [LDA](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/LDA.html)
+
+**Parameters:**
+
 ```
 - checkpointInterval: integer
 - docConcentration: double
@@ -383,8 +444,11 @@ return $i
 - topicConcentration: double
 - topicDistributionCol: string
 ```
-### [LinearRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/LinearRegression.html)
-#### Parameters:
+
+#### [LinearRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/LinearRegression.html)
+
+**Parameters:**
+
 ```
 - aggregationDepth: integer
 - elasticNetParam: double
@@ -401,8 +465,11 @@ return $i
 - tol: double
 - weightCol: string
 ```
-### [LinearSVC](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/LinearSVC.html)
-#### Parameters:
+
+#### [LinearSVC](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/LinearSVC.html)
+
+**Parameters:**
+
 ```
 - aggregationDepth: integer
 - featuresCol: string
@@ -417,8 +484,11 @@ return $i
 - tol: double
 - weightCol: string
 ```
-### [LogisticRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/LogisticRegression.html)
-#### Parameters:
+
+#### [LogisticRegression](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/LogisticRegression.html)
+
+**Parameters:**
+
 ```
 - aggregationDepth: integer
 - elasticNetParam: double
@@ -441,30 +511,42 @@ return $i
 - upperBoundsOnIntercepts: object (of double)
 - weightCol: string
 ```
-### [MaxAbsScaler](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MaxAbsScaler.html)
-#### Parameters:
+
+#### [MaxAbsScaler](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MaxAbsScaler.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 ```
-### [MinHashLSH](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MinHashLSH.html)
-#### Parameters:
+
+#### [MinHashLSH](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MinHashLSH.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - numHashTables: integer
 - outputCol: string
 - seed: double
 ```
-### [MinMaxScaler](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MinMaxScaler.html)
-#### Parameters:
+
+#### [MinMaxScaler](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MinMaxScaler.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - max: double
 - min: double
 - outputCol: string
 ```
-### [MultilayerPerceptronClassifier](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/MultilayerPerceptronClassifier.html)
-#### Parameters:
+
+#### [MultilayerPerceptronClassifier](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/MultilayerPerceptronClassifier.html)
+
+**Parameters:**
+
 ```
 - blockSize: integer
 - featuresCol: string
@@ -481,8 +563,11 @@ return $i
 - thresholds: array (of double)
 - tol: double
 ```
-### [NaiveBayes](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/NaiveBayes.html)
-#### Parameters:
+
+#### [NaiveBayes](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/NaiveBayes.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - labelCol: string
@@ -494,16 +579,22 @@ return $i
 - thresholds: array (of double)
 - weightCol: string
 ```
-### [OneHotEncoder](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/OneHotEncoder.html)
-#### Parameters:
+
+#### [OneHotEncoder](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/OneHotEncoder.html)
+
+**Parameters:**
+
 ```
 - dropLast: boolean
 - handleInvalid: string
 - inputCols: array (of string)
 - outputCols: array (of string)
 ```
-### [OneVsRest](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/OneVsRest.html)
-#### Parameters:
+
+#### [OneVsRest](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/OneVsRest.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - labelCol: string
@@ -512,19 +603,28 @@ return $i
 - rawPredictionCol: string
 - weightCol: string
 ```
-### [PCA](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/PCA.html)
-#### Parameters:
+
+#### [PCA](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/PCA.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - k: integer
 - outputCol: string
 ```
-### [Pipeline](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/Pipeline.html)
-#### Parameters:
+
+#### [Pipeline](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/Pipeline.html)
+
+**Parameters:**
+
 ```
 ```
-### [QuantileDiscretizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/QuantileDiscretizer.html)
-#### Parameters:
+
+#### [QuantileDiscretizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/QuantileDiscretizer.html)
+
+**Parameters:**
+
 ```
 - handleInvalid: string
 - inputCol: string
@@ -535,8 +635,11 @@ return $i
 - outputCols: array (of string)
 - relativeError: double
 ```
-### [RFormula](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/RFormula.html)
-#### Parameters:
+
+#### [RFormula](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/RFormula.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - forceIndexLabel: boolean
@@ -545,8 +648,11 @@ return $i
 - labelCol: string
 - stringIndexerOrderType: string
 ```
-### [RandomForestClassifier](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/RandomForestClassifier.html)
-#### Parameters:
+
+#### [RandomForestClassifier](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/RandomForestClassifier.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -567,8 +673,11 @@ return $i
 - subsamplingRate: double
 - thresholds: array (of double)
 ```
-### [RandomForestRegressor](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/RandomForestRegressor.html)
-#### Parameters:
+
+#### [RandomForestRegressor](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/RandomForestRegressor.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -586,24 +695,33 @@ return $i
 - seed: double
 - subsamplingRate: double
 ```
-### [StandardScaler](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StandardScaler.html)
-#### Parameters:
+
+#### [StandardScaler](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StandardScaler.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - withMean: boolean
 - withStd: boolean
 ```
-### [StringIndexer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StringIndexer.html)
-#### Parameters:
+
+#### [StringIndexer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StringIndexer.html)
+
+**Parameters:**
+
 ```
 - handleInvalid: string
 - inputCol: string
 - outputCol: string
 - stringOrderType: string
 ```
-### [TrainValidationSplit](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/tuning/TrainValidationSplit.html)
-#### Parameters:
+
+#### [TrainValidationSplit](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/tuning/TrainValidationSplit.html)
+
+**Parameters:**
+
 ```
 - collectSubModels: boolean
 - estimator: estimator (i.e., function(object*, object) as function(object*, object) as object*)
@@ -611,16 +729,22 @@ return $i
 - seed: double
 - trainRatio: double
 ```
-### [VectorIndexer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorIndexer.html)
-#### Parameters:
+
+#### [VectorIndexer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorIndexer.html)
+
+**Parameters:**
+
 ```
 - handleInvalid: string
 - inputCol: string
 - maxCategories: integer
 - outputCol: string
 ```
-### [Word2Vec](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Word2Vec.html)
-#### Parameters:
+
+#### [Word2Vec](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Word2Vec.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - maxIter: integer
@@ -634,9 +758,12 @@ return $i
 - windowSize: integer
 ```
 
-## RumbleDB ML - Catalogue of Transformers:
-### [AFTSurvivalRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/AFTSurvivalRegressionModel.html)
-#### Parameters:
+### RumbleDB ML - Catalogue of Transformers:
+
+#### [AFTSurvivalRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/AFTSurvivalRegressionModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
@@ -644,8 +771,11 @@ return $i
 - quantileProbabilities: array (of double)
 - quantilesCol: string
 ```
-### [ALSModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/recommendation/ALSModel.html)
-#### Parameters:
+
+#### [ALSModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/recommendation/ALSModel.html)
+
+**Parameters:**
+
 ```
 - coldStartStrategy: string
 - itemCol: string
@@ -653,29 +783,41 @@ return $i
 - predictionCol: string
 - userCol: string
 ```
-### [Binarizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Binarizer.html)
-#### Parameters:
+
+#### [Binarizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Binarizer.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - threshold: double
 ```
-### [BisectingKMeansModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/BisectingKMeansModel.html)
-#### Parameters:
+
+#### [BisectingKMeansModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/BisectingKMeansModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - predictionCol: string
 ```
-### [BucketedRandomProjectionLSHModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/BucketedRandomProjectionLSHModel.html)
-#### Parameters:
+
+#### [BucketedRandomProjectionLSHModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/BucketedRandomProjectionLSHModel.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [Bucketizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Bucketizer.html)
-#### Parameters:
+
+#### [Bucketizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Bucketizer.html)
+
+**Parameters:**
+
 ```
 - handleInvalid: string
 - inputCol: string
@@ -686,19 +828,28 @@ return $i
 - splits: array (of double)
 - splitsArray: array (of array of double)
 ```
-### [ChiSqSelectorModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ChiSqSelectorModel.html)
-#### Parameters:
+
+#### [ChiSqSelectorModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ChiSqSelectorModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [ColumnPruner](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ColumnPruner.html)
-#### Parameters:
+
+#### [ColumnPruner](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ColumnPruner.html)
+
+**Parameters:**
+
 ```
 ```
-### [CountVectorizerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/CountVectorizerModel.html)
-#### Parameters:
+
+#### [CountVectorizerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/CountVectorizerModel.html)
+
+**Parameters:**
+
 ```
 - binary: boolean
 - inputCol: string
@@ -706,20 +857,29 @@ return $i
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [CrossValidatorModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/tuning/CrossValidatorModel.html)
-#### Parameters:
+
+#### [CrossValidatorModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/tuning/CrossValidatorModel.html)
+
+**Parameters:**
+
 ```
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [DCT](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/DCT.html)
-#### Parameters:
+
+#### [DCT](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/DCT.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - inverse: boolean
 - outputCol: string
 ```
-### [DecisionTreeClassificationModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/DecisionTreeClassificationModel.html)
-#### Parameters:
+
+#### [DecisionTreeClassificationModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/DecisionTreeClassificationModel.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -737,8 +897,11 @@ return $i
 - seed: double
 - thresholds: array (of double)
 ```
-### [DecisionTreeRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/DecisionTreeRegressionModel.html)
-#### Parameters:
+
+#### [DecisionTreeRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/DecisionTreeRegressionModel.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -754,39 +917,54 @@ return $i
 - seed: double
 - varianceCol: string
 ```
-### [DistributedLDAModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/DistributedLDAModel.html)
-#### Parameters:
+
+#### [DistributedLDAModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/DistributedLDAModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - seed: double
 - topicDistributionCol: string
 ```
-### [ElementwiseProduct](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ElementwiseProduct.html)
-#### Parameters:
+
+#### [ElementwiseProduct](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ElementwiseProduct.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - scalingVec: object (of double)
 ```
-### [FPGrowthModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/fpm/FPGrowthModel.html)
-#### Parameters:
+
+#### [FPGrowthModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/fpm/FPGrowthModel.html)
+
+**Parameters:**
+
 ```
 - itemsCol: string
 - minConfidence: double
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - predictionCol: string
 ```
-### [FeatureHasher](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/FeatureHasher.html)
-#### Parameters:
+
+#### [FeatureHasher](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/FeatureHasher.html)
+
+**Parameters:**
+
 ```
 - categoricalCols: array (of string)
 - inputCols: array (of string)
 - numFeatures: integer
 - outputCol: string
 ```
-### [GBTClassificationModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/GBTClassificationModel.html)
-#### Parameters:
+
+#### [GBTClassificationModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/GBTClassificationModel.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -808,8 +986,11 @@ return $i
 - subsamplingRate: double
 - thresholds: array (of double)
 ```
-### [GBTRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/GBTRegressionModel.html)
-#### Parameters:
+
+#### [GBTRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/GBTRegressionModel.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -828,81 +1009,114 @@ return $i
 - stepSize: double
 - subsamplingRate: double
 ```
-### [GaussianMixtureModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/GaussianMixtureModel.html)
-#### Parameters:
+
+#### [GaussianMixtureModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/GaussianMixtureModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - predictionCol: string
 - probabilityCol: string
 ```
-### [GeneralizedLinearRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/GeneralizedLinearRegressionModel.html)
-#### Parameters:
+
+#### [GeneralizedLinearRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/GeneralizedLinearRegressionModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - linkPredictionCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - predictionCol: string
 ```
-### [HashingTF](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/HashingTF.html)
-#### Parameters:
+
+#### [HashingTF](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/HashingTF.html)
+
+**Parameters:**
+
 ```
 - binary: boolean
 - inputCol: string
 - numFeatures: integer
 - outputCol: string
 ```
-### [IDFModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/IDFModel.html)
-#### Parameters:
+
+#### [IDFModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/IDFModel.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [ImputerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ImputerModel.html)
-#### Parameters:
+
+#### [ImputerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/ImputerModel.html)
+
+**Parameters:**
+
 ```
 - inputCols: array (of string)
 - outputCols: array (of string)
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [IndexToString](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/IndexToString.html)
-#### Parameters:
+
+#### [IndexToString](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/IndexToString.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - labels: array (of string)
 - outputCol: string
 ```
-### [Interaction](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Interaction.html)
-#### Parameters:
+
+#### [Interaction](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Interaction.html)
+
+**Parameters:**
+
 ```
 - inputCols: array (of string)
 - outputCol: string
 ```
-### [IsotonicRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/IsotonicRegressionModel.html)
-#### Parameters:
+
+#### [IsotonicRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/IsotonicRegressionModel.html)
+
+**Parameters:**
+
 ```
 - featureIndex: integer
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - predictionCol: string
 ```
-### [KMeansModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/KMeansModel.html)
-#### Parameters:
+
+#### [KMeansModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/KMeansModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - predictionCol: string
 ```
-### [LinearRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/LinearRegressionModel.html)
-#### Parameters:
+
+#### [LinearRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/LinearRegressionModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - predictionCol: string
 ```
-### [LinearSVCModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/LinearSVCModel.html)
-#### Parameters:
+
+#### [LinearSVCModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/LinearSVCModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
@@ -911,16 +1125,22 @@ return $i
 - threshold: double
 - weightCol: double
 ```
-### [LocalLDAModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/LocalLDAModel.html)
-#### Parameters:
+
+#### [LocalLDAModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/clustering/LocalLDAModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - seed: double
 - topicDistributionCol: string
 ```
-### [LogisticRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/LogisticRegressionModel.html)
-#### Parameters:
+
+#### [LogisticRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/LogisticRegressionModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
@@ -930,22 +1150,31 @@ return $i
 - threshold: double
 - thresholds: array (of double)
 ```
-### [MaxAbsScalerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MaxAbsScalerModel.html)
-#### Parameters:
+
+#### [MaxAbsScalerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MaxAbsScalerModel.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [MinHashLSHModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MinHashLSHModel.html)
-#### Parameters:
+
+#### [MinHashLSHModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MinHashLSHModel.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [MinMaxScalerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MinMaxScalerModel.html)
-#### Parameters:
+
+#### [MinMaxScalerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/MinMaxScalerModel.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - max: double
@@ -953,8 +1182,11 @@ return $i
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [MultilayerPerceptronClassificationModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/MultilayerPerceptronClassificationModel.html)
-#### Parameters:
+
+#### [MultilayerPerceptronClassificationModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/MultilayerPerceptronClassificationModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
@@ -963,15 +1195,21 @@ return $i
 - rawPredictionCol: string
 - thresholds: array (of double)
 ```
-### [NGram](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/NGram.html)
-#### Parameters:
+
+#### [NGram](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/NGram.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - n: integer
 - outputCol: string
 ```
-### [NaiveBayesModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/NaiveBayesModel.html)
-#### Parameters:
+
+#### [NaiveBayesModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/NaiveBayesModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
@@ -980,22 +1218,31 @@ return $i
 - rawPredictionCol: string
 - thresholds: array (of double)
 ```
-### [Normalizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Normalizer.html)
-#### Parameters:
+
+#### [Normalizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Normalizer.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - p: double
 ```
-### [OneHotEncoder](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/OneHotEncoder.html)
-#### Parameters:
+
+#### [OneHotEncoder](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/OneHotEncoder.html)
+
+**Parameters:**
+
 ```
 - dropLast: boolean
 - inputCol: string
 - outputCol: string
 ```
-### [OneHotEncoderModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/OneHotEncoderModel.html)
-#### Parameters:
+
+#### [OneHotEncoderModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/OneHotEncoderModel.html)
+
+**Parameters:**
+
 ```
 - dropLast: boolean
 - handleInvalid: string
@@ -1003,40 +1250,58 @@ return $i
 - outputCols: array (of string)
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [OneVsRestModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/OneVsRestModel.html)
-#### Parameters:
+
+#### [OneVsRestModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/OneVsRestModel.html)
+
+**Parameters:**
+
 ```
 - featuresCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 - predictionCol: string
 - rawPredictionCol: string
 ```
-### [PCAModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/PCAModel.html)
-#### Parameters:
+
+#### [PCAModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/PCAModel.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [PipelineModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/PipelineModel.html)
-#### Parameters:
+
+#### [PipelineModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/PipelineModel.html)
+
+**Parameters:**
+
 ```
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [PolynomialExpansion](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/PolynomialExpansion.html)
-#### Parameters:
+
+#### [PolynomialExpansion](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/PolynomialExpansion.html)
+
+**Parameters:**
+
 ```
 - degree: integer
 - inputCol: string
 - outputCol: string
 ```
-### [RFormulaModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/RFormulaModel.html)
-#### Parameters:
+
+#### [RFormulaModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/RFormulaModel.html)
+
+**Parameters:**
+
 ```
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [RandomForestClassificationModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/RandomForestClassificationModel.html)
-#### Parameters:
+
+#### [RandomForestClassificationModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/classification/RandomForestClassificationModel.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -1057,8 +1322,11 @@ return $i
 - subsamplingRate: double
 - thresholds: array (of double)
 ```
-### [RandomForestRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/RandomForestRegressionModel.html)
-#### Parameters:
+
+#### [RandomForestRegressionModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/regression/RandomForestRegressionModel.html)
+
+**Parameters:**
+
 ```
 - cacheNodeIds: boolean
 - checkpointInterval: integer
@@ -1076,8 +1344,11 @@ return $i
 - seed: double
 - subsamplingRate: double
 ```
-### [RegexTokenizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/RegexTokenizer.html)
-#### Parameters:
+
+#### [RegexTokenizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/RegexTokenizer.html)
+
+**Parameters:**
+
 ```
 - gaps: boolean
 - inputCol: string
@@ -1086,20 +1357,29 @@ return $i
 - pattern: string
 - toLowercase: boolean
 ```
-### [SQLTransformer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/SQLTransformer.html)
-#### Parameters:
+
+#### [SQLTransformer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/SQLTransformer.html)
+
+**Parameters:**
+
 ```
 - statement: string
 ```
-### [StandardScalerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StandardScalerModel.html)
-#### Parameters:
+
+#### [StandardScalerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StandardScalerModel.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [StopWordsRemover](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StopWordsRemover.html)
-#### Parameters:
+
+#### [StopWordsRemover](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StopWordsRemover.html)
+
+**Parameters:**
+
 ```
 - caseSensitive: boolean
 - inputCol: string
@@ -1107,63 +1387,89 @@ return $i
 - outputCol: string
 - stopWords: array (of string)
 ```
-### [StringIndexerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StringIndexerModel.html)
-#### Parameters:
+
+#### [StringIndexerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/StringIndexerModel.html)
+
+**Parameters:**
+
 ```
 - handleInvalid: string
 - inputCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [Tokenizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Tokenizer.html)
-#### Parameters:
+
+#### [Tokenizer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Tokenizer.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 ```
-### [TrainValidationSplitModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/tuning/TrainValidationSplitModel.html)
-#### Parameters:
+
+#### [TrainValidationSplitModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/tuning/TrainValidationSplitModel.html)
+
+**Parameters:**
+
 ```
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
-### [VectorAssembler](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorAssembler.html)
-#### Parameters:
+
+#### [VectorAssembler](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorAssembler.html)
+
+**Parameters:**
+
 ```
 - handleInvalid: string
 - inputCols: array (of string)
 - outputCol: string
 ```
-### [VectorAttributeRewriter](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorAttributeRewriter.html)
-#### Parameters:
+
+#### [VectorAttributeRewriter](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorAttributeRewriter.html)
+
+**Parameters:**
+
 ```
 ```
-### [VectorIndexerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorIndexerModel.html)
-#### Parameters:
-```
-- inputCol: string
-- outputCol: string
-- parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
-```
-### [VectorSizeHint](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorSizeHint.html)
-#### Parameters:
-```
-- handleInvalid: string
-- inputCol: string
-- size: integer
-```
-### [VectorSlicer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorSlicer.html)
-#### Parameters:
-```
-- indices: array (of integer)
-- inputCol: string
-- names: array (of string)
-- outputCol: string
-```
-### [Word2VecModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Word2VecModel.html)
-#### Parameters:
+
+#### [VectorIndexerModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorIndexerModel.html)
+
+**Parameters:**
+
 ```
 - inputCol: string
 - outputCol: string
 - parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
 ```
 
+#### [VectorSizeHint](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorSizeHint.html)
+
+**Parameters:**
+
+```
+- handleInvalid: string
+- inputCol: string
+- size: integer
+```
+
+#### [VectorSlicer](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/VectorSlicer.html)
+
+**Parameters:**
+
+```
+- indices: array (of integer)
+- inputCol: string
+- names: array (of string)
+- outputCol: string
+```
+
+#### [Word2VecModel](https://spark.apache.org/docs/3.0.0/api/java/org/apache/spark/ml/feature/Word2VecModel.html)
+
+**Parameters:**
+
+```
+- inputCol: string
+- outputCol: string
+- parent: estimator (i.e., function(object*, object) as function(object*, object) as object*)
+```

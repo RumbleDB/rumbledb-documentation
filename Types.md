@@ -27,7 +27,6 @@ In the above query, although the type is defined, the query returns an object th
 
 To validate and annotate a sequence of objects, you need to use the validate-type expression, like so:
 
-
 ```
 declare type local:my-type as {
   "foo" : "string",
@@ -59,7 +58,6 @@ return if($a instance of local:my-type*)
        then local:proj($a)
        else "Not an instance."
 ```
-
 
 You can validate larger sequences
 
@@ -156,7 +154,6 @@ Extra fields will be rejected. However, the verbose version of JSound supports a
 
 With the JSound comptact syntax, you can easily define nested array structures:
 
-
 ```
 declare type local:my-type as {
   "foo" : "string",
@@ -174,7 +171,6 @@ validate type local:my-type* {
 ```
 
 You can even further nest objects:
-
 
 ```
 declare type local:my-type as {
@@ -249,7 +245,7 @@ In other words, the JSound Compact Schema Syntax is perfect for defining DataFra
 
 ## Verbose syntax
 
-For advanced JSound features, such as open object types or subtypes, the verbose syntax must be used, like so: 
+For advanced JSound features, such as open object types or subtypes, the verbose syntax must be used, like so:
 
 ```
 declare type local:x as jsound verbose {
@@ -271,8 +267,7 @@ declare type local:y as jsound verbose {
 };
 ```
 
-The JSound type system, as its name indicates, is sound: you can only make subtypes more restrictive than the super type. The
-complete specification of both syntaxes is available on the [JSound website](https://www.jsound-spec.org/).
+The JSound type system, as its name indicates, is sound: you can only make subtypes more restrictive than the super type. The complete specification of both syntaxes is available on the [JSound website](https://www.jsound-spec.org/).
 
 In the feature, RumbleDB will support user-defined atomic types and union types via the verbose syntax.
 

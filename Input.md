@@ -18,13 +18,11 @@ returns the (single) JSON value read from the supplied JSON file. This will also
 
 json-doc() also works with an HTTP URI.
 
-
 ### JSON Lines
 
 JSON Lines files are files that have one JSON object (or value) per line. Such files can thus become very large, up to billions or even trillions of JSON objects.
 
-JSON Lines files are read with the json-lines() function (formerly called json-file()). json-lines() exists in unary and binary. The first parameter specifies the JSON file (or set of JSON files) to read.
-The second, optional parameter specifies the minimum number of partitions. It is recommended to use it in a local setup, as the default is only one partition, which does not fully use the parallelism. If the input is on HDFS, then blocks are taken as splits by default. This is also similar to Spark's textFile().
+JSON Lines files are read with the json-lines() function (formerly called json-file()). json-lines() exists in unary and binary. The first parameter specifies the JSON file (or set of JSON files) to read. The second, optional parameter specifies the minimum number of partitions. It is recommended to use it in a local setup, as the default is only one partition, which does not fully use the parallelism. If the input is on HDFS, then blocks are taken as splits by default. This is also similar to Spark's textFile().
 
 json-lines() also works with an HTTP URI, however, it will download the file completely and then parallelize, because HTTP does not support blocks. As a consequence, it can only be used for reasonable sizes.
 
@@ -62,7 +60,6 @@ return $my-json
 
 Several files or whole directories can be read with the same pattern syntax as in Spark.
 
-
 ```
 for $my-json in json-lines("*.json")
 where $my-json.property eq "some value"
@@ -93,8 +90,7 @@ Example of usage:
 doc("path/to/file.xml")
 ```
 
-Additionally, RumbeDB provides the xml-files() function to read many XML files at once.  xml-files() exists in unary and binary. The first parameter specifies the directory of XML files to read.
-The second, optional parameter specifies the minimum number of partitions. It is recommended to use it in a local setup, as the default is only one partition. 
+Additionally, RumbeDB provides the xml-files() function to read many XML files at once. xml-files() exists in unary and binary. The first parameter specifies the directory of XML files to read. The second, optional parameter specifies the minimum number of partitions. It is recommended to use it in a local setup, as the default is only one partition.
 
 Example of usage:
 
@@ -127,7 +123,6 @@ Several files or whole directories can be read with the same pattern syntax as i
 
 There is also a function local-text-file() that reads locally, without parallelism. RumbleDB can stream through the file efficiently.
 
-
 ```
 count(
   for $my-string in local-text-file("file:///home/me/file.txt")
@@ -139,7 +134,6 @@ count(
 
 RumbleDB supports also the W3C-standard functions unparsed-text and unparsed-text-lines. The output of the latter is automatically parallelized as a potentially large sequence of strings.
 
-
 ```
 count(
   for $my-string in unparsed-text-lines("file:///home/me/file.txt")
@@ -148,7 +142,6 @@ count(
   return $token
 )
 ```
-
 
 ```
 count(
@@ -260,7 +253,6 @@ return $i
 
 ROOT files can be open with the function root-file(). The second parameter specifies the path within the ROOT files (a ROOT file is like a mini-file system of its own). It is often `Events` or `tree`.
 
-
 ```
 for $i in root-file("events.root", "Events")
 where $i._c0 eq "some value"
@@ -271,8 +263,7 @@ return $i
 
 The function parallelize() can be used to create, on the fly, a big sequence of items in such a way that RumbleDB can spread its querying across cores and machines.
 
-This function behaves like the Spark parallelize() you are familiar with and sends a large sequence to the cluster.
-The rest of the FLWOR expression is then evaluated with Spark transformations on the cluster.
+This function behaves like the Spark parallelize() you are familiar with and sends a large sequence to the cluster. The rest of the FLWOR expression is then evaluated with Spark transformations on the cluster.
 
 ```
 for $i in parallelize(1 to 1000000)
@@ -292,8 +283,7 @@ return $i
 
 As a general rule of thumb, RumbleDB can read from any file system that Spark can read from. The file system is inferred from the scheme used in the path used in any of the functions described above.
 
-Note that the scheme is optional, in which case the default file system as configured in Hadoop and Spark is used.
-A relative path can also be provided, in which case the working directory (including its file system) as configured is used.
+Note that the scheme is optional, in which case the default file system as configured in Hadoop and Spark is used. A relative path can also be provided, in which case the working directory (including its file system) as configured is used.
 
 ### Local file system
 
@@ -317,7 +307,7 @@ file:/C:/Users/hadoop/file.json
 /C:/Users/hadoop/file.json
 ```
 
-In particular, the following will *not* work:
+In particular, the following will _not_ work:
 
 ```
 file://C:/Users/hadoop/file.json
@@ -342,7 +332,7 @@ If HDFS is already set up as the default file system as is often the case in man
 /user/hadoop/file.json
 ```
 
-The following will *not* work:
+The following will _not_ work:
 
 ```
 hdfs:///user/hadoop/file.json
@@ -363,7 +353,6 @@ s3a://my-bucket/directory/file.json
 ```
 
 If you are on an Amazon EMR cluster, `s3://` is straightforward to use and will automatically authenticate. For more details on how to set up your environment to read from S3 and which scheme is most appropriate, we refer to the Amazon S3 documentation.
-
 
 ### Azure blob storage
 
