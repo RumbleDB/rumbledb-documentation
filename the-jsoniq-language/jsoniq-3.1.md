@@ -10,6 +10,8 @@ JSONiq 3.1 benefits from all the map and object builtin functions defined in XQu
 
 JSONiq 3.1 is fully interoperable with XQuery 3.1 and can execute on the same virtual machine (similar to Scala and Java).
 
+This also paves the way for JSONiq 4.0 which will also be aligned with XQuery 4.0 as much as is technically possible.
+
 As a result, the specification for JSONiq 3.1 is even more minimal than that of JSONiq 1.0. This makes it easy to support for any existing XQuery engine to step into the JSON community.
 
 RumbleDB is slowly deploying the use of JSONiq 3.1 but it will take some time as we make sure to sweep in all corners.
