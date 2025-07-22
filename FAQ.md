@@ -6,20 +6,28 @@ By default, the memory allocated is limited. This depends on whether you run Rum
 
 If you run RumbleDB with a standalone jar, then your laptop will allocate by default one quarter of your total working memory. You can check this with:
 
-    java -XX:+PrintFlagsFinal -version | grep -iE 'MaxHeapSize'   
+```
+java -XX:+PrintFlagsFinal -version | grep -iE 'MaxHeapSize'   
+```
 
 In order to increase the memory, you can use `-Xmx10g` (for 10 GB, but you can use any other value):
 
-    java -jar -Xmx10g rumbledb-1.24.0-standalone.jar ...
-    
+```
+java -jar -Xmx10g rumbledb-1.24.0-standalone.jar ...
+```
+
 If you run RumbleDB on your laptop (or a single machine) with the thin jar, then by default this is limited to around 2 GB, and you can change this with `--driver-memory`:
 
-    spark-submit --driver-memory 10G rumbledb-1.24.0-for-spark-3.1.jar ...
-    
+```
+spark-submit --driver-memory 10G rumbledb-1.24.0-for-spark-3.1.jar ...
+```
+
 If you run RumbleDB on a cluster, then the memory needs to be allocated to the executors, not the driver:
 
-    spark-submit --executor-memory 10G rumbledb-1.24.0-for-spark-3.1.jar ...
-    
+```
+spark-submit --executor-memory 10G rumbledb-1.24.0-for-spark-3.1.jar ...
+```
+
 Setting things up on a cluster requires more thinking because setting the executor memory should be done in conjunction with setting the total number of executors and the number of cores per executor. This highly depends on your cluster hardware.
 
 ## Paths with whitespaces
@@ -36,4 +44,12 @@ This is a known issue under investigation. It is related to a version conflict b
 
 ## Java version
 
-A very common issue leading to some errors is using the wrong Java version. With Spark 2+, only Java 8 is supported. With Spark 3+, Java 8 or 11 are supported but no other version. You should make sure in particular you are not using a more recent Java version. Multiple Java versions can normally co-habit on the same machine but you need to make sure to set the JAVA_HOME variable appropriately.
+A very common issue leading to some errors is using the wrong Java version. With Spark 3.5, only Java 11 or 17 is supported. With Spark 4, Java 17 or 21 are supported.
+
+You should make sure in particular you are not using a more recent Java version. Multiple Java versions can normally co-habit on the same machine but you need to make sure to set the JAVA\_HOME variable appropriately.
+
+It is easy to check the Java version with:
+
+```
+java -version
+```

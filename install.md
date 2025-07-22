@@ -1,4 +1,4 @@
-# Installing from source
+# Installing from source (for the adventurous)
 
 We show here how to install RumbleDB from the GitHub repository and build it yourself if you wish to do so (for example, to use the latest master). However, the easiest way to use RumbleDB is to simply download the already compiled .jar files.
 
@@ -6,7 +6,7 @@ We show here how to install RumbleDB from the GitHub repository and build it you
 
 The following software is required:
 
-* [Java SE](https://adoptium.net/temurin/releases/) 11, the version of Java is important, as RumbleDB only works with Java 11 (Standalone or Spark 3.5), 17 (Standalone or Spark 3.5 or Spark 4 or Python) or 21 (Spark 4 or Python).
+* [Java SE](https://adoptium.net/temurin/releases/): the version of Java is important, as RumbleDB only works with Java 11 (Standalone or Spark 3.5), 17 (Standalone or Spark 3.5 or Spark 4 or Python) or 21 (Spark 4 or Python). The current master branch corresponds to Spark 3.5, meaning that Java 11 or 17 is required.
 * [Spark](https://spark.apache.org/), version 3.5.6 (for example)
 * [Ant](http://ant.apache.org/), version 1.10
 * [Maven](https://maven.apache.org/) 3.9.9
