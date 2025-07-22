@@ -3,8 +3,8 @@
 There are many ways to install and use RumbleDB. For example:
 
 * By simply using one of our online sandboxes (Jupyter notebook or simple sandbox page)
-* By installing a pip package (pip install jsoniq)
-* By running the standalone RumbleDB jar (new and experimental) with Java on your laptop
+* Our newest library: by installing a pip package (pip install jsoniq)
+* By running the standalone RumbleDB jar with Java on your laptop
 * By installing with homebrew
 * By installing Spark yourself on your laptop (for more control on Spark parameters) and use a small RumbleDB jar with spark-submit
 * By using our docker image on your laptop (go to the "Run with docker" section on the left menu)
