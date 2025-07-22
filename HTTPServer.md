@@ -1,4 +1,6 @@
-# Run in Jupyter notebooks
+# In Jupyter notebooks
+
+_Note: now that there is a pip package available, using it may appeal more to some users than this older approach based on running RumbleDB as a server (you can put your JSONiq queries in rumble.jsoniq() calls)._
 
 ## Starting the HTTP server
 
