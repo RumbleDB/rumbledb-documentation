@@ -47,16 +47,19 @@ print(python_list)
 
 ### Type mapping
 
-When passing Python values to JSONiq or getting them from a JSONiq queries, the mapping is as follows:
+Any expression in JSONiq returns a sequence of items. Any variable in JSONiq is bound to a sequence of items. Items can be objects, arrays, or atomic values (strings, integers, booleans, nulls, dates, binary, durations, doubles, decimal numbers, etc). A sequence of items can be a sequence of just one item, but it can also be empty, or it can be as large as to contain millions, billions or even trillions of items. Obviously, for sequence longer than a billion items, it is a better idea to use a cluster than a laptop. A relational table (or more generally a data frame) corresponds to a sequence of object items sharing the same schema. However, sequences of items are more general than tables or data frames and support heterogeneity seamlessly.
 
-| Python | JSONiq                                                              |
-| ------ | ------------------------------------------------------------------- |
-| dict   | object                                                              |
-| list   | <p>array (if not outermost)<br>sequence of items (if outermost)</p> |
-| str    | string                                                              |
-| int    | integer                                                             |
-| bool   | boolean                                                             |
-| None   | null                                                                |
+When passing Python values to JSONiq or getting them from a JSONiq queries, the mapping to and from Python is as follows:
+
+| Python | JSONiq            |
+| ------ | ----------------- |
+| tuple  | sequence of items |
+| dict   | object            |
+| list   | array             |
+| str    | string            |
+| int    | integer           |
+| bool   | boolean           |
+| None   | null              |
 
 Furthermore, other JSONiq types will be mapped to string literals. Users who want to preserve JSONiq types can use the Item API instead.
 
@@ -117,10 +120,10 @@ print(seq.json());
 ## Binding JSONiq variables to Python values
 
 \
-It is possible to bind a JSONiq variable to a list of native Python values and then use it in a query. JSONiq, variables are bound to sequences of items, just like the results of JSONiq queries are sequence of items. A Python list will be seamlessly converted to a sequence of items by the library.  Currently we only support strs, ints, floats, booleans, None, lists, and dicts. But if you need more (like date, bytes, etc) we will add them without any problem. JSONiq has a rich type system.
+It is possible to bind a JSONiq variable to a tuple of native Python values and then use it in a query. JSONiq, variables are bound to sequences of items, just like the results of JSONiq queries are sequence of items. A Python tuple will be seamlessly converted to a sequence of items by the library.  Currently we only support strs, ints, floats, booleans, None, and (recursively) lists and dicts. But if you need more (like date, bytes, etc) we will add them without any problem. JSONiq has a rich type system.
 
 ```python
-rumble.bind('$c', [1,2,3,4, 5, 6])
+rumble.bind('$c', (1,2,3,4, 5, 6))
 print(rumble.jsoniq("""
 for $v in $c
 let $parity := $v mod 2
@@ -132,7 +135,7 @@ return { switch($parity)
 }
 """).json())
 
-rumble.bind('$c', [[1,2,3],[4,5,6]])
+rumble.bind('$c', ([1,2,3],[4,5,6]))
 print(rumble.jsoniq("""
 for $i in $c
 return [
@@ -141,14 +144,14 @@ return [
 ]
 """).json())
 
-rumble.bind('$c', [{"foo":[1,2,3]},{"foo":[4,{"bar":[1,False, None]},6]}])
+rumble.bind('$c', ({"foo":[1,2,3]},{"foo":[4,{"bar":[1,False, None]},6]}))
 print(rumble.jsoniq('{ "results" : $c.foo[[2]] }').json())
 ```
 
-It is possible to bind only one value. The it must be provided as a singleton list. This is because in JSONiq, an item is the same a sequence of one item.
+It is possible to bind only one value. The it must be provided as a singleton tuple. This is because in JSONiq, an item is the same a sequence of one item.
 
 ```python
-rumble.bind('$c', [42])
+rumble.bind('$c', (42,))
 print(rumble.jsoniq('for $i in 1 to $c return $i*$i').json())
 ```
 
@@ -157,6 +160,27 @@ For convenience and code readability, you can also use bindOne().
 ```python
 rumble.bindOne('$c', 42)
 print(rumble.jsoniq('for $i in 1 to $c return $i*$i').json())
+```
+
+## Binding JSONiq variables to pandas DataFrames
+
+bind() also accepts pandas dataframes
+
+```python
+data = {'Name': ['Alice', 'Bob', 'Charlie'],
+        'Age': [30,25,35]};
+pdf = pd.DataFrame(data);
+
+rumble.bind('$a',pdf);
+seq = rumble.jsoniq('$a.Name')
+```
+
+## Getting the results as a pandas DataFrame
+
+It is also possible to get the results back as a pandas dataframe with pdf() (if the output has a schema, which you can check by calling availableOutputs() and seeing if "DataFrame" is in the returned list).
+
+```
+print(seq.pdf())
 ```
 
 ## Using Pyspark DataFrames with JSONiq
@@ -253,8 +277,8 @@ This streams through the items one by one
 
 ```python
 res.open();
-while (res.hasNext())
-print(res.next().getStringValue());
+while (res.hasNext()):
+    print(res.next().getStringValue());
 res.close();
 ```
 
