@@ -1,11 +1,16 @@
-# Installation
+# Ways to install and use
 
-In this section, you will find instructions to get started with RumbleDB, either in an online sandbox or on your own computer, which among others will allow you to query any files stored on your local disk. In short, there are four possibilities to get started:
+There are many ways to install and use RumbleDB. For example:
 
-* Use one of our online sandboxes (Jupyter notebook or simple sandbox page)
-* Run the standalone RumbleDB jar (new and experimental) with Java on your laptop
-* Install Spark yourself on your laptop (for more control on Spark parameters) and use a small RumbleDB jar with spark-submit
-* Use our docker image on your laptop (go to the "Run with docker" section on the left menu)
+* By simply using one of our online sandboxes (Jupyter notebook or simple sandbox page)
+* By installing a pip package (pip install jsoniq)
+* By running the standalone RumbleDB jar (new and experimental) with Java on your laptop
+* By installing with homebrew
+* By installing Spark yourself on your laptop (for more control on Spark parameters) and use a small RumbleDB jar with spark-submit
+* By using our docker image on your laptop (go to the "Run with docker" section on the left menu)
+* By uploading the small RumbleDB jar to an existing Spark cluster (such as AWS EMR)
+* By running RumbleDB as an HTTP server in the background and connecting to it in a Jupyter notebook with the %%jsoniq magic.
+* By installing it manually on your machine.
 
 ## Further steps
 
