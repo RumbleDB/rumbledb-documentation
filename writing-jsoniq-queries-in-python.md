@@ -162,6 +162,22 @@ rumble.bindOne('$c', 42)
 print(rumble.jsoniq('for $i in 1 to $c return $i*$i').json())
 ```
 
+## Ways to get and process the output of a JSONiq query
+
+There are several ways to get back the output of the JSONiq query. There are many examples of use further down this page.
+
+| Method                                 | Description                                                                                                                                                                                            | Requirement in availableOutputs()                                                                |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| availableOutputs()                     | Returns a list that helps you understand which output methods you can call. The strings in this list can be Local, RDD, DataFrame, or PUL.                                                             |                                                                                                  |
+| json()                                 | Returns the results as a tuple containing dicts, lists, strs, ints, floats, booleans, Nones.                                                                                                           | Local, for lists below the materialization cap (can be increased in the RumbleDB configuration). |
+| df()                                   | Returns the results as a pyspark data frame                                                                                                                                                            | DataFrame                                                                                        |
+| pdf()                                  | Returns the results as a pandas data frame                                                                                                                                                             | DataFrame                                                                                        |
+| rdd()                                  | Returns the results as an RDD containing dicts, lists, strs, ints, floats, booleans, Nones (experimental)                                                                                              | RDD                                                                                              |
+| items()                                | Returns the results as a list containing Java Item objects that can be queried with the RumbleDB Item API. Will contain more information and more accurate typing.                                     | Local, for lists below the materialization cap (can be increased in the RumbleDB configuration). |
+| open(), hasNext(), nextJSON(), close() | Allows streaming (with no limitation of length) through individuals items as dicts, lists, strs, ints, floats, booleans, Nones.                                                                        | Local                                                                                            |
+| open(), hasNext(), next(), close()     | Allows streaming (with no limitation of length) through individuals items as Java Item objects that can be queried with the RumbleDB Item API. Will contain more information and more accurate typing. | Local                                                                                            |
+| applyUpdates()                         | Persists the Pending Update List produced by the query (to the Delta Lake or a table registered in the Hive metastore).                                                                                | PUL                                                                                              |
+
 ## Binding JSONiq variables to pandas DataFrames
 
 bind() also accepts pandas dataframes
