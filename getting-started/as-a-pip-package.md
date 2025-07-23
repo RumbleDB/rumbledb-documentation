@@ -14,4 +14,4 @@ You can control your Java version with:
 java -version
 ```
 
-Information about how this package is used can be found [in this section](../writing-jsoniq-queries-in-python.md).
+Information about how this package is used can be found [in this section](../writing-jsoniq-queries-in-python/).
