@@ -7,12 +7,12 @@ When passing Python values to JSONiq or getting them from a JSONiq queries, the 
 | Python | JSONiq            |
 | ------ | ----------------- |
 | tuple  | sequence of items |
-| dict   | object            |
-| list   | array             |
-| str    | string            |
-| int    | integer           |
-| bool   | boolean           |
-| None   | null              |
+| dict   | object item       |
+| list   | array item        |
+| str    | string item       |
+| int    | integer item      |
+| bool   | boolean item      |
+| None   | null item         |
 
 Furthermore, other JSONiq types will be mapped to string literals. Users who want to preserve JSONiq types can use the Item API instead.
 
