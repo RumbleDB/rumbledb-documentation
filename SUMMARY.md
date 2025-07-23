@@ -39,6 +39,8 @@
     * [JSON update primitives](the-jsoniq-language/jsoniq-update-facility/json-update-primitives.md)
     * [Merging updates](the-jsoniq-language/jsoniq-update-facility/merging-updates.md)
     * [Applying updates](the-jsoniq-language/jsoniq-update-facility/applying-updates.md)
+    * [The transform expression](the-jsoniq-language/jsoniq-update-facility/the-transform-expression.md)
+    * [Primary updating expressions](the-jsoniq-language/jsoniq-update-facility/primary-updating-expressions.md)
 * [RumbleDB Reference](rumbledb-reference/README.md)
   * [JSONiq coverage](rumbledb-reference/jsoniq.md)
   * [Reading data](rumbledb-reference/input.md)
