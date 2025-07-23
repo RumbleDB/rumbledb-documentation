@@ -22,7 +22,7 @@ There are several ways to retrieve the results of the query. Calling the json() 
 
 ## More complex, standalone queries
 
-Below are a few examples showing what is possible with JSONiq. You can [learn JSONiq with our interactive tutorial](https://colab.research.google.com/github/RumbleDB/rumble/blob/master/RumbleSandbox.ipynb). You will also find [a full language reference here](../the-jsoniq-language/jsoniq-specification.md) as well as a [list of builtin functions](<../Function library.md>).
+Below are a few examples showing what is possible with JSONiq. You can [learn JSONiq with our interactive tutorial](https://colab.research.google.com/github/RumbleDB/rumble/blob/master/RumbleSandbox.ipynb). You will also find [a full language reference here](../the-jsoniq-language/jsoniq-specification.md) as well as a [list of builtin functions](../rumbledb-reference/function-library.md).
 
 For complex queries, you can use Python's ability to spread strings over multiple lines, and with no need to escape special characters.
 
