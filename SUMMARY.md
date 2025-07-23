@@ -38,6 +38,7 @@
   * [JSONiq Update Facility](the-jsoniq-language/jsoniq-update-facility/README.md)
     * [JSON update primitives](the-jsoniq-language/jsoniq-update-facility/json-update-primitives.md)
     * [Merging updates](the-jsoniq-language/jsoniq-update-facility/merging-updates.md)
+    * [Applying updates](the-jsoniq-language/jsoniq-update-facility/applying-updates.md)
 * [RumbleDB Reference](rumbledb-reference/README.md)
   * [JSONiq coverage](rumbledb-reference/jsoniq.md)
   * [Reading data](rumbledb-reference/input.md)
