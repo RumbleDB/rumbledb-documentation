@@ -4,7 +4,7 @@ RumbleDB relies on the JSONiq language.
 
 ## JSONiq reference
 
-The complete specification can be found [here](../the-jsoniq-language/jsoniq-specification.md) and on the [JSONiq.org](http://www.jsoniq.org) website. The implementation is now in a very advanced stage and there remain only few unsupported core JSONiq features.
+The complete specification can be found [here](../the-jsoniq-language/jsoniq-specification/) and on the [JSONiq.org](http://www.jsoniq.org) website. The implementation is now in a very advanced stage and there remain only few unsupported core JSONiq features.
 
 ## JSONiq tutorial
 
