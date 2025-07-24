@@ -200,7 +200,7 @@ This expression creates an update primitive that modifies a value in a collectio
 **Example**
 
 ```
-edit table("mytable")[1] into {"foo":3} from collection
+edit table("mytable")[1] into {"foo":3} in collection
 ```
 
 ### Deleting a value from a collection
