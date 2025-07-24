@@ -2,7 +2,9 @@
 
 Update expressions are the visible part of JSONiq Updates in the language. Each primary updating expression contributes an update primitive to the Pending Update List being built.
 
-**Figure 84. JSONInsertExpr**
+## Nested updates (memory or persistent)
+
+### **Inserting values into an object or array**
 
 \
 
@@ -11,7 +13,7 @@ Update expressions are the visible part of JSONiq Updates in the language. Each 
 
 A JSON insert expression is used to insert new pairs into an object. It produces a _jupd:insert-into-object_ update primitive. If the target is not an object, JNUP0008 is raised. If the content is not a sequence of objects, JNUP0019 is raised. These objects are merged prior to inserting the pairs into the target, and JNDY0003 is raised if the content to be inserted has colliding keys.
 
-**Example 192. JSON insert expression**
+**Example**&#x20;
 
 ```
 copy $obj := { "foo" : "bar" }
@@ -22,12 +24,11 @@ return $obj
 
 **Result:** { "foo" : "bar", "bar" : 123, "foobar" : \[ true, false ] }
 
-\
 
 
 A JSON insert expression is also used to insert a new member into an array. It produces a _jupd:insert-into-array_ update primitive. If the target is not an array, JNUP0008 is raised. If the position is not an integer, JNUP0007 is raised.
 
-**Example 193. JSON insert expression**
+**Example**
 
 ```
 copy $arr := { "foo" : [1,2,3,4] }
@@ -38,10 +39,7 @@ return $arr
 
 **Result:** { "foo" : \[ 1, 2, 5, 3, 4 ] }
 
-\
-
-
-**Figure 85. JSONDeleteExpr**
+### **Deleting values in an object or array**
 
 \
 
@@ -50,7 +48,7 @@ return $arr
 
 A JSON delete expression is used to remove a pair from an object. It produces a _jupd:delete-from-object_ update primitive. If the key is not a string, JNUP0007 is raised. If the key does not exist, JNUP0016 is raised.
 
-**Example 194. JSON delete expression**
+**Example**&#x20;
 
 ```
 copy $obj := { "foo" : "bar", "bar" : 123 }
@@ -61,12 +59,11 @@ return $obj
 
 **Result:** { "bar" : 123 }
 
-\
 
 
 A JSON delete expression is also used to remove a member from an array. It produces a _jupd:insert-from-array_ update primitive. If the position is not an integer, JNUP0007 is raised. If the position is out of range, JNUP0016 is raised.
 
-**Example 195. JSON delete expression**
+**Example**&#x20;
 
 ```
 copy $arr := [1,2,3,4,5,6]
@@ -80,7 +77,7 @@ return $arr
 \
 
 
-**Figure 86. JSONRenameExpr**
+### **Renaming a key**
 
 \
 
@@ -100,10 +97,7 @@ return $obj
 
 **Result:** { "bar" : 123, "foobar" : "bar" }
 
-\
-
-
-**Figure 87. JSONAppendExpr**
+### **Appending values to an array**
 
 \
 
@@ -121,21 +115,16 @@ return $obj
       
 ```
 
-**Result:** { "foo" : "bar", "bar" : \[ 1, 2, 3, 4 ] }
-
-\
+**Result:** { "foo" : "bar", "bar" : \[ 1, 2, 3, 4 ] }\
 
 
-**Figure 88. JSONReplaceExpr**
-
-\
-
+### **Replacing a value in an object or array.** 
 
 <figure><img src="https://www.jsoniq.org/docs/JSONiq/webhelp/images/JSONReplaceExpr.png" alt=""><figcaption></figcaption></figure>
 
 A JSON replace expression is used to replace the value associated with a certain key in an object. It produces a _jupd:replace-in-object_ update primitive. JNUP0007 is raised if the selector is not a single string. If the selector key does not exist, JNUP0016 is raised.
 
-**Example 198. JSON replace expression**
+**Example**&#x20;
 
 ```
 copy $obj := { "foo" : "bar", "bar" : [1,2,3] }
@@ -146,12 +135,9 @@ return $obj
 
 **Result:** { "bar" : \[ 1, 2, 3 ], "foo" : { "nested" : true } }
 
-\
-
-
 A JSON replace expression is also used to replace a member in an array. It produces a _jupd:insert-in-array_ update primitive. JNUP0007 is raised if the selector is not a single position. If the selector position is out of range, JNUP0016 is raised.
 
-**Example 199. JSON replace expression**
+**Example**
 
 ```
 copy $obj := { "foo" : "bar", "bar" : [1,2,3] }
@@ -161,3 +147,71 @@ return $obj
 ```
 
 **Result:** { "foo" : "bar", "bar" : \[ 1, "two", 3 ] }
+
+## Update expressions at the collection top-level (persistent only)
+
+### Creating a collection
+
+<figure><img src="../../.gitbook/assets/CreateCollectionExpr.svg" alt=""><figcaption></figcaption></figure>
+
+This expression creates an update primitive that creates a collection.
+
+**Example**&#x20;
+
+```
+create collection table("mytable") with ({"foo":1},{"foo":2}),
+create collection delta-file("/path/to/file.delta") with ({"foo":1},{"foo":2})
+```
+
+### Deleting a collection
+
+<figure><img src="../../.gitbook/assets/DeleteCollectionExpr (1).svg" alt=""><figcaption></figcaption></figure>
+
+This expression creates an update primitive that deletes a collection.
+
+**Example**&#x20;
+
+```
+delete collection table("mytable"),
+delete collection delta-file("/path/to/file.delta")
+```
+
+### Inserting into a collection
+
+<figure><img src="../../.gitbook/assets/InsertCollectionExpr.svg" alt=""><figcaption></figcaption></figure>
+
+This expression creates an update primitive that inserts values at the beginning or end of a collection, or before or after specific values in that collection.
+
+**Example**
+
+```
+insert {"foo":3} first into collection table("mytable"),
+insert {"foo":4} last into collection delta-file("/path/to/file.delta"),
+insert {"foo":3} before table("mytable")[3] into collection,
+insert {"foo":3} after delta-file("/path/to/file.delta")[3] into collection
+```
+
+### Editing a value in a collection
+
+<figure><img src="../../.gitbook/assets/EditCollectionExpr.svg" alt=""><figcaption></figcaption></figure>
+
+This expression creates an update primitive that modifies a value in a collection into the other supplied value.
+
+**Example**
+
+```
+edit table("mytable")[1] into {"foo":3} from collection
+```
+
+### Deleting a value from a collection
+
+<figure><img src="../../.gitbook/assets/DeleteInCollectionExpr (2).svg" alt=""><figcaption></figcaption></figure>
+
+This expression creates an update primitive that deletes a specified value from its collection.
+
+**Example**
+
+```
+delete table("mytable")[1] from collection
+```
+
