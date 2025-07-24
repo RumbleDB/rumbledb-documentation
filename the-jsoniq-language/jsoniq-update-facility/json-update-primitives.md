@@ -2,6 +2,8 @@
 
 A Pending Update List is an unordered list of update primitives. Update primitives are internal and do not appear in the syntax. Each kind of update primitive models one individual update to an object or an array.
 
+A Pending Update List can by analogy be seen as the diff between two git revisions, and a single update primitive can be seen, with this same analogy, as the difference between two single lines of code. Thus, the JSONiq Update Facility is to trees what git is to lines of text: a "tree diff" language.
+
 JSONiq adds the following new update primitives, specific to JSON. They are similar to those defined by the XQuery Update Facility for XML.
 
 Update primitives within a PUL are applied with strict snapshot semantics. For examples, the positions are resolved against the array before the updates. Names are resolved on the object before the updates.
