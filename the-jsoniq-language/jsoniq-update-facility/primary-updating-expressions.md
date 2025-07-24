@@ -4,6 +4,8 @@ Update expressions are the visible part of JSONiq Updates in the language. Each 
 
 ## Nested updates (memory or persistent)
 
+These expressions may appear in a copy-modify-return (transform) expression (for in-memory updates on cloned values), or outside (for persistent updates to an underlying storage).
+
 ### **Inserting values into an object or array**
 
 \
@@ -149,6 +151,8 @@ return $obj
 **Result:** { "foo" : "bar", "bar" : \[ 1, "two", 3 ] }
 
 ## Update expressions at the collection top-level (persistent only)
+
+These expressions may not appear in a copy-modify-return (transform) expression because they can only be used for persistent updates to an underlying storage (document store, data lakehouse, etc).
 
 ### Creating a collection
 
