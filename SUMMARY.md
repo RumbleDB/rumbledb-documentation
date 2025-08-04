@@ -20,6 +20,7 @@
   * [Interacting with pandas DataFrames](writing-jsoniq-queries-in-python/interacting-with-pandas-dataframes.md)
   * [Interacting with pyspark DataFrames](writing-jsoniq-queries-in-python/interacting-with-pyspark-dataframes.md)
   * [More advanced output retrieval methods](writing-jsoniq-queries-in-python/more-advanced-output-retrieval-methods.md)
+  * [Writing queries directly in Jupyter notebook cells](writing-jsoniq-queries-in-python/writing-queries-directly-in-jupyter-notebook-cells.md)
   * [Write back to the disk (or data lake)](writing-jsoniq-queries-in-python/write-back-to-the-disk-or-data-lake.md)
 * [The JSONiq language](the-jsoniq-language/README.md)
   * [JSONiq 1.0](the-jsoniq-language/jsoniq-specification/README.md)
