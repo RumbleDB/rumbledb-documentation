@@ -41,7 +41,7 @@ for $i in 1 to 10000000
 return { "foobar" : $i}
 ```
 
-Note that it will not work in all cases. If the output is not fully structured or RumbleDB is unable to infer a DataFrame schema, you can specify the schema yourself.
+Note that it will not work in all cases. If the output is not fully structured or RumbleDB is unable to infer a DataFrame schema, you can specify the schema yourself. The schema language is called JSound and you will find a [tutorial here](https://github.com/ghislainfourny/jsound-tutorial).
 
 ```
 %%jsoniq -pdf
