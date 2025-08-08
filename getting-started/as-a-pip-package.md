@@ -26,3 +26,11 @@ If this happens, RumbleDB should output an informative error message. They are t
 
 * The easiest is remove the SPARK\_HOME environment variable completely. This will have RumbleDB fall back to the Spark 4.0 installation that ships with its pyspark dependency.
 * Or you can instead change the value of SPARK\_HOME to point to a Spark 4.0 installation, if you have one. This would be for more advanced users who know what they are doing.
+
+If you have another working Spark installation on your machine, you can see which version it is with
+
+```
+spark-submit --version
+```
+
+The above command is of course expected not to work for first-time users who only installed the jsoniq package and never installed Spark additionally on their machine.
