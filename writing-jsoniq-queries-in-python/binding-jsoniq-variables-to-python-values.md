@@ -4,7 +4,7 @@ It is possible to bind a JSONiq variable to a tuple of native Python values and 
 
 Values can be passed with extra named parameters, like so.
 
-```
+```python
 print(rumble.jsoniq("""
 for $v in $c
 let $parity := $v mod 2
