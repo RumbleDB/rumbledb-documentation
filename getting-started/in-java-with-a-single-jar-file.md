@@ -1,4 +1,4 @@
-# Using the standalone jar (no spark needed)
+# In Java with a single jar file
 
 ## Java version (important)
 
@@ -25,13 +25,13 @@ Make sure to use the corresponding jar name accordingly in all our instructions 
 You can test that it works with:
 
 ```
-java -jar rumbledb-1.24.0-standalone.jar run -q '1+1'
+java -jar rumbledb-2.0.0-standalone.jar run -q '1+1'
 ```
 
 or launch a JSONiq shell with:
 
 ```
-java -jar rumbledb-1.24.0-standalone.jar repl
+java -jar rumbledb-2.0.0-standalone.jar repl
 ```
 
 If you run out of memory, you can set allocate more memory to Java with an additional Java parameter, e.g., -Xmx10g
@@ -42,7 +42,7 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   1.24.0 "Lemon Ironwood" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.0.0 "Lemon Ironwood" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
 
 

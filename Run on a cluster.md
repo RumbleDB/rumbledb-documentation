@@ -1,8 +1,10 @@
-# Run on a cluster
+# On a Spark cluster (e.g., AWS EMR)
 
 ## Running RumbleDB on a cluster
 
 After you have tried RumbleDB locally as explained in the getting started section, you can take RumbleDB to a real cluster simply by modifying the command line parameters as documented [here for spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html).
+
+_<mark style="color:$warning;">Warning: EMR as of version 7.10 does not support Spark 4.0 yet, but we expect this will happen soon. In the meantime, you should use RumbleDB 1.22.</mark>_
 
 ## Creating a cluster
 
@@ -27,7 +29,7 @@ And once you have connected with ssh and are on the shell, you can start using R
 First you need to download it with wget (which is usually available by default on cloud virtual machines):
 
 ```
-wget https://github.com/RumbleDB/rumble/releases/download/v1.24.0/rumbledb-1.24.0-for-spark-3.5.jar
+wget https://github.com/RumbleDB/rumble/releases/download/v1.22.0/rumbledb-1.22.0-for-spark-3.5.jar
 ```
 
 This is all you need to do, since Apache Spark is already installed. If spark-submit does not work, you might want to wait for a few more minutes as it might be that the cluster is not fully prepared yet.
@@ -35,14 +37,14 @@ This is all you need to do, since Apache Spark is already installed. If spark-su
 Often, the Spark cluster is running on yarn. The --master option can be changed from local\[\*] (which was for running on your laptop) to yarn compared to the getting started guide.
 
 ```
-spark-submit --master yarn --deploy-mode client rumbledb-1.24.0-for-spark-3.5.jar repl
+spark-submit --master yarn --deploy-mode client rumbledb-1.22.0-for-spark-3.5.jar repl
              
 ```
 
 Most of the time, though (e.g., on Amazon EMR), it needs not be specified, as this is already set up in the environment. So the same command will do:
 
 ```
-spark-submit rumbledb-1.24.0-for-spark-3.5.jar repl
+spark-submit rumbledb-1.22.0-for-spark-3.5.jar repl
              
 ```
 
@@ -52,14 +54,14 @@ For example, if we have 6 worker nodes with each 16 cores and 64 GB, we can use 
 
 ```
 spark-submit --num-executors 30 --executor-cores 3 --executor-memory 10g
-             rumbledb-1.24.0-for-spark-3.5.jar repl
+             rumbledb-1.22.0-for-spark-3.5.jar repl
 ```
 
 If necesasry, the size limit for materialization can be made higher with --materialization-cap or its shortcut -c (the default is 200). This affects the number of items displayed on the shells as an answer to a query. It also affects the maximum number of items that can be materialized from a large sequence into, say, an array. Warnings are issued if the cap is reached.
 
 ```
 spark-submit --num-executors 30 --executor-cores 3 --executor-memory 10g
-             rumbledb-1.24.0-for-spark-3.5.jar repl -c 10000
+             rumbledb-1.22.0-for-spark-3.5.jar repl -c 10000
 ```
 
 ### Creation functions
@@ -102,7 +104,7 @@ RumbleDB also supports executing a single query from the command line, reading f
 
 ```
 spark-submit --num-executors 30 --executor-cores 3 --executor-memory 10g
-             rumbledb-1.24.0-for-spark-3.5.jar run "hdfs:///user/me/query.jq"
+             rumbledb-1.22.0-for-spark-3.5.jar run "hdfs:///user/me/query.jq"
              -o "hdfs:///user/me/results/output"
              --log-path "hdfs:///user/me/logging/mylog"
 ```
@@ -111,7 +113,7 @@ The query path, output path and log path can be any of the supported schemes (HD
 
 ```
 spark-submit --num-executors 30 --executor-cores 3 --executor-memory 10g
-             rumbledb-1.24.0-for-spark-3.5.jar run "/home/me/my-local-machine/query.jq"
+             rumbledb-1.22.0-for-spark-3.5.jar run "/home/me/my-local-machine/query.jq"
              -o "/user/me/results/output"
              --log-path "hdfs:///user/me/logging/mylog"
 ```

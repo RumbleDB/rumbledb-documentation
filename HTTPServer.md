@@ -1,4 +1,4 @@
-# In Jupyter notebooks
+# As an HTTP server
 
 _Note: now that there is a pip package available, using it may appeal more to some users than this older approach based on running RumbleDB as a server (you can put your JSONiq queries in rumble.jsoniq() calls)._
 
@@ -7,7 +7,7 @@ _Note: now that there is a pip package available, using it may appeal more to so
 RumbleDB can be run as an HTTP server that listens for queries. In order to do so, you can use the --server and --port parameters:
 
 ```
-spark-submit rumbledb-1.24.0.jar serve -p 8001
+spark-submit rumbledb.jar serve -p 8001
 ```
 
 This command will not return until you force it to (Ctrl+C on Linux and Mac). This is because the server has to run permanently to listen to incoming requests.
@@ -96,7 +96,7 @@ Then there are two options
 There is also another way that does not need any tunnelling: you can specify the hostname of your EC2 machine (copied over from the EC2 dashboard) with the --host parameter. For example, with the placeholder :
 
 ```
-spark-submit rumbledb-1.24.0.jar serve -p 8001 -h <ec2-hostname>
+spark-submit rumbledb.jar serve -p 8001 -h <ec2-hostname>
 ```
 
 You also need to make sure in your EMR security group that the chosen port (e.g., 8001) is accessible from the machine in which you run your Jupyter notebook. Then, you can point your Jupyter notebook on this machine to `http://<ec2-hostname>:8001/jsoniq`.

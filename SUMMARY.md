@@ -1,6 +1,6 @@
 # Table of contents
 
-* [RumbleDB 1.23 "Mountain Ash"](README.md)
+* [RumbleDB 2.0 "Lemon Ironwood"](README.md)
 * [Ways to install and use](<Getting started.md>)
   * [On the online sandbox](getting-started/on-the-online-sandbox.md)
   * [As a pip package](getting-started/as-a-pip-package.md)
