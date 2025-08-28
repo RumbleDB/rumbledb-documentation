@@ -26,6 +26,12 @@ This is how to run a query. This is similar to spark.sql(). Since variable $a wa
 res = rumble.jsoniq('$a.Name');
 ```
 
+You can also instead bind the pyspark DataFrame directly in jsoniq() with an extra name parameter:
+
+```python
+res = rumble.jsoniq('$a.Name', a=df);
+```
+
 There are several ways to collect the outputs, depending on the user needs but also on the query supplied. The following method returns a list containing one or several of "DataFrame", "RDD", "PUL", "Local".
 
 If DataFrame is in the list, df() can be invoked.
