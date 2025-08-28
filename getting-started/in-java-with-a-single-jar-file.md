@@ -18,7 +18,7 @@ Do make sure it is not Java 8, which will not work.
 
 RumbleDB is just a download and no installation is required.
 
-In order to run RumbleDB, you simply need to download rumbledb-1.24.0-standalone.jar from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
+In order to run RumbleDB, you simply need to download rumbledb-2.0.0-standalone.jar from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
 
 Make sure to use the corresponding jar name accordingly in all our instructions in lieu of rumbledb.jar.
 
