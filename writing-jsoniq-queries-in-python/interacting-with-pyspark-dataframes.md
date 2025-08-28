@@ -26,7 +26,7 @@ This is how to run a query. This is similar to spark.sql(). Since variable $a wa
 res = rumble.jsoniq('$a.Name');
 ```
 
-You can also instead bind the pyspark DataFrame directly in jsoniq() with an extra name parameter:
+You can also, instead of the bind() call, pass the pyspark DataFrame directly in jsoniq() with an extra named parameter:
 
 ```python
 res = rumble.jsoniq('$a.Name', a=df);
