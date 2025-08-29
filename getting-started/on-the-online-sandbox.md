@@ -1,6 +1,6 @@
-# Trying on the online sandbox
+# On the online sandbox
 
-If you really want to start writing queries right now, there is a public sandbox [here](https://colab.research.google.com/github/RumbleDB/rumble/blob/master/RumbleSandbox.ipynb) that will just work and guide you. You only need to have a Google account to be able to execute them, as this exposes our Jupyter notebook via the Colab environment. You are also free to download and use this notebook with any other provider or even your own local Jupyter and it will work just the same: the queries are all shipped to our own, small public backend no matter what.
+If you really want to start writing queries right now, there is a public sandbox [here](https://colab.research.google.com/github/RumbleDB/rumble/blob/master/RumbleSandbox.ipynb) that will just work and guide you. You only need to have a Google account to be able to execute them, as this exposes our Jupyter notebook via the Colab environment. You are also free to download and use this notebook with any other provider or even your own local Jupyter and it will work just the same: the queries are all shipped to our own, small public backend no matter what. However, this may require a bit of configuration (JAVA\_HOME pointing to Java 17 or 21, and if you have conflicting Spark installations in addition to pyspark, SPARK\_HOME pointing to a Spark 4.0 installation).
 
 If you do not have a Google account, you can also use our simpler sandbox page without Jupyter, [here](http://public.rumbledb.org:9090/public.html) where you can type small queries and see the results.
 

@@ -1,4 +1,4 @@
-# In Java with a single jar file
+# Execute with Java using a single jar file
 
 ## Java version (important)
 
@@ -74,3 +74,7 @@ or
  (3 * 4) div 5
  
 ```
+
+Javadoc
+
+If you plan to add the jar to your Java environment to use RumbleDB in your Java programs, the JavaDoc documentation can be found [here](https://rumbledb.org/docs/latest/api/). The entry point is the class org.rumbledb.api.Rumble.

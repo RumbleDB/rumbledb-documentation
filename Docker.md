@@ -1,8 +1,10 @@
 # With docker
 
+<mark style="color:$info;">The docker installation is kindly contributed by Dr. Ingo Müller (Google).</mark>
+
 ## Known issue
 
-On occasion, the docker version of RumbleDB used to throw a Kryo NoSuchMethodError on some systems. This should be fixed with version 1.24.0, let us know if this is not the case.
+On occasion, the docker version of RumbleDB used to throw a Kryo NoSuchMethodError on some systems. This should be fixed with version 2.0.0, let us know if this is not the case.
 
 You can upgrade to the newest version with
 

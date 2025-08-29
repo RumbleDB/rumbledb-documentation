@@ -4,13 +4,19 @@ This method gives you more control about the Spark configuration than the experi
 
 If you use Linux, Florian Kellner also kindly contributed an [installation script](https://github.com/fkellner/rumbledb-install-script) for Linux users that roughly takes care of what is described below for you.
 
-### Install Spark
+<mark style="color:$warning;">Users of the Python edition (pip install jsoniq) should not have to install Spark manually because the pip package automatically installs pyspark and this contains a Spark 4 installation. However, advanced users who have multiple Spark installations or encounter a Spark version conflict in Python may find the information below useful.</mark>
 
-RumbleDB requires an Apache Spark installation on Linux, Mac or Windows. Important note: it needs to be the scala 2.13 version of spark as RumbleDB supports only that version.
+### Install Spark (if you do not have installed already)
 
-It is straightforward to directly [download it](https://spark.apache.org/downloads.html), unpack it and put it at a location of your choosing. We recommend to pick Spark 4.0.0. Let us call this location SPARK\_HOME (it is a good idea, in fact to also define an environment variable SPARK\_HOME pointing to the absolute path of this location).
+RumbleDB requires an Apache Spark installation on Linux, Mac or Windows. Important note: it needs to be either Spark 4, or the Scala 2.13 build of Spark 3.5.
 
-What you need to do then is to add the subdirectory "bin" within the unpacked directory to the PATH variable. On macOS this is done by adding
+It is straightforward to directly [download it](https://spark.apache.org/downloads.html), unpack it and put it at a location of your choosing. We recommend to pick Spark 4.0.0.
+
+### SPARK\_HOME and PATH (you need to check even if you already have an existing installation)
+
+You then need to point the SPARK\_HOME environment variable to this directory, and to additionally add the subdirectory "bin" within the unpacked directory to the PATH variable. On macOS this is done by adding.
+
+<mark style="color:$warning;">Users of the Python edition who have additional Spark installations must ensure that SPARK\_HOME and PATH point to a Spark 4 installation. The Python edition does not work with Spark 3.5.</mark>  &#x20;
 
 ```
 export SPARK_HOME=/path/to/spark-4.0.0-bin-hadoop3
