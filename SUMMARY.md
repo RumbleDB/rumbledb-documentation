@@ -49,7 +49,7 @@
   * [Reading data](rumbledb-reference/input.md)
   * [Function library](rumbledb-reference/function-library.md)
   * [User-defined types](rumbledb-reference/types.md)
-  * [HTTP/CLI parameters](rumbledb-reference/cli.md)
+  * [Configuration parameters](rumbledb-reference/cli.md)
   * [RumbleML](rumbledb-reference/rumbleml.md)
 * [Frequently asked questions and common issues](FAQ.md)
 * [Error codes](<Error codes.md>)
