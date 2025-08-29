@@ -18,4 +18,6 @@ You can also configure RumbleDB to output verbose information about the internal
 conf.setPrintIteratorTree(True)
 ```
 
-We will document more tunable parameters here soon.
+The complete API for configuring RumbleDB is accessible in our [JavaDoc](https://rumbledb.org/docs/latest/api/org/rumbledb/config/RumbleRuntimeConfiguration.html) pages. These methods are also callable in Python.
+
+Warning: some of the configuration methods do not make sense in Python and are specific to the command line edition of RumbleDB (such as setting the query content or an output path and input/output format). Also, setting external variables in Python should not be done via the configuration, but with the bind() and unbind() functions or extra parameters in jsoniq() calls.
