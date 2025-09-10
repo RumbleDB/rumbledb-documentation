@@ -201,6 +201,26 @@ where $i.key eq "some value"
 return $i
 ```
 
+### PostgreSQL (from RumbleDB 2.0.1)
+
+PostgreSQL tables can be opened with the function postgresql-table().
+
+It opens one table and returns it as a sequence of objects. The first argument is the connection string in the JDBC format, containing host, port, username, password, and database. The second argument is the name of the table to read.
+
+```
+for $i in postgresql-table("jdbc:postgresql://servername/dbname?user=postgres&password=example", "tablename")
+where $i.attribute eq "some value"
+return $i
+```
+
+The third parameter can be used to control the number of partitions.
+
+```
+or $i in postgresql-table("jdbc:postgresql://servername/dbname?user=postgres&password=example", "tablename", 10)
+where $i.attribute eq "some value"
+return $i
+```
+
 ### AVRO
 
 Avro files can be opened with the function avro-file().
