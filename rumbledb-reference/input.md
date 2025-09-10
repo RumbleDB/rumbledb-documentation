@@ -216,7 +216,7 @@ return $i
 The third parameter can be used to control the number of partitions.
 
 ```
-or $i in postgresql-table("jdbc:postgresql://servername/dbname?user=postgres&password=example", "tablename", 10)
+for $i in postgresql-table("jdbc:postgresql://servername/dbname?user=postgres&password=example", "tablename", 10)
 where $i.attribute eq "some value"
 return $i
 ```
