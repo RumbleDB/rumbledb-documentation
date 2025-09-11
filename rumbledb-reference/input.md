@@ -333,7 +333,7 @@ return $i
 
 ## Supported file systems
 
-As a general rule of thumb, RumbleDB can read from any file system that Spark can read from. The file system is inferred from the scheme used in the path used in any of the functions described above.
+As a general rule of thumb, RumbleDB can read from any file system that Spark can read from. The file system is inferred from the scheme used in the path used in any of the functions described above, with the exception of MongoDB and PostgreSQL, which are ETL-based.
 
 Note that the scheme is optional, in which case the default file system as configured in Hadoop and Spark is used. A relative path can also be provided, in which case the working directory (including its file system) as configured is used.
 
