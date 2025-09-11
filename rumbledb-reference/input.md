@@ -253,6 +253,16 @@ where $i.attribute eq "some value"
 return $i
 ```
 
+### Hive metastore
+
+RumbleDB can connect to a table registered in the Hive metastore with the function table().
+
+```
+for $i in table("m)ytable
+where $i.attribute eq "some value"
+return $i
+```
+
 ### AVRO
 
 Avro files can be opened with the function avro-file().
