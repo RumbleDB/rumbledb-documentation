@@ -4,7 +4,9 @@
 
 After you have tried RumbleDB locally as explained in the getting started section, you can take RumbleDB to a real cluster simply by modifying the command line parameters as documented [here for spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html).
 
+{% hint style="info" %}
 _<mark style="color:$warning;">Warning: EMR as of version 7.10 does not support Spark 4.0 yet, but we expect this will happen soon. In the meantime, you should use RumbleDB 1.22.</mark>_
+{% endhint %}
 
 ## Creating a cluster
 

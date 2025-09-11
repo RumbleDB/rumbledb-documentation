@@ -1,10 +1,12 @@
-# With an existing Spark installation
+# Command line (with spark-submit and an existing Spark installation)
 
 This method gives you more control about the Spark configuration than the experimental standalone jar, in particular you can increase the memory used, change the number of cores, and so on.
 
 If you use Linux, Florian Kellner also kindly contributed an [installation script](https://github.com/fkellner/rumbledb-install-script) for Linux users that roughly takes care of what is described below for you.
 
+{% hint style="info" %}
 <mark style="color:$warning;">Users of the Python edition (pip install jsoniq) should not have to install Spark manually because the pip package automatically installs pyspark and this contains a Spark 4 installation. However, advanced users who have multiple Spark installations or encounter a Spark version conflict in Python may find the information below useful.</mark>
+{% endhint %}
 
 ### Install Spark (if you do not have installed already)
 
@@ -16,7 +18,9 @@ It is straightforward to directly [download it](https://spark.apache.org/downloa
 
 You then need to point the SPARK\_HOME environment variable to this directory, and to additionally add the subdirectory "bin" within the unpacked directory to the PATH variable. On macOS this is done by adding.
 
+{% hint style="info" %}
 <mark style="color:$warning;">Users of the Python edition who have additional Spark installations must ensure that SPARK\_HOME and PATH point to a Spark 4 installation. The Python edition does not work with Spark 3.5.</mark>  &#x20;
+{% endhint %}
 
 ```
 export SPARK_HOME=/path/to/spark-4.0.0-bin-hadoop3

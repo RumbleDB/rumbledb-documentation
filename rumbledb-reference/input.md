@@ -201,7 +201,11 @@ where $i.key eq "some value"
 return $i
 ```
 
-### PostgreSQL (from RumbleDB 2.0.1)
+### PostgreSQL
+
+{% hint style="info" %}
+This functionality is currently only available in the Python edition (pip install jsoniq) as of 2.0.1+.
+{% endhint %}
 
 PostgreSQL tables can be opened with the function postgresql-table().
 
@@ -217,6 +221,30 @@ The third parameter can be used to control the number of partitions.
 
 ```
 for $i in postgresql-table("jdbc:postgresql://servername/dbname?user=postgres&password=example", "tablename", 10)
+where $i.attribute eq "some value"
+return $i
+```
+
+### MongoDB
+
+{% hint style="info" %}
+This functionality is currently only available in the Python edition (pip install jsoniq) as of 2.0.2+.
+{% endhint %}
+
+MongoDB collections can be opened with the function mongodb-collection().
+
+It opens one collection and returns it as a sequence of objects. The first argument is the connection string in the MongoDB format, containing host, port, database, collection, username ,password. The second argument is the name of the collection to read.
+
+```
+for $i in mongodb-collection("mongodb://servername/dbname", "collection")
+where $i.attribute eq "some value"
+return $i
+```
+
+The third parameter can be used to control the number of partitions.
+
+```
+for $i in mongodb-collection("mongodb://servername/dbname", "collection", 10)
 where $i.attribute eq "some value"
 return $i
 ```

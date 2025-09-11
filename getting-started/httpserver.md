@@ -1,6 +1,8 @@
 # As an HTTP server
 
+{% hint style="info" %}
 _<mark style="color:$warning;">Now that there is a pip package available, using it may appeal more to some users than this older approach based on running RumbleDB as a server (you can put your JSONiq queries in rumble.jsoniq() calls). We keep this documentation for any users interested in the server capabilities of RumbleDB.</mark>_
+{% endhint %}
 
 ## Starting the HTTP server
 
