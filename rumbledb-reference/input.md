@@ -257,11 +257,27 @@ return $i
 
 RumbleDB can connect to a table registered in the Hive metastore with the function table().
 
+The Hive metastore manages its own storage system. Thus, unlike most other functions on this page, it uses a simple name rather than a path on a data lake.
+
 ```
-for $i in table("m)ytable
+for $i in table("mytable")
 where $i.attribute eq "some value"
 return $i
 ```
+
+RumbleDB can also modify data in a Hive metastore table with the [JSONiq Update Facility](../the-jsoniq-language/jsoniq-update-facility/).
+
+### Delta files
+
+Delta files, part of the [Delta Lake framework](https://delta.io/), can be oped with the function delta-file().
+
+```
+for $i in delta-file("hdfs://path/to/my/delta-file")
+where $i.attribute eq "some value"
+return $i
+```
+
+RumbleDB can also modify data in a delta file with the [JSONiq Update Facility](../the-jsoniq-language/jsoniq-update-facility/).
 
 ### AVRO
 
@@ -343,7 +359,7 @@ return $i
 
 ## Supported file systems
 
-As a general rule of thumb, RumbleDB can read from any file system that Spark can read from. The file system is inferred from the scheme used in the path used in any of the functions described above, with the exception of MongoDB and PostgreSQL, which are ETL-based.
+As a general rule of thumb, RumbleDB can read from any file system that Spark can read from. The file system is inferred from the scheme used in the path used in any of the functions described above, with the exception of MongoDB, the Hive metastore, and PostgreSQL, which are ETL-based.
 
 Note that the scheme is optional, in which case the default file system as configured in Hadoop and Spark is used. A relative path can also be provided, in which case the working directory (including its file system) as configured is used.
 
