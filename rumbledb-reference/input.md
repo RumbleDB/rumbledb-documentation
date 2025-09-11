@@ -209,6 +209,8 @@ This functionality is currently only available in the Python edition (pip instal
 
 PostgreSQL tables can be opened with the function postgresql-table().
 
+PostgreSQL is an OLTP system with its own storage system. Thus, unlike most other functions on this page, it uses a connection string rather than a path on a data lake.
+
 It opens one table and returns it as a sequence of objects. The first argument is the connection string in the JDBC format, containing host, port, username, password, and database. The second argument is the name of the table to read.
 
 ```
@@ -232,6 +234,8 @@ This functionality is currently only available in the Python edition (pip instal
 {% endhint %}
 
 MongoDB collections can be opened with the function mongodb-collection().
+
+MongoDB is an OLTP system with its own storage system. Thus, unlike most other functions on this page, it uses a connection string rather than a path on a data lake.
 
 It opens one collection and returns it as a sequence of objects. The first argument is the connection string in the MongoDB format, containing host, port, database, collection, username ,password. The second argument is the name of the collection to read.
 
