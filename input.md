@@ -1,8 +1,10 @@
-# Reading data
+# Data sources and formats
 
-RumbleDB is able to read a variety of formats from a variety of file systems.
+RumbleDB is able to read a variety of formats from a variety of file systems and database management systems.
 
-We support functions to read JSON, JSON Lines, XML, Parquet, CSV, Text and ROOT files from various storage layers such as S3 and HDFS, Azure blob storage. We run most of our tests on Amazon EMR with S3 or HDFS, as well as locally on the local file system, but we welcome feedback on other setups.
+We support functions to read JSON, JSON Lines, XML, Parquet, CSV, Text, ROOT, Delta files from various storage layers such as S3 and HDFS, Azure blob storage. We run most of our tests on Amazon EMR with S3 or HDFS, as well as locally on the local file system, but we welcome feedback on other setups.
+
+We also support some ETL-based systems such as PostgreSQL, MongoDB and the Hive metastore.
 
 ## Supported formats
 
@@ -265,7 +267,7 @@ where $i.attribute eq "some value"
 return $i
 ```
 
-RumbleDB can also modify data in a Hive metastore table with the [JSONiq Update Facility](../the-jsoniq-language/jsoniq-update-facility/).
+RumbleDB can also modify data in a Hive metastore table with the [JSONiq Update Facility](the-jsoniq-language/jsoniq-update-facility/).
 
 ### Delta files
 
@@ -277,7 +279,7 @@ where $i.attribute eq "some value"
 return $i
 ```
 
-RumbleDB can also modify data in a delta file with the [JSONiq Update Facility](../the-jsoniq-language/jsoniq-update-facility/).
+RumbleDB can also modify data in a delta file with the [JSONiq Update Facility](the-jsoniq-language/jsoniq-update-facility/).
 
 ### AVRO
 
