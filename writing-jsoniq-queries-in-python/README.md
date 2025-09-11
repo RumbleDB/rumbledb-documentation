@@ -43,7 +43,7 @@ JSONiq queries are invoked with rumble.jsoniq() in a way similar to the way Spar
 
 JSONiq variables can be bound to lists of JSON values (str, int, float, True, False, None, dict, list) or to Pyspark DataFrames. A JSONiq query can use as many variables as needed (for example, it can join between different collections).
 
-It will later also be possible to read tables registered in the Hive metastore, similar to spark.sql(). Alternatively, the JSONiq query can also read many files of many different formats from many places (local drive, HTTP, S3, HDFS, ...) directly with simple [builtin function calls](../input.md) such as json-lines(), text-file(), parquet-file(), csv-file(), etc.
+It will later also be possible to read tables registered in the Hive metastore, similar to spark.sql(). Alternatively, the JSONiq query can also read many files of many different formats from many places (local drive, HTTP, S3, HDFS, ...) directly with simple [builtin function calls](../rumbledb-reference/input.md) such as json-lines(), text-file(), parquet-file(), csv-file(), etc.
 
 The resulting sequence of items can be retrieved as a list of JSON values, as a Pyspark DataFrame, or, for advanced users, as an RDD or with a streaming iteration over the items using the [RumbleDB Item API](https://github.com/RumbleDB/rumble/blob/master/src/main/java/org/rumbledb/api/Item.java).
 

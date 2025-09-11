@@ -25,7 +25,7 @@
   * [Writing queries directly in Jupyter notebook cells](writing-jsoniq-queries-in-python/writing-queries-directly-in-jupyter-notebook-cells.md)
   * [Advanced configuration](writing-jsoniq-queries-in-python/advanced-configuration.md)
   * [Write back to the disk (or data lake)](writing-jsoniq-queries-in-python/write-back-to-the-disk-or-data-lake.md)
-* [Data sources and formats](input.md)
+* [Data sources and formats](rumbledb-reference/input.md)
 * [The JSONiq language](the-jsoniq-language/README.md)
   * [JSONiq 1.0](the-jsoniq-language/jsoniq-specification/README.md)
     * [Introduction](the-jsoniq-language/jsoniq-specification/introduction.md)

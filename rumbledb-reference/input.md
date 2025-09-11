@@ -255,6 +255,12 @@ where $i.attribute eq "some value"
 return $i
 ```
 
+MongoDB does not work "out of the box" but requires some configuration as indicated on the MongoDB Spark connector website. In the Python edition, we simplified the process and all that is needed is to add withMongo() on the session building chain:
+
+```python
+RumbleSession.builder.withMongo().getOrCreate();
+```
+
 ### Hive metastore
 
 RumbleDB can connect to a table registered in the Hive metastore with the function table().
@@ -267,7 +273,7 @@ where $i.attribute eq "some value"
 return $i
 ```
 
-RumbleDB can also modify data in a Hive metastore table with the [JSONiq Update Facility](the-jsoniq-language/jsoniq-update-facility/).
+RumbleDB can also modify data in a Hive metastore table with the [JSONiq Update Facility](../the-jsoniq-language/jsoniq-update-facility/).
 
 ### Delta files
 
@@ -279,7 +285,13 @@ where $i.attribute eq "some value"
 return $i
 ```
 
-RumbleDB can also modify data in a delta file with the [JSONiq Update Facility](the-jsoniq-language/jsoniq-update-facility/).
+RumbleDB can also modify data in a delta file with the [JSONiq Update Facility](../the-jsoniq-language/jsoniq-update-facility/).
+
+Delta files do not work "out of the box" but require some configuration as indicated on the Delta Lake website (importing packages, configuring some parameters). In the Python edition, we simplified the process and all that is needed is to add withDelta() on the session building chain:
+
+```python
+RumbleSession.builder.withDelta().getOrCreate();
+```
 
 ### AVRO
 
