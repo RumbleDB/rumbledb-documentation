@@ -14,7 +14,7 @@ The prolog appears before the main query and is optional. It can contain setters
 
 Module imports are explained in the next chapter.
 
-### Setters. <a href="#setters.d12e5165" id="setters.d12e5165"></a>
+### Setters <a href="#setters.d12e5165" id="setters.d12e5165"></a>
 
 Setters allow to specify a default behaviour for various aspects of the language.
 
