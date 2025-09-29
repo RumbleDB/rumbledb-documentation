@@ -239,7 +239,7 @@ MongoDB collections can be opened with the function mongodb-collection().
 
 MongoDB is an OLTP system with its own storage system. Thus, unlike most other functions on this page, it uses a connection string rather than a path on a data lake.
 
-It opens one collection and returns it as a sequence of objects. The first argument is the connection string in the MongoDB format, containing host, port, database, collection, username ,password. The second argument is the name of the collection to read.
+It opens one collection and returns it as a sequence of objects. The first argument is the connection string in the MongoDB format, containing host, port, database, collection, username, password. The second argument is the name of the collection to read.
 
 ```
 for $i in mongodb-collection("mongodb://servername/dbname", "collection")
