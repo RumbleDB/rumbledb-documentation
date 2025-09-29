@@ -26,7 +26,7 @@ Warning: some of the configuration methods do not make sense in Python and are s
 
 ## Allocating more memory
 
-If you get an out-of-memory error, it is possible to allocate memory when you build the Rumble session with a config() call. This is exactly the same way it is done when building a Spark session. The config() call can of course be used in combinatino with any other method calls that are part of the builder chain (withDelta(), appName(), config(), etc).
+If you get an out-of-memory error, it is possible to allocate memory when you build the Rumble session with a config() call. This is exactly the same way it is done when building a Spark session. The config() call can of course be used in combination with any other method calls that are part of the builder chain (withDelta(), appName(), config(), etc).
 
 {% hint style="info" %}
 This will only have an effect when done the first time the session is created. Spark and Java are not able to adjust the memory automatically after the session has been created. Subsequent calls of getOrCreate() do not create a new session, they only get the existing one.
