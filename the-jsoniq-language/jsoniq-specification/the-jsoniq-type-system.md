@@ -20,10 +20,9 @@ All sequences match the sequence type _js:item\*_.
 
 A sequence type is made of an item type followed by an occurrence indicator:
 
-* \* stands for a sequence of any length (zero or more)
-*
-  * stands for a non-empty sequence (one or more)
-* ? stands for an empty or a singleton sequence (zero or one)
+* The symbol \* (star) stands for a sequence of any length (zero or more)
+* The symbol + (plus) stands for a non-empty sequence (one or more)
+* The symbol ? (question mark) stands for an empty or a singleton sequence (zero or one)
 * The absence of indicator stands for a singleton sequence (one).
 
 Examples:
