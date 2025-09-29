@@ -36,7 +36,7 @@ where $my-json.property eq "some value"
 return $my-json
 ```
 
-If a host and port are set:
+If a default host and port are set in the Hadoop configuration, you can directly specify an absolute path without host and port:
 
 ```
 for $my-json in json-lines("/absolute/directory/file.json")
