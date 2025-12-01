@@ -1950,7 +1950,7 @@ CountClause
 
 For each incoming tuple, a binding from the position of this tuple in the tuple stream to the count variable is added. The new tuple is then forwarded to the next clause.
 
-**An order by clause.**
+**A count clause.**
 
 ```
 
