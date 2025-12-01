@@ -277,7 +277,7 @@ RumbleDB can also modify data in a Hive metastore table with the [JSONiq Update 
 
 ### Delta files
 
-Delta files, part of the [Delta Lake framework](https://delta.io/), can be oped with the function delta-file().
+Delta files, part of the [Delta Lake framework](https://delta.io/), can be opened with the function delta-file().
 
 ```
 for $i in delta-file("hdfs://path/to/my/delta-file")
