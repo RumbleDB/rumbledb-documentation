@@ -1833,7 +1833,7 @@ For each incoming tuple, the expression in the group clause is evaluated to an a
 
 For each group, a tuple is output, with a binding from the grouping variable to the key of the group.
 
-**An order by clause.**
+**A group by clause.**
 
 ```
 
@@ -1849,7 +1849,7 @@ As for the other (non-grouping) variables, their values within one group are all
 
 The following query is equivalent to "SELECT century, COUNT(\*) FROM captains GROUP BY century".
 
-**An order by clause.**
+**A group by clause.**
 
 ```
 
@@ -1863,7 +1863,7 @@ Result (run with Zorba):{ "century" : 21, "count" : 1 } { "century" : 22, "count
 
 JSONiq's group by is more flexible than SQL and is fully composable.
 
-**An order by clause.**
+**A group by clause.**
 
 ```
 
@@ -1879,7 +1879,7 @@ Unlike SQL, JSONiq does not need a having clause, because a where clause works p
 
 The following query is the counterpart of "SELECT century, COUNT(\*) FROM captains GROUP BY century HAVING COUNT(\*) > 1"
 
-**An order by clause.**
+**A group by clause.**
 
 ```
 
@@ -1904,7 +1904,7 @@ Let bindings can be used to define aliases for any sequence, for convenience.
 
 For each incoming tuple, the expression in the let clause is evaluated to a sequence. A binding is added from this sequence to the let variable in each tuple. A tuple is hence produced for each incoming tuple.
 
-**An order by clause.**
+**A let clause.**
 
 ```
 
@@ -1921,7 +1921,7 @@ Result (run with Zorba):{ "century" : 24, "count" : 4 }
 
 Note that it is perfectly fine to reuse a variable name and hide a variable binding.
 
-**An order by clause.**
+**A let clause.**
 
 ```
 
