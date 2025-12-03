@@ -6,7 +6,9 @@ RumbleDB now supports user-defined array and object types both with the JSound c
 
 RumbleDB user-defined types can be defined with the JSound syntax. A tutorial for the JSound syntax can be found [here](https://github.com/ghislainfourny/jsound-tutorial).
 
-For now, RumbleDB only allows the definition of user-defined types for objects and arrays. User-defined atomic types and union types will follow soon. Also, the @ (primary key) and ? (nullable) characters are not supported at this point. The implementation is still experimental and bugs are still expected, which we will appreciate to be informed of.
+For now, RumbleDB only allows the definition of user-defined types for objects and arrays. User-defined atomic types and union types will follow soon. The @ (primary key) and ? (nullable) shortcuts are supported as of version 2.0.5. The behavior of nulls with absent vs. nullable fields can be tweaked in the configuration (e.g., if a null is present in an optional, non-nullable field, RumbleBD can be lenient and simply remove it instead of throwing an error).
+
+The implementation is still experimental and bugs are still expected, which we will appreciate to be informed of.
 
 ## Type declaration
 
