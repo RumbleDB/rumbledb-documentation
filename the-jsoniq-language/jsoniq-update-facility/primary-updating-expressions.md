@@ -8,8 +8,7 @@ These expressions may appear in a copy-modify-return (transform) expression (for
 
 ### **Inserting values into an object or array**
 
-\
-
+<br>
 
 <figure><img src="https://www.jsoniq.org/docs/JSONiq/webhelp/images/JSONInsertExpr.png" alt=""><figcaption></figcaption></figure>
 
@@ -43,8 +42,7 @@ return $arr
 
 ### **Deleting values in an object or array**
 
-\
-
+<br>
 
 <figure><img src="https://www.jsoniq.org/docs/JSONiq/webhelp/images/JSONDeleteExpr.png" alt=""><figcaption></figcaption></figure>
 
@@ -76,13 +74,11 @@ return $arr
 
 **Result:** \[ 1, 2, 4, 5, 6 ]
 
-\
-
+<br>
 
 ### **Renaming a key**
 
-\
-
+<br>
 
 <figure><img src="https://www.jsoniq.org/docs/JSONiq/webhelp/images/JSONRenameExpr.png" alt=""><figcaption></figcaption></figure>
 
@@ -97,12 +93,11 @@ return $obj
       
 ```
 
-**Result:** { "bar" : 123, "foobar" : "bar" }
+**Result:** { "foobar" : "bar", "bar" : 123 }
 
 ### **Appending values to an array**
 
-\
-
+<br>
 
 <figure><img src="https://www.jsoniq.org/docs/JSONiq/webhelp/images/JSONAppendExpr.png" alt=""><figcaption></figcaption></figure>
 
@@ -117,10 +112,9 @@ return $obj
       
 ```
 
-**Result:** { "foo" : "bar", "bar" : \[ 1, 2, 3, 4 ] }\
+**Result:** { "foo" : "bar", "bar" : \[ 1, 2, 3, 4 ] }<br>
 
-
-### **Replacing a value in an object or array.** 
+### **Replacing a value in an object or array.**<br>
 
 <figure><img src="https://www.jsoniq.org/docs/JSONiq/webhelp/images/JSONReplaceExpr.png" alt=""><figcaption></figcaption></figure>
 
@@ -135,7 +129,7 @@ return $obj
       
 ```
 
-**Result:** { "bar" : \[ 1, 2, 3 ], "foo" : { "nested" : true } }
+**Result:** { "foo" : { "nested" : true }, "bar" : \[ 1, 2, 3 ] }
 
 A JSON replace expression is also used to replace a member in an array. It produces a _jupd:insert-in-array_ update primitive. JNUP0007 is raised if the selector is not a single position. If the selector position is out of range, JNUP0016 is raised.
 
