@@ -1,6 +1,6 @@
 # Table of contents
 
-* [RumbleDB 2.0 "Lemon Ironwood"](README.md)
+* [RumbleDB 2.1 "Cedrus Libani"](README.md)
 * [Ways to install and use](getting-started/README.md)
   * [On the online sandbox](getting-started/on-the-online-sandbox.md)
   * [As a pip package](getting-started/as-a-pip-package.md)
