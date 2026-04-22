@@ -4,7 +4,7 @@
 
 ## Known issue
 
-On occasion, the docker version of RumbleDB used to throw a Kryo NoSuchMethodError on some systems. This should be fixed with version 2.0.0, let us know if this is not the case.
+On occasion, the docker version of RumbleDB used to throw a Kryo NoSuchMethodError on some systems. This should be fixed with version 2.1.0, let us know if this is not the case.
 
 You can upgrade to the newest version with
 
@@ -39,7 +39,7 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.0.0 "Lemon Ironwood" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.1.0 "Cedrus Libani" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
 
 

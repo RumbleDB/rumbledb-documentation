@@ -1,4 +1,4 @@
-# Execute with Java using a single jar file
+# Command line (java -jar)
 
 ## Java version (important)
 
@@ -18,20 +18,20 @@ Do make sure it is not Java 8, which will not work.
 
 RumbleDB is just a download and no installation is required.
 
-In order to run RumbleDB, you simply need to download rumbledb-2.0.0-standalone.jar from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
+In order to run RumbleDB, you simply need to download rumbledb-2.1.0-standalone.jar from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
 
 Make sure to use the corresponding jar name accordingly in all our instructions in lieu of rumbledb.jar.
 
 You can test that it works with:
 
 ```
-java -jar rumbledb-2.0.0-standalone.jar run -q '1+1'
+java -jar rumbledb-2.1.0-standalone.jar run -q '1+1'
 ```
 
 or launch a JSONiq shell with:
 
 ```
-java -jar rumbledb-2.0.0-standalone.jar repl
+java -jar rumbledb-2.1.0-standalone.jar repl
 ```
 
 If you run out of memory, you can set allocate more memory to Java with an additional Java parameter, e.g., -Xmx10g
@@ -42,7 +42,7 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.0.0 "Lemon Ironwood" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.1.0 "Cedrus Libani" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
 
 

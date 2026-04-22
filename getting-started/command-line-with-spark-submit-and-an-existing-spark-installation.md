@@ -59,9 +59,11 @@ Like Spark, RumbleDB is just a download and no installation is required.
 
 In order to run RumbleDB, you simply need to download one of the small .jar files from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
 
-If you use Spark 3.5, use rumbledb-2.0.0-for-spark-3.5-scala-2.13.jar.
+If you use Spark 4.0, use rumbledb-2.1.0-for-spark-4.0.jar.
 
-If you use Spark 4.0, use rumbledb-2.0.0-for-spark-4.0.jar.
+If you use Spark 4.1, use rumbledb-2.1.0-for-spark-4.1.jar.
+
+If you use Spark 4.2, use rumbledb-2.1.0-for-spark-4.2.jar.
 
 These jars do not embed Spark, since you chose to set it up separately. They will work with your Spark installation with the spark-submit command.
 
@@ -81,7 +83,7 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.0.0 "Lemon Ironwood" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.1.0 "Cedrus Libani" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
 
 
