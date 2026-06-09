@@ -8,7 +8,7 @@ JSONiq 3.1 does not require a separate serialization mechanism, since XQuery 3.1
 
 JSONiq 3.1 benefits from all the map and object builtin functions defined in XQuery 3.1.
 
-JSONiq 3.1 is fully interoperable with XQuery 3.1 and can execute on the same virtual machine (similar to Scala and Java).
+JSONiq 3.1 is fully interoperable with XQuery 3.1 and can execute on the same virtual machine (similar to Scala and Java). Concretely, XQuery and JSONiq modules can be imported and used in the same (XQuery or JSONiq) query.
 
 This also paves the way for JSONiq 4.0 which will also be aligned with XQuery 4.0 as much as is technically possible.
 
@@ -66,6 +66,14 @@ null exists as a literal representing a special item. It is distinct from the em
 
 {% hint style="info" %}
 The null literal is forward compatible with XQuery 4.0's semantics for json-doc() and parse-doc() which enable the representation of JSON null literals as a special QName item rather than an empty sequence).
+{% endhint %}
+
+### Array constructors
+
+The \[ ... ] array constructor has the semantics of XQuery 3.1's array { ... } constructor, in the sense that each item in the child expression's sequence becomes a member of the array.
+
+{% hint style="info" %}
+This behavior is familiar to the JSONiq community and is preserved.
 {% endhint %}
 
 ### Navigation
