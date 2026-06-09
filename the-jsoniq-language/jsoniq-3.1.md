@@ -65,7 +65,7 @@ true and false exist as literals and do not have to be obtained through function
 null exists as a literal representing a special item. It is distinct from the empty sequence.
 
 {% hint style="info" %}
-The null literal is forward compatible with XQuery 4.0's semantics for json-doc() and parse-doc() which enable the representation of JSON null literals as a special QName item rather than an empty sequence).
+The null literal is forward compatible with XQuery 4.0's semantics for json-doc() and parse-doc(), which enable the representation of JSON null literals as a special QName item rather than an empty sequence with the "null" parameter.
 {% endhint %}
 
 ### Array constructors
