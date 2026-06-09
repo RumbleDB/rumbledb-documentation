@@ -81,11 +81,13 @@ This behavior is familiar to the JSONiq community and is preserved.
 The dot ., the double square brackets \[\[ ]], and the array unboxing syntax \[] are retained and follow the semantics of JSONiq 1.0. They come in addition to the XQuery 3.1's ? postfix and unary lookup syntax.
 
 {% hint style="info" %}
-The difference with ? lookup syntax is that . and \[\[ ]] are semantically optimized for working flexibly on large-scale sequences of items, e.g., billions of items.&#x20;
+The difference with ? lookup syntax is that . \[] and \[\[ ]] are semantically optimized for working flexibly on large-scale sequences of items, e.g., billions of items.&#x20;
 {% endhint %}
 
 ## How JSONiq 3.1 differs from JSONiq 1.0
 
 The data model standardized by the W3C working group is more generic and allows for atomic object keys that are not necessarily strings (dates, etc). Also, an object value or an array value can be a sequence of items and does not need to be a single item. The particular case in which object keys are strings and values are single items (or empty) corresponds to the JSON use.
+
+Unquoted keys are not allowed in JSONiq 3.1 and are considered element name tests.
 
 There are other minor changes in semantics that correspond to the alignment with XQuery 3.1 such as Effective Boolean Values, comparison, etc.
