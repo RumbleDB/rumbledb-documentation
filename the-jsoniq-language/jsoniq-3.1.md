@@ -39,7 +39,7 @@ The dot is used for JSONiq's large-scale object lookup syntax.
 String literals use JSON escaping instead of XML escaping (backslash, not ampersand).
 
 {% hint style="info" %}
-JSON-like escaping is more natural to the JSON community.
+JSON-like escaping is more natural to the JSON community. This allows in particular copy-pasting (nested) JSON content directly into the query without modification.
 {% endhint %}
 
 ### Map constructors
