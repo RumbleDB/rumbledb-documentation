@@ -52,7 +52,7 @@ This is forward compatible with XQuery 4.0. This allows copy-pasting (nested) JS
 
 ### Constraints on XPath
 
-A name test must be prefixed with \$$/ and cannot stand on its own.
+A name test on any of the element names true, false, or null must be prefixed with \$$/ and cannot stand on its own.
 
 {% hint style="info" %}
 This allows for the parsing of true, false and null literals, allowing copy-pasting JSON content directly into the query without modification.
