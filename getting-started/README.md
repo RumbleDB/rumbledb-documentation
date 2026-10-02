@@ -3,8 +3,8 @@
 There are many ways to install and use RumbleDB. For example:
 
 * Without installation, by using one of our online sandboxes (Jupyter notebook or simple sandbox page)
-* In Python, by installing our pip package (pip install [jsoniq](https://test.pypi.org/project/jsoniq/)), which contains everything needed.
-* In Jupyter notebook with the %%jsoniq and %%xquery magics, also with the jsoniq pip library. It is fully compatible with Python values, Pandas DataFrames, Spark SQL, etc.
+* In Python, by installing our pip package (pip install [jsoniq](https://test.pypi.org/project/jsoniq/)), which contains everything needed. It is fully compatible with Python values, Pandas DataFrames, Spark SQL, etc.
+* In Jupyter notebooks with the %%jsoniq and %%xquery magics, also with the jsoniq pip library.
 * By running the standalone RumbleDB jar with Java on your laptop, which embeds a copy of Spark.
 * By installing with homebrew (we are officially registered there as [rumbledb](https://formulae.brew.sh/formula/rumbledb#default)).
 * By installing Spark yourself on your laptop (for more control on Spark parameters) and use a small RumbleDB jar with spark-submit.
