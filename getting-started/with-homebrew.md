@@ -1,12 +1,9 @@
 # With homebrew
 
-##
-
-It is also possible to use RumbleDB with brew, however there is currently no way to adjust memory usage. To install RumbleDB with brew, type the commands:
+It is possible to install RumbleDB with homebrew, however there is currently no way to adjust memory usage. To install RumbleDB with brew, type the command:
 
 ```
-brew tap rumbledb/rumble
-brew install --build-from-source rumble
+brew install rumbledb
 ```
 
 You can test that it works with:
@@ -20,8 +17,6 @@ Then, launch a JSONiq shell with:
 ```
 rumbledb repl
 ```
-
-
 
 The RumbleDB shell appears:
 
