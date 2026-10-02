@@ -1,50 +1,188 @@
 # Configuration parameters
 
-The parameters that can be used on the command line as well as on the planned HTTP server are shown below. They are also accessible via the Java API and via Python through the [RumbleRuntimeConfiguration](https://rumbledb.org/docs/latest/api/org/rumbledb/config/RumbleRuntimeConfiguration.html) class.
+This page documents the RumbleDB 3 command line and configuration parameters. Configuration settings are also available through the Java `org.rumbledb.api.RumbleConfiguration` class and the Python session configuration API.
 
-RumbleDB runs in three modes. You can select the mode passing a verb as the first parameter. For example:
+## Command line modes
 
+Select a mode with the first argument:
+
+| Command | Availability | Semantics |
+| --- | --- | --- |
+| `run` | RumbleDB 2 and 3 | Executes a query supplied as a string or read from a file. |
+| `repl` | RumbleDB 2 and 3 | Starts the interactive shell. |
+| `serve` | RumbleDB 2 only; dropped in RumbleDB 3 | Starts the legacy HTTP server. |
+
+For RumbleDB 3:
+
+```sh
+spark-submit rumbledb.jar run file.jq -o output-dir -P 1
+spark-submit rumbledb.jar run -q '1+1'
+spark-submit rumbledb.jar repl --result-size 10
+spark-submit rumbledb.jar run --help
 ```
-   spark-submit rumbledb.jar run file.jq -o output-dir -P 1
-   spark-submit rumbledb.jar run -q '1+1'
-   spark-submit rumbledb.jar serve -p 8001
-   spark-submit rumbledb.jar repl -c 10
+
+`run` requires exactly one query source: `--query`, `--query-path`, or a positional query file. `repl` does not take a query source. The other options below are shared by `run` and `repl`, except where their purpose is specific to one mode.
+
+Boolean CLI options are flags: use `--static-typing` to enable static typing and `--no-static-typing` to disable it. All boolean options below support the corresponding `--no-...` form. Do not pass `yes` or `no` as separate arguments to these flags. Serialization options such as `--output-format-option indent=yes` have their own value syntax.
+
+`--help` (shortcut `-h`) displays help for the selected command, or for the launcher when used without a command. It has no configuration key.
+
+## Configuration from Python and Java
+
+The **Python/Java configuration key** column gives the exact, case-sensitive string path used by the API. For Python, configure a session when creating it:
+
+```python
+from jsoniq import RumbleSession
+
+rumble = (
+    RumbleSession.builder
+    .rumbleConfig("runtime.resultsSizeCap", 1000)
+    .rumbleConfig("debug.printIteratorTree", True)
+    .getOrCreate()
+)
 ```
 
-Previous parameters (--shell, --query-path, --server) work in a backward compatible fashion, however we do recommend to start using the new verb-based format.
+Use `.rumbleConfig(path, value)` for RumbleDB settings and `.config(key, value)` for Spark settings, such as `spark.driver.memory`.
 
-| Shell parameter                                   | Shortcut                                                 | HTTP parameter                                  | example values                                                   | Semantics                                                                                                                                                                                                                                                                                      |
-| ------------------------------------------------- | -------------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| --shell                                           | repl                                                     | N/A                                             | yes, no                                                          | yes runs the interactive shell. No executes a query specified with --query-path                                                                                                                                                                                                                |
-| --shell-filter                                    | N/A                                                      | N/A                                             | jq .                                                             | Post-processes the output of JSONiq queries on the shell with the specified command (reading the RumbleDB output via stdin)                                                                                                                                                                    |
-| --query                                           | -q                                                       | query                                           | 1+1                                                              | A JSONiq query directly provided as a string.                                                                                                                                                                                                                                                  |
-| --query-path                                      | (any text without -- or - is recognized as a query path) | query-path                                      | file:///folder/file.jq                                           | A JSONiq query file to read from (from any file system, even the Web!).                                                                                                                                                                                                                        |
-| --output-path                                     | -o                                                       | output-path                                     | file:///folder/output                                            | Where to output to (if the output is large, it will create a sharded directory, otherwise it will create a file)                                                                                                                                                                               |
-| --output-format                                   | -f                                                       | N/A                                             | json, csv, avro, parquet, or any other format supported by Spark | An output format to use for the output. Formats other than json can only be output if the query outputs a highly structured sequence of objects (you can nest your query in an annotate() call to specify a schema if it does not).                                                            |
-| --output-format-option:foo                        | N/A                                                      | N/A                                             | bar                                                              | Options to further specify the output format (example: separator character for CSV, compression format...)                                                                                                                                                                                     |
-| --overwrite                                       | -O (meaning --overwrite yes)                             | overwrite                                       | yes, no                                                          | Whether to overwrite to --output-path. No throws an error if the output file/folder exists.                                                                                                                                                                                                    |
-| --materialization-cap                             | -c                                                       | materialization-cap                             | 100000                                                           | A cap on the maximum number of items to materialize during the query execution for large sequences within a query. For example, when nesting an expression producing a large sequence of items (and that RumbleDB chose to physically store as an RDD or DataFrame) into an array constructor. |
-| --result-size                                     |                                                          | result-size                                     | 10                                                               | A cap on the maximum number of items to output on the screen or to a local list.                                                                                                                                                                                                               |
-| --number-of-output-partitions                     | -P                                                       | N/A                                             | ad hoc                                                           | How many partitions to create in the output, i.e., the number of files that will be created in the output path directory.                                                                                                                                                                      |
-| --log-path                                        | N/A                                                      | log-path                                        | file:///folder/log.txt                                           | Where to output log information                                                                                                                                                                                                                                                                |
-| --print-iterator-tree                             | N/A                                                      | N/A                                             | yes, no                                                          | For debugging purposes, prints out the expression tree and runtime interator tree.                                                                                                                                                                                                             |
-| --show-error-info                                 | -v (meaning --show-error-info yes)                       | show-error-info                                 | yes, no                                                          | For debugging purposes. If you want to report a bug, you can use this to get the full exception stack. If no, then only a short message is shown in case of error.                                                                                                                             |
-| --static-typing                                   | -t (meaning --static-typing yes)                         | static-typing                                   | yes, no                                                          | Activates static type analysis, which annotates the expression tree with inferred types at compile time and enables more optimizations (experimental). Deactivated by default.                                                                                                                 |
-| --server                                          | serve                                                    | N/A                                             | yes, no                                                          | yes runs RumbleDB as a server on port 8001. Run queries with http://localhost:8001/jsoniq?query-path=/folder/foo.json                                                                                                                                                                          |
-| --port                                            | -p                                                       | N/A                                             | 8001 (default)                                                   | Changes the port of the RumbleDB HTTP server to any of your liking                                                                                                                                                                                                                             |
-| --host                                            | -h                                                       | N/A                                             | localhost (default)                                              | Changes the host of the RumbleDB HTTP server to any of your liking                                                                                                                                                                                                                             |
-| --variable:foo                                    | N/A                                                      | variable:foo                                    | bar                                                              | --variable:foo bar initialize the global variable $foo to "bar". The query must contain the corresponding global variable declaration, e.g., "declare variable $foo external;"                                                                                                                 |
-| --context-item                                    | -I                                                       | context-item                                    | bar                                                              | initializes the global context item \$$ to "bar". The query must contain the corresponding global variable declaration, e.g., "declare context item external;"                                                                                                                                 |
-| --context-item-input                              | -i                                                       | context-item-input                              | -                                                                | reads the context item value from the standard input                                                                                                                                                                                                                                           |
-| --context-item-input-format                       | N/A                                                      | context-item-input-format                       | text or json                                                     | sets the input format to use for parsing the standard input (as text or as a serialized json value)                                                                                                                                                                                            |
-| --dates-with-timezone                             | N/A                                                      | dates-with-timezone                             | yes or no                                                        | activates timezone support for the type xs:date (deactivated by default)                                                                                                                                                                                                                       |
-| --lax-json-null-valication                        | N/A                                                      | lax-json-null-validation                        | yes or no                                                        | Allows conflating JSON nulls with absent values when validating nillable object fields for more flexibility (activated by default).                                                                                                                                                            |
-| --optimize-general-comparison-to-value-comparison | N/A                                                      | optimize-general-comparison-to-value-comparison | yes or no                                                        | activates automatic conversion of general comparisons to value comparisons when applicable (activated by default)                                                                                                                                                                              |
-| --function-inlining                               | N/A                                                      | function-inlining                               | yes or no                                                        | activates function inlining for non-recursive functions (activated by default)                                                                                                                                                                                                                 |
-| --parallel-execution                              | N/A                                                      | parallel-execution                              | yes or no                                                        | activates parallel execution when possible (activated by default)                                                                                                                                                                                                                              |
-| --native-execution                                | N/A                                                      | native-execution                                | yes or no                                                        | activates native (Spark SQL) execution when possible (activated by default)                                                                                                                                                                                                                    |
-| --default-language                                | N/A                                                      | N/A                                             | jsoniq10, jsoniq31, xquery31                                     | specifies the query language to be used                                                                                                                                                                                                                                                        |
-| --optimize-steps                                  | N/A                                                      | N/A                                             | yes or no                                                        | allows RumbleDB to optimize steps, might violate stability of document order (activated by default)                                                                                                                                                                                            |
-| --optimize-steps-experimental                     | N/A                                                      | N/A                                             | yes or no                                                        | experimentally optimizes steps more by skipping uniqueness and sorting in some cases. correctness is not yet verified (disabled by default)                                                                                                                                                    |
-| --optimize-parent-pointers                        | N/A                                                      | N/A                                             | yes or no                                                        | allows RumbleDB to remove parent pointers from items if no steps requiring parent pointers are detected statically (activated by default)                                                                                                                                                      |
-| --static-base-uri                                 | N/A                                                      | N/A                                             | "../data/"                                                       | sets the static base uri for the execution. This option overwrites module location but is overwritten by declaration inside query                                                                                                                                                              |
+To inspect or change an existing session's configuration:
+
+```python
+conf = rumble.getRumbleConf()
+conf.set("runtime.resultsSizeCap", 1000)
+conf.set("debug.printIteratorTree", True)
+
+cap = conf.getInt("runtime.resultsSizeCap")
+show_plan = conf.getBoolean("debug.printIteratorTree")
+language = conf.getString("semantics.queryLanguage")
+```
+
+Changes apply to subsequent queries. Already-created sequences retain the configuration with which they were compiled. Python values must have the appropriate type: use integers for caps, `True` or `False` for booleans, and strings for language names and paths. Legacy setters such as `setResultSizeCap()` and `setPrintIteratorTree()` were removed in RumbleDB 3; use `set(path, value)` instead.
+
+In Java, use the configuration builder:
+
+```java
+RumbleConfiguration configuration = RumbleConfiguration.builder()
+    .with("runtime.resultsSizeCap", 1000)
+    .with("debug.printIteratorTree", true)
+    .build();
+```
+
+Import `org.rumbledb.api.RumbleConfiguration`. The configuration is immutable; `toBuilder()` creates a builder initialized with its current values. Read settings with `get(path)`, `getInt(path)`, `getBoolean(path)`, or `getString(path)`.
+
+The tables below use Python notation for defaults (`True`, `False`, and `None`). `None` means that no value is configured. Query-source settings and CLI output destinations are primarily for command line use; in Python, pass queries to `rumble.jsoniq(...)` and retrieve or write the returned sequence using its output methods.
+
+## Query source
+
+These CLI options apply to `run` only.
+
+| CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
+| --- | --- | --- | --- | --- | --- |
+| `--query` | `-q` | `input.query` | string | `None` | Query supplied directly as a string, for example `1+1`. |
+| `--query-path` | Positional query file | `input.queryPath` | string | `None` | Query file to read from a supported file system or URL, for example `file:///folder/file.jq`. |
+
+## Runtime
+
+| CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
+| --- | --- | --- | --- | --- | --- |
+| `--result-size` | — | `runtime.resultsSizeCap` | integer | `10` | Maximum number of items to display on screen or retrieve through Python's `json()` convenience method. |
+| `--materialization-cap` | `-c` | `runtime.materializationCap` | integer | `100000` | Maximum number of items to materialize from large distributed sequences during execution, for example when collecting an RDD or DataFrame into an array. Also used by Java's full-list retrieval. This is separate from the result display cap. |
+| `--native-sql-predicates` | — | `runtime.useNativeSQLPredicates` | boolean | `True` | Enables native SQL predicates when possible. |
+| `--data-frame-execution-mode-detection` | — | `runtime.detectDataFrameExecutionMode` | boolean | `True` | Enables DataFrame execution mode detection for higher-order functions. |
+| `--parallel-execution` | — | `runtime.useParallelExecution` | boolean | `True` | Enables parallel execution when possible. |
+| `--data-frame-execution` | — | `runtime.useDataFrameExecution` | boolean | `True` | Enables DataFrame execution when possible. |
+| `--native-execution` | — | `runtime.useNativeExecution` | boolean | `True` | Enables native Spark SQL execution when possible. |
+| `--apply-updates` | — | `runtime.shouldApplyUpdates` | boolean | `False` | Applies the pending update list returned by an updating query. |
+
+## Output
+
+Output destinations, execution logs, and shell filters are primarily CLI settings. A configuration key does not imply that Python query retrieval automatically writes to the configured destination.
+
+| CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
+| --- | --- | --- | --- | --- | --- |
+| `--output-path` | `-o` | `output.outputPath` | string | `None` | Output destination. Depending on the execution mode, output is written as a file or as a directory of partition files. Without a destination, the CLI displays results on standard output. |
+| `--output-format` | `-f` | `output.outputFormat` | string | `None` | Requests an output format, for example `json`, `csv`, `avro`, or `parquet`. Spark formats require a structured sequence representable as a DataFrame; `annotate()` can supply a schema. |
+| `--output-format-option` | — | `output.serializationParameters` (see below) | `name=value` on the CLI; object in the API | `None` | Repeatable serialization or Spark writer option, for example `--output-format-option indent=yes --output-format-option compression=gzip`. |
+| `--overwrite` | `-O` | `output.allowOverwrite` | boolean | `False` | Allows overwriting an existing CLI output path; otherwise an existing destination raises an error. |
+| `--number-of-output-partitions` | `-P` | `output.numberOfOutputPartitions` | integer | `-1` | Positive values request that many partitions for DataFrame output. `-1` leaves the partition count unspecified. |
+| `--log-path` | — | `output.logPath` | string | `None` | Destination for CLI execution timing and profiler information. This is separate from diagnostic logging levels. |
+| `--shell-filter` | — | `output.shellFilter` | string | `None` | Command used to post-process interactive shell output through standard input, for example `jq .`. |
+
+`--output-format-option` does not map to an arbitrary `output.serializationParameters.foo` key. CLI option names are converted into the serialization object's fields. For example, `indent` maps to `output.serializationParameters.indent`, `indent-spaces` maps to `output.serializationParameters.indentSpaces`, and Spark writer options such as `compression` belong to `output.serializationParameters.sparkOptions`. API values use native types rather than CLI strings:
+
+```python
+conf.set("output.serializationParameters.indent", True)
+conf.set("output.serializationParameters.indentSpaces", 2)
+conf.set("output.serializationParameters.sparkOptions", {"compression": "gzip"})
+```
+
+## Diagnostics
+
+| CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
+| --- | --- | --- | --- | --- | --- |
+| `--print-iterator-tree` | — | `debug.printIteratorTree` | boolean | `False` | Prints the expression tree and runtime iterator tree. |
+| `--show-error-info` | `-v` | `debug.showErrorInfo` | boolean | `False` | Displays detailed error information and exception stacks for debugging or bug reports. |
+| `--debug` | — | `debug.logging` | boolean | `False` | Enables the engine's debug output. Diagnostic logging levels are configured separately below. |
+| `--log-level` | — | `debug.logLevel` | string | `None` (CLI uses `warn`) | CLI diagnostic logging level: `off`, `fatal`, `error`, `warn`, `info`, `debug`, `trace`, or `all`. |
+| `--spark-log-level` | — | `debug.sparkLogLevel` | string | `"off"` | CLI Spark/Hadoop logging level; accepts the same levels as `--log-level`. |
+
+## Static analysis
+
+| CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
+| --- | --- | --- | --- | --- | --- |
+| `--static-typing` | `-t` | `analysis.enableStaticTyping` | boolean | `False` | Activates static type analysis, annotating expressions with inferred types and enabling additional optimizations. Experimental. |
+| `--print-inferred-types` | — | `analysis.printInferredTypes` | boolean | `False` | Prints inferred types during analysis. |
+| `--check-return-types-of-builtin-functions` | — | `analysis.checkReturnTypeOfBuiltinFunctions` | boolean | `False` | Checks the return types of built-in functions. |
+
+## Optimizations
+
+| CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
+| --- | --- | --- | --- | --- | --- |
+| `--function-inlining` | — | `optimization.useFunctionInlining` | boolean | `True` | Enables inlining of non-recursive functions. |
+| `--tail-call-optimization` | — | `optimization.useTailCallOptimization` | boolean | `True` | Enables tail call optimization. |
+| `--optimize-general-comparison-to-value-comparison` | — | `optimization.optimizeGeneralComparisonToValueComparison` | boolean | `True` | Rewrites general comparisons as value comparisons when applicable. |
+| `--optimize-steps` | — | `optimization.optimizeSteps` | boolean | `True` | Enables XPath step optimizations, which may affect stability of document order. |
+| `--optimize-steps-experimental` | — | `optimization.optimizeStepsExperimental` | boolean | `False` | Enables experimental step optimizations that skip uniqueness checks or sorting in some cases; correctness is not yet verified. |
+| `--optimize-parent-pointers` | — | `optimization.optimizeParentPointers` | boolean | `True` | Removes parent pointers when no steps requiring them are detected statically. |
+
+## Language and semantics
+
+| CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
+| --- | --- | --- | --- | --- | --- |
+| `--default-language` | — | `semantics.queryLanguage` | string | `"jsoniq10"` | Default query language: `jsoniq10`, `jsoniq31`, or `xquery31`. |
+| `--xml-version` | — | `semantics.xmlVersion` | string | `"1.1"` | XML version: `1.0` or `1.1`. |
+| `--dates-with-timezone` | — | `semantics.datesWithTimeZone` | boolean | `False` | Enables timezone support for `xs:date`. |
+| `--lax-json-null-validation` | — | `semantics.laxJSONNullValidation` | boolean | `True` | Allows JSON nulls and absent values to be conflated when validating nillable object fields. |
+| `--static-base-uri` | — | `semantics.staticBaseUri` | string | `None` | Static base URI, for example `../data/`. Overrides the module location; a declaration in the query takes precedence. |
+
+The misspelled `--lax-json-null-valication` remains a supported alias for `--lax-json-null-validation`. Use the correctly spelled option in new commands.
+
+## Date and time formatting
+
+These defaults are used by date/time formatting functions when no explicit place, calendar, or language is supplied.
+
+| CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
+| --- | --- | --- | --- | --- | --- |
+| `--default-formatting-place` | — | `formatting.defaultFormattingPlace` | string | `"UTC"` | Formatting timezone, for example `Europe/Zurich`. |
+| `--default-formatting-calendar` | — | `formatting.defaultFormattingCalendar` | string | `"ISO"` | Formatting calendar; use a supported calendar identifier. |
+| `--default-formatting-language` | — | `formatting.defaultFormattingLanguage` | string | `"en"` | Formatting language; use a supported language identifier. |
+
+## External variables and context item
+
+Bindings are separate from configuration and have no Python/Java configuration string key. The query must declare the corresponding external variable (for example, `declare variable $foo external;`) or context item (`declare context item external;`).
+
+| CLI option | Shortcut | Python/Java configuration key | Example value | Semantics |
+| --- | --- | --- | --- | --- |
+| `--variable` | — | N/A (binding API) | `foo=bar` | Binds external variable `$foo` to a lexical value. Repeat the option for different variables. |
+| `--variable-from-file` | — | N/A (binding API) | `foo=data.json` | Binds external variable `$foo` from a file. A variable cannot also be supplied with `--variable`. |
+| `--context-item` | `-I` | N/A (binding API) | `bar` | Binds the global context item `$$` to a lexical value. Mutually exclusive with `--context-item-input`. |
+| `--context-item-input` | `-i` | N/A (binding API) | `data.json` or `-` | Reads the context item from a file, or from standard input when the path is `-`. |
+| `--context-item-input-format` | — | N/A (binding API) | `json` or `text` | Format for context item file or standard input parsing. Default: `json`. |
+
+For example:
+
+```sh
+spark-submit rumbledb.jar run -q 'declare variable $foo external; $foo' --variable foo=bar
+spark-submit rumbledb.jar run -q 'declare context item external; $$' -i data.json
+```
+
+In Python, use `rumble.bind(...)`, `rumble.bindOne(...)`, or keyword arguments to `rumble.jsoniq(...)` for variables; do not try to configure variable values through `conf.set(...)`. See [Binding JSONiq variables to Python values](../writing-jsoniq-queries-in-python/binding-jsoniq-variables-to-python-values.md).
