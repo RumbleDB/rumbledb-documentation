@@ -1,5 +1,9 @@
 # RumbleDB 3.0 "Coast Redwood"
 
+{% hint style="info" %}
+We are currently rolling out RumbleDB 3. This is expected to be done during the months of October and November 2026 in the various editions. The pip package of RumbleDB 3 is already available. The documentation is also being updated and some parts may still refer to RumbleDB 2.
+{% endhint %}
+
 RumbleDB is a querying engine that allows you to query your large, messy datasets with ease and productivity. It covers the entire data pipeline: clean up, structure, normalize, validate, convert to an efficient binary format, and feed it right into Machine Learning estimators and models
 
 RumbleDB supports two twin languages: JSONiq and XQuery. They are very similar. XQuery is a standard of the W3C, while JSONiq is a similar language that was adapted to be more appealing to the JSON community.
