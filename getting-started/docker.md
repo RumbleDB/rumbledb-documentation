@@ -39,21 +39,8 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.1.0 "Cedrus Libani" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.0.0 "Coast Redwood" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
-
-
-App name: spark-rumble-jar-with-dependencies.jar
-Master: local[*]
-Driver's memory: (not set)
-Number of executors (only applies if running on a cluster): (not set)
-Cores per executor (only applies if running on a cluster): (not set)
-Memory per executor (only applies if running on a cluster): (not set)
-Dynamic allocation: (not set)
-Item Display Limit: 200
-Output Path: -
-Log Path: -
-Query Path : -
 
 RumbleDB$
 ```
@@ -145,15 +132,9 @@ return { "product" : $product, "total-quantity" : $sum }
 
 Mind the double parenthesis, as parallelize is a unary function to which we pass a sequence of objects.
 
-## Running the RumbleDB docker as a server
+## Legacy HTTP server
 
-You can also run the docker as a server like so:
-
-```
-docker run -p 8001:8001 --rm rumbledb/rumble serve -p 8001 -h 0.0.0.0
-```
-
-You can change the port to something else than 8001 at all three places it appears. Do not forget `-p 8001:8001` that forwards the port to the outside of the docker. Then, you can use a [jupyter notebook](https://github.com/RumbleDB/rumble/blob/master/RumbleSandbox.ipynb) connected to the RumbleDB docker server to write queries in it. Point the notebook to `http://localhost:8001/jsoniq` in the appropriate cell (or any other port).
+RumbleDB 3.0 does not support `serve`, `--port`, or `--host`. The HTTP server requires an older RumbleDB image; see the [legacy HTTP server instructions](httpserver.md). Use `run` or `repl` with RumbleDB 3.0.
 
 ## Querying local files with the docker version of RumbleDB
 
@@ -173,4 +154,4 @@ where $i.quantity gt 99
 return $i
 ```
 
-You can also mount a local directory in this way running it as a server rather than a shell.
+You can also mount a local directory in this way when executing a query with `run`.

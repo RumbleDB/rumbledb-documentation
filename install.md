@@ -6,8 +6,8 @@ We show here how to install RumbleDB from the GitHub repository and build it you
 
 The following software is required:
 
-* [Java SE](https://adoptium.net/temurin/releases/): the version of Java is important, as RumbleDB only works with Java 11 (Standalone or Spark 3.5), 17 (Standalone or Spark 3.5 or Spark 4 or Python) or 21 (Spark 4 or Python). The current master branch corresponds to Spark 4.0, meaning that Java 17 or 21 is required.
-* [Spark](https://spark.apache.org/), version 4.0.0 (for example)
+* [Java SE](https://adoptium.net/temurin/releases/): Java 17 or 21 is required for RumbleDB 3.0. The current source build targets Java 17 and Spark 4.2.
+* [Spark](https://spark.apache.org/), version 4.2.0 (matching the current source build)
 * [Ant](http://ant.apache.org/), version 1.10
 * [Maven](https://maven.apache.org/) 3.9.9
 
@@ -55,14 +55,14 @@ You can compile the entire project like so:
 $ mvn clean compile assembly:single
 ```
 
-After successful completion, you can check the `target` directory, which should contain the compiled classes as well as the JAR file `rumbledb-2.0.0-jar-with-dependencies.jar`.
+After successful completion, you can check the `target` directory, which should contain the compiled classes as well as the JAR file `rumbledb-3.0.0-jar-with-dependencies.jar`.
 
 ## Running locally
 
 The most straightforward to test if the above steps were successful is to run the RumbleDB shell locally, like so:
 
 ```
-$ spark-submit target/rumbledb-2.0.0-with-dependencies.jar repl
+$ spark-submit target/rumbledb-3.0.0-jar-with-dependencies.jar repl
 ```
 
 The RumbleDB shell should start:
@@ -73,14 +73,8 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.0.0 "Lemon Ironwood" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.0.0 "Coast Redwood" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
-
-Master: local[2]
-Item Display Limit: 1000
-Output Path: -
-Log Path: -
-Query Path : -
 
 rumble$
 ```

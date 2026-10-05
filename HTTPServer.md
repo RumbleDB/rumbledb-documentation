@@ -1,10 +1,14 @@
-# As an HTTP server
+# As an HTTP server (legacy)
+
+{% hint style="warning" %}
+The `serve` command and the `--server`, `--port`, and `--host` CLI parameters were removed in RumbleDB 3.0. The instructions below apply only to older RumbleDB releases. For RumbleDB 3.0, use the [Python package](getting-started/as-a-pip-package.md) or the Java API to integrate queries into an application.
+{% endhint %}
 
 _<mark style="color:$warning;">Now that there is a pip package available, using it may appeal more to some users than this older approach based on running RumbleDB as a server (you can put your JSONiq queries in rumble.jsoniq() calls). We keep this documentation for any users interested in the server capabilities of RumbleDB.</mark>_
 
 ## Starting the HTTP server
 
-RumbleDB can be run as an HTTP server that listens for queries. In order to do so, you can use the --server and --port parameters:
+RumbleDB can be run as an HTTP server that listens for queries. In older releases, start it with the `serve` command and the `--port` parameter:
 
 ```
 spark-submit rumbledb.jar serve -p 8001

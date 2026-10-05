@@ -10,7 +10,7 @@ If you use Linux, Florian Kellner also kindly contributed an [installation scrip
 
 ### Install Spark (if you do not have installed already)
 
-RumbleDB requires an Apache Spark installation on Linux, Mac or Windows. Important note: it needs to be either Spark 4, or the Scala 2.13 build of Spark 3.5.
+RumbleDB requires an Apache Spark installation on Linux, Mac or Windows. Use a Spark 4 installation and the RumbleDB 3.0 jar built for that Spark version.
 
 It is straightforward to directly [download it](https://spark.apache.org/downloads.html), unpack it and put it at a location of your choosing. We recommend to pick Spark 4.0.0.
 
@@ -45,7 +45,7 @@ spark-submit --version
 
 ### Java version (important)
 
-You need to make sure that you have Java 11 (for Spark 3.5) or 17 (for Spark 3.5 or 4.0) or 21 (for Spark 4.0) and that, if you have several versions installed, JAVA\_HOME correctly points to the correct Java installation. Spark only supports Java 11 or 17 or 21 depending on the version.
+Use Java 17 or 21 for RumbleDB 3.0 with Spark 4. If you have several Java versions installed, make sure JAVA\_HOME points to the correct installation.
 
 Spark 4+ is documented to work with both Java 17 and Java 21. If there is an issue with the Java version, RumbleDB will inform you with an appropriate error message. You can check the Java version that is configured on your machine with:
 
@@ -59,23 +59,23 @@ Like Spark, RumbleDB is just a download and no installation is required.
 
 In order to run RumbleDB, you simply need to download one of the small .jar files from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
 
-If you use Spark 4.0, use rumbledb-2.1.0-for-spark-4.0.jar.
+If you use Spark 4.0, use rumbledb-3.0.0-for-spark-4.0.jar.
 
-If you use Spark 4.1, use rumbledb-2.1.0-for-spark-4.1.jar.
+If you use Spark 4.1, use rumbledb-3.0.0-for-spark-4.1.jar.
 
-If you use Spark 4.2, use rumbledb-2.1.0-for-spark-4.2.jar.
+If you use Spark 4.2, use rumbledb-3.0.0-for-spark-4.2.jar.
 
 These jars do not embed Spark, since you chose to set it up separately. They will work with your Spark installation with the spark-submit command.
 
-Make sure to use the corresponding jar name accordingly in all our instructions in lieu of rumbledb.jar, replacing rumbledb.jar with the actual name of the jar file you downloaded.
+The example below uses Spark 4.0. Substitute the matching jar name if you use Spark 4.1 or 4.2.
 
 In a shell, from the directory where the RumbleDB .jar lies, type, all on one line:
 
 ```
-spark-submit rumbledb.jar repl
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar repl
 ```
 
-replacing rumbledb.jar with the actual name of the jar file you downloaded.
+Use the actual name of the jar file you downloaded.
 
 The RumbleDB shell appears:
 
@@ -83,15 +83,8 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.1.0 "Cedrus Libani" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.0.0 "Coast Redwood" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
-
-
-Master: local[*]
-Item Display Limit: 200
-Output Path: -
-Log Path: -
-Query Path : -
 
 rumble$
 ```

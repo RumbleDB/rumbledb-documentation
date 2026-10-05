@@ -2,39 +2,43 @@
 
 ## Java version (important)
 
-You need to make sure that you have Java 11 or 17 and that, if you have several versions installed, JAVA\_HOME correctly points to Java 11 or 17.
+You need to make sure that you have Java 17 or 21 and that, if you have several versions installed, JAVA\_HOME correctly points to Java 17 or 21.
 
-RumbleDB works with both Java 11 and Java 17. You can check the Java version that is configured on your machine with:
+RumbleDB works with Java 17 and Java 21. You can check the Java version that is configured on your machine with:
 
 ```
 java -version
 ```
 
-If you do not have Java, you can download version 11 or 17 from [AdoptOpenJDK](https://adoptopenjdk.net/).
+If you do not have Java, you can download version 17 or 21 from [AdoptOpenJDK](https://adoptopenjdk.net/).
 
-Do make sure it is not Java 8, which will not work.
+Java 8 and Java 11 cannot run RumbleDB 3.0.
 
 ## Download RumbleDB
 
 RumbleDB is just a download and no installation is required.
 
-In order to run RumbleDB, you simply need to download rumbledb-2.1.0-standalone.jar from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
+In order to run RumbleDB, you simply need to download rumbledb-3.0.0-standalone.jar from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
 
-Make sure to use the corresponding jar name accordingly in all our instructions in lieu of rumbledb.jar.
+Use the standalone jar with `java -jar`; use a matching thin jar with `spark-submit` as described on the next page.
 
 You can test that it works with:
 
 ```
-java -jar rumbledb-2.1.0-standalone.jar run -q '1+1'
+java -jar rumbledb-3.0.0-standalone.jar run -q '1+1'
 ```
 
 or launch a JSONiq shell with:
 
 ```
-java -jar rumbledb-2.1.0-standalone.jar repl
+java -jar rumbledb-3.0.0-standalone.jar repl
 ```
 
-If you run out of memory, you can set allocate more memory to Java with an additional Java parameter, e.g., -Xmx10g
+If you run out of memory, allocate more memory with a JVM option before `-jar`, for example:
+
+```sh
+java -Xmx10g -jar rumbledb-3.0.0-standalone.jar repl
+```
 
 The RumbleDB shell appears:
 
@@ -42,15 +46,8 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   2.1.0 "Cedrus Libani" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.0.0 "Coast Redwood" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
-
-
-Master: local[*]
-Item Display Limit: 200
-Output Path: -
-Log Path: -
-Query Path : -
 
 rumble$
 ```

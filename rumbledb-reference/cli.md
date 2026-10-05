@@ -15,10 +15,10 @@ Select a mode with the first argument:
 For RumbleDB 3:
 
 ```sh
-spark-submit rumbledb.jar run file.jq -o output-dir -P 1
-spark-submit rumbledb.jar run -q '1+1'
-spark-submit rumbledb.jar repl --result-size 10
-spark-submit rumbledb.jar run --help
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar run file.jq -o output-dir -P 1
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q '1+1'
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar repl --result-size 10
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar run --help
 ```
 
 `run` requires exactly one query source: `--query`, `--query-path`, or a positional query file. `repl` does not take a query source. The other options below are shared by `run` and `repl`, except where their purpose is specific to one mode.
@@ -26,6 +26,25 @@ spark-submit rumbledb.jar run --help
 Boolean CLI options are flags: use `--static-typing` to enable static typing and `--no-static-typing` to disable it. All boolean options below support the corresponding `--no-...` form. Do not pass `yes` or `no` as separate arguments to these flags. Serialization options such as `--output-format-option indent=yes` have their own value syntax.
 
 `--help` (shortcut `-h`) displays help for the selected command, or for the launcher when used without a command. It has no configuration key.
+
+## Updating commands from RumbleDB 2
+
+These examples use the Spark 4.0 jar. For another Spark version, use the matching `rumbledb-3.0.0-for-spark-<version>.jar`. With the standalone jar, replace `spark-submit rumbledb-3.0.0-for-spark-4.0.jar` with `java -jar rumbledb-3.0.0-standalone.jar`.
+
+* Select `run` or `repl` explicitly. The old `--shell` and `--server` options are no longer accepted; `serve` is unavailable in RumbleDB 3.
+* Output options now use `--output-format-option name=value`, and variable bindings use `--variable name=value` or `--variable-from-file name=path`. Repeat the option for each entry. The former colon-based option names are no longer accepted.
+* Boolean options take no separate `yes` or `no` argument. For example, use `--overwrite` or `--no-overwrite`.
+* Use `--result-size` to change the display limit (default: `10`). `--materialization-cap` / `-c` controls materialization during execution (default: `100000`).
+
+For example, bind a variable and configure serialization:
+
+```sh
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar run \
+    -q 'declare variable $foo external; $foo' \
+    --variable 'foo=hello world' \
+    -f serialize-each-item --output-format-option method=json \
+    --output-format-option indent=yes
+```
 
 ## Configuration from Python and Java
 
@@ -99,13 +118,40 @@ Output destinations, execution logs, and shell filters are primarily CLI setting
 
 | CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
 | --- | --- | --- | --- | --- | --- |
-| `--output-path` | `-o` | `output.outputPath` | string | `None` | Output destination. Depending on the execution mode, output is written as a file or as a directory of partition files. Without a destination, the CLI displays results on standard output. |
-| `--output-format` | `-f` | `output.outputFormat` | string | `None` | Requests an output format, for example `json`, `csv`, `avro`, or `parquet`. Spark formats require a structured sequence representable as a DataFrame; `annotate()` can supply a schema. |
+| `--output-path` | `-o` | `output.outputPath` | string | `None` | Output destination. `serialize` writes one file containing the serialized string. `serialize-each-item` writes newline-separated serialized items to partition files, or one file with `-P 1`. Other formats write partition files (local JSON with one partition can be a single file). Without a destination, the CLI displays results on standard output. |
+| `--output-format` | `-f` | `output.outputFormat` | string | `None` (`serialize-each-item` for JSONiq; `serialize` for XQuery) | Output file format: `json`, `csv`, `avro`, `parquet`, or another supported Spark format. The special format `serialize` serializes the entire result sequence to one string using the configured serialization method. `serialize-each-item` serializes each item independently, with newlines between the resulting strings. Only `serialize` and `serialize-each-item` work without `--output-path`. Spark file formats, including `json`, require an output path. Formats other than `json`, `serialize`, and `serialize-each-item` also require a sequence representable as a DataFrame (structured objects or supported atomic values); `annotate()` can supply a schema. |
 | `--output-format-option` | — | `output.serializationParameters` (see below) | `name=value` on the CLI; object in the API | `None` | Repeatable serialization or Spark writer option, for example `--output-format-option indent=yes --output-format-option compression=gzip`. |
 | `--overwrite` | `-O` | `output.allowOverwrite` | boolean | `False` | Allows overwriting an existing CLI output path; otherwise an existing destination raises an error. |
-| `--number-of-output-partitions` | `-P` | `output.numberOfOutputPartitions` | integer | `-1` | Positive values request that many partitions for DataFrame output. `-1` leaves the partition count unspecified. |
+| `--number-of-output-partitions` | `-P` | `output.numberOfOutputPartitions` | integer | `-1` | Positive values request that many output partitions. `-1` leaves the partition count unspecified. `serialize` always writes one string and rejects values greater than `1`. |
 | `--log-path` | — | `output.logPath` | string | `None` | Destination for CLI execution timing and profiler information. This is separate from diagnostic logging levels. |
 | `--shell-filter` | — | `output.shellFilter` | string | `None` | Command used to post-process interactive shell output through standard input, for example `jq .`. |
+
+The output format and serialization method are distinct. `--output-format csv` selects the CSV file writer; setting `--output-format-option method=xml` does not change that writer. Both `serialize` and `serialize-each-item` accept serialization methods such as `xml`, `json`, `text`, `adaptive`, or the RumbleDB extension `xml-json-hybrid`. The default output format and method follow the query language (including version declarations and file extensions):
+
+| Query language | Default output format | Default method |
+| --- | --- | --- |
+| JSONiq | `serialize-each-item` | `xml-json-hybrid` |
+| XQuery | `serialize` | `xml` |
+
+Explicit format and method options override these defaults independently. The serialization parameter `item-separator` is absent by default in both languages; W3C sequence normalization inserts spaces between adjacent atomic values when serializing a whole sequence. Newlines between independently serialized items come from the `serialize-each-item` output format, rather than from this parameter. To serialize an entire sequence with a chosen method:
+
+```sh
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q '1, [2, 3], 4' -o result.txt -f serialize \
+    --output-format-option method=text --output-format-option 'item-separator=|'
+```
+
+This writes exactly `1|2|3|4`, without an extra trailing newline. Serialization follows sequence normalization: for example, text/XML methods flatten arrays, while JSON serialization requires at most one top-level item (use an array to serialize multiple JSON values together). Query serialization declarations take precedence over CLI serialization defaults. File encoding follows the `encoding` serialization parameter, whose default is `UTF-8`.
+
+`serialize` materializes the whole sequence subject to `runtime.materializationCap`; `runtime.resultsSizeCap` does not truncate it. Without `--output-path`, `serialize` displays the serialized string. `serialize-each-item` displays items subject to the result-size cap, but writes all items when an output path is given. It supports multiple output partitions without collecting the whole result sequence. Its file output honors the configured encoding and terminates each serialized item with a newline. A serialized item can itself contain newlines, so this is not necessarily one physical line per item. The `item-separator` parameter does not control the newline between serialized items; it can still affect normalization within an item, such as an array serialized with the text method. All Spark file formats, including JSON, CSV, Avro, and Parquet, require an output path. For JSON on standard output, select `-f serialize-each-item --output-format-option method=json`, or use `-f serialize --output-format-option method=json` for a single JSON value.
+
+For example, to write multiple independent JSON values:
+
+```sh
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q '1, 2, 3' -o results.jsonl -P 1 -f serialize-each-item \
+    --output-format-option method=json --output-format-option 'item-separator=|'
+```
+
+This writes `1`, `2`, and `3` on separate lines. The configured `|` does not replace the newlines. In contrast, `-f serialize` with method `json` rejects this sequence because JSON serialization requires at most one top-level item.
 
 `--output-format-option` does not map to an arbitrary `output.serializationParameters.foo` key. CLI option names are converted into the serialization object's fields. For example, `indent` maps to `output.serializationParameters.indent`, `indent-spaces` maps to `output.serializationParameters.indentSpaces`, and Spark writer options such as `compression` belong to `output.serializationParameters.sparkOptions`. API values use native types rather than CLI strings:
 
@@ -122,8 +168,10 @@ conf.set("output.serializationParameters.sparkOptions", {"compression": "gzip"})
 | `--print-iterator-tree` | — | `debug.printIteratorTree` | boolean | `False` | Prints the expression tree and runtime iterator tree. |
 | `--show-error-info` | `-v` | `debug.showErrorInfo` | boolean | `False` | Displays detailed error information and exception stacks for debugging or bug reports. |
 | `--debug` | — | `debug.logging` | boolean | `False` | Enables the engine's debug output. Diagnostic logging levels are configured separately below. |
-| `--log-level` | — | `debug.logLevel` | string | `None` (CLI uses `warn`) | CLI diagnostic logging level: `off`, `fatal`, `error`, `warn`, `info`, `debug`, `trace`, or `all`. |
+| `--log-level` | — | `debug.logLevel` | string | `None` (CLI normally uses `warn`) | CLI diagnostic logging level: `off`, `fatal`, `error`, `warn`, `info`, `debug`, `trace`, or `all`. |
 | `--spark-log-level` | — | `debug.sparkLogLevel` | string | `"off"` | CLI Spark/Hadoop logging level; accepts the same levels as `--log-level`. |
+
+When `--log-level` is omitted, `--debug`, `--print-iterator-tree`, or `--print-inferred-types` enables the diagnostic logging needed to display the requested information. An explicit `--log-level` takes precedence. Diagnostic output goes to standard error so it does not mix with query results.
 
 ## Static analysis
 
@@ -162,7 +210,7 @@ These defaults are used by date/time formatting functions when no explicit place
 
 | CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
 | --- | --- | --- | --- | --- | --- |
-| `--default-formatting-place` | — | `formatting.defaultFormattingPlace` | string | `"UTC"` | Formatting timezone, for example `Europe/Zurich`. |
+| `--default-formatting-place` | — | `formatting.defaultFormattingPlace` | string | `None` | Formatting timezone, for example `Europe/Zurich` or `UTC`. When unset, formatting preserves the value's timezone. |
 | `--default-formatting-calendar` | — | `formatting.defaultFormattingCalendar` | string | `"ISO"` | Formatting calendar; use a supported calendar identifier. |
 | `--default-formatting-language` | — | `formatting.defaultFormattingLanguage` | string | `"en"` | Formatting language; use a supported language identifier. |
 
@@ -181,8 +229,8 @@ Bindings are separate from configuration and have no Python/Java configuration s
 For example:
 
 ```sh
-spark-submit rumbledb.jar run -q 'declare variable $foo external; $foo' --variable foo=bar
-spark-submit rumbledb.jar run -q 'declare context item external; $$' -i data.json
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q 'declare variable $foo external; $foo' --variable foo=bar
+spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q 'declare context item external; $$' -i data.json
 ```
 
 In Python, use `rumble.bind(...)`, `rumble.bindOne(...)`, or keyword arguments to `rumble.jsoniq(...)` for variables; do not try to configure variable values through `conf.set(...)`. See [Binding JSONiq variables to Python values](../writing-jsoniq-queries-in-python/binding-jsoniq-variables-to-python-values.md).

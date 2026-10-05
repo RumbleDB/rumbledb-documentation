@@ -60,11 +60,11 @@ More expressions working on sequences will be pushed down in the future, priorit
 
 We also started to push down some expressions to DataFrames and Spark SQL (obtained via structured-json-lines, csv-file and parquet-file calls). In particular, keys() pushes down the schema lookup if used on parquet-file() and structured-json-lines(). Likewise, count() as well as object lookup, array unboxing and array lookup is also pushed down on DataFrames.
 
-When an expression does not support pushdown, it will materialize automaticaly. To avoid issues, the materializion is capped by default at 200 items, but this can be changed on the command line with --materialization-cap. A warning is issued if a materialization happened and the sequence was truncated on screen. An error is thrown if this happens within a query.
+When an expression does not support pushdown, it will materialize automaticaly. To avoid issues, the materialization is capped by default at 100000 items, but this can be changed on the command line with --materialization-cap. The separate `--result-size` option controls the display limit (default: `10`). An error is thrown if the materialization cap is exceeded within a query.
 
 ## External global variables.
 
-Prologs with user-defined functions and global variables are supported. Global external variables are supported (use "--variable:foo bar" on the command line to assign values to them). If the declared type is not string, then the literal supplied on the command line is cast. If the declared type is anyURI, the path supplied on the command line is also resolved against the working directory to an absolute URI. Thus, anyURI should be used to supply paths dynamically through an external variable.
+Prologs with user-defined functions and global variables are supported. Global external variables are supported (use `--variable foo=bar` on the command line to assign values to them). If the declared type is not string, then the literal supplied on the command line is cast. If the declared type is anyURI, the path supplied on the command line is also resolved against the working directory to an absolute URI. Thus, anyURI should be used to supply paths dynamically through an external variable.
 
 Context item declarations are supported and a global context item value can be passed with the "--context-item" or "-I" parameter on the command line.
 
