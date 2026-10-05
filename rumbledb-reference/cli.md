@@ -103,7 +103,7 @@ These CLI options apply to `run` only.
 
 | CLI option | Shortcut | Python/Java configuration key | Type | Default | Semantics |
 | --- | --- | --- | --- | --- | --- |
-| `--result-size` | — | `runtime.resultsSizeCap` | integer | `10` | Maximum number of items to display on screen or retrieve through Python's `json()` convenience method. |
+| `--result-size` | — | `runtime.resultsSizeCap` | integer | `10` | Maximum number of items to display on screen or retrieve through Python's `first()` method. Python's `json()` uses the separate materialization cap. |
 | `--materialization-cap` | `-c` | `runtime.materializationCap` | integer | `100000` | Maximum number of items to materialize from large distributed sequences during execution, for example when collecting an RDD or DataFrame into an array. Also used by Java's full-list retrieval. This is separate from the result display cap. |
 | `--native-sql-predicates` | — | `runtime.useNativeSQLPredicates` | boolean | `True` | Enables native SQL predicates when possible. |
 | `--data-frame-execution-mode-detection` | — | `runtime.detectDataFrameExecutionMode` | boolean | `True` | Enables DataFrame execution mode detection for higher-order functions. |
