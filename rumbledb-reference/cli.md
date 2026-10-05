@@ -126,7 +126,43 @@ Output destinations, execution logs, and shell filters are primarily CLI setting
 | `--log-path` | — | `output.logPath` | string | `None` | Destination for CLI execution timing and profiler information. This is separate from diagnostic logging levels. |
 | `--shell-filter` | — | `output.shellFilter` | string | `None` | Command used to post-process interactive shell output through standard input, for example `jq .`. |
 
-The output format and serialization method are distinct. `--output-format csv` selects the CSV file writer; setting `--output-format-option method=xml` does not change that writer. Both `serialize` and `serialize-each-item` accept serialization methods such as `xml`, `json`, `text`, `adaptive`, or the RumbleDB extension `xml-json-hybrid`. The default output format and method follow the query language (including version declarations and file extensions):
+### Output formats (`--output-format` / `-f`)
+
+The output format selects how the result is written:
+
+| Value | Behavior |
+| --- | --- |
+| `serialize` | Serializes the entire result sequence once, producing one string. Writes one file when `--output-path` is supplied, or displays the string otherwise. Materializes the sequence and rejects more than one output partition. |
+| `serialize-each-item` | Serializes each result item independently. File output adds a newline after each serialized item and supports distributed partition files; `-P 1` requests one file. Without an output path, displays items up to the result-size cap. |
+| `json` | Writes JSON values to files. Supports structured DataFrame output and sequences without a DataFrame schema. Requires an output path. |
+| `csv` | Writes a DataFrame-compatible sequence as CSV. Requires an output path. |
+| `parquet` | Writes a DataFrame-compatible sequence as Parquet. Requires an output path. |
+| `avro` | Writes a DataFrame-compatible sequence as Avro using Spark's Avro provider. Requires an output path and the corresponding provider. |
+| `orc` | Writes a DataFrame-compatible sequence as ORC. Requires an output path. |
+| `text` | Uses Spark's text writer, which requires a single string column and an output path. To serialize arbitrary results as text, use `-f serialize --output-format-option method=text` instead. |
+| Other Spark provider names | Passed to Spark's DataFrame writer. Availability and schema requirements depend on the providers installed in your Spark environment. Requires an output path. |
+
+`serialize` and `serialize-each-item` use the serialization method selected below. For example, with method `text` and `item-separator=|`, the sequence `1, 2, 3` becomes the single string `1|2|3` under `serialize`; under `serialize-each-item`, file output contains `1`, `2`, and `3` on separate lines. Each serialized item can contain its own newlines.
+
+### Serialization methods (`--output-format-option method=...`)
+
+The output format and serialization method are distinct. `--output-format csv` selects the CSV writer; setting `--output-format-option method=xml` does not change that writer. Select `serialize` or `serialize-each-item` to use the following methods:
+
+| Method | Behavior |
+| --- | --- |
+| `xml` | XML serialization of the normalized sequence. |
+| `xhtml` | XML serialization with XHTML-specific rules. |
+| `html` | HTML serialization with HTML-specific rules. |
+| `text` | Text output, including node text without markup. |
+| `json` | JSON serialization; at most one top-level item per serialization call. Use an array for multiple values with `serialize`, or `serialize-each-item` for independent values. |
+| `adaptive` | A readable representation that adapts to each item's type, including nodes, maps, arrays, and atomic values. |
+| `xml-json-hybrid` | RumbleDB extension combining XML node serialization with JSON serialization of JSON values. Also accepts `xml_json_hybrid` and `xmljsonhybrid`. |
+| `yaml` | RumbleDB extension for YAML output. |
+| `tyson` | RumbleDB extension for output with explicit type annotations. |
+
+The first six methods are defined by [W3C XSLT and XQuery Serialization 3.1](https://www.w3.org/TR/xslt-xquery-serialization-31/). The remaining methods are RumbleDB extensions.
+
+The default output format and method follow the query language (including version declarations and file extensions):
 
 | Query language | Default output format | Default method |
 | --- | --- | --- |
@@ -152,6 +188,38 @@ spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q '1, 2, 3' -o results.jsonl 
 ```
 
 This writes `1`, `2`, and `3` on separate lines. The configured `|` does not replace the newlines. In contrast, `-f serialize` with method `json` rejects this sequence because JSON serialization requires at most one top-level item.
+
+### Output format options (`--output-format-option name=value`)
+
+Repeat this option for each parameter. These are the serialization parameter names recognized by the CLI; their effect depends on the selected method. See the [W3C serialization parameters](https://www.w3.org/TR/xslt-xquery-serialization-31/#serparam) for the standard definitions.
+
+| Parameter | CLI value and purpose |
+| --- | --- |
+| `method` | A serialization method from the table above. |
+| `encoding` | Character encoding for serialized file output, for example `UTF-8` (default). |
+| `version` | Output version for the selected method, for example `1.0` for XML. |
+| `html-version` | HTML/XHTML version, for example `5.0`. |
+| `omit-xml-declaration` | `yes` / `no`: omit the XML declaration. |
+| `standalone` | `yes`, `no`, or `omit`: XML standalone declaration. |
+| `doctype-system`, `doctype-public` | System or public identifier for the document type declaration. |
+| `media-type` | Media type associated with the output. |
+| `normalization-form` | Unicode normalization: RumbleDB currently supports `none` and `NFC`. |
+| `undeclare-prefixes` | `yes` / `no`: undeclare namespace prefixes where applicable. |
+| `include-content-type` | `yes` / `no`: include content-type metadata for HTML/XHTML. |
+| `escape-uri-attributes` | `yes` / `no`: escape URI-valued HTML/XHTML attributes. |
+| `byte-order-mark` | `yes` / `no`: request a byte order mark where supported. |
+| `indent` | `yes` / `no`: request indentation. |
+| `indent-spaces` | Nonnegative integer specifying indentation width; RumbleDB extension. |
+| `item-separator` | String separating items during sequence serialization. Does not replace the newlines added by `serialize-each-item`. |
+| `allow-duplicate-names` | `yes` / `no`: allow duplicate object member names in JSON output. |
+| `json-node-output-method` | `xml`, `xhtml`, `html`, `text`, or `json`: how to serialize nodes embedded in JSON. |
+| `use-character-maps` | Comma-separated character/replacement pairs, for example `'use-character-maps=@=(at),#=(hash)'`. Quote the whole `name=value` argument. |
+| `cdata-section-elements` | Comma- or whitespace-separated expanded element names requesting CDATA output, for example `'cdata-section-elements=script style'`. |
+| `suppress-indentation` | Comma- or whitespace-separated expanded element names whose content should not be indented. |
+
+Boolean serialization values also accept `true` / `false` and `1` / `0`. These values belong to `--output-format-option`; boolean CLI flags such as `--overwrite` take no separate value.
+
+Other option names are passed to Spark's writer. Examples include `compression=gzip`, `header=true`, and `sep=;` for CSV; supported names and values depend on the chosen Spark format. W3C parameters that are not in the table, such as `parameter-document`, are not interpreted as serialization parameters by this CLI.
 
 `--output-format-option` does not map to an arbitrary `output.serializationParameters.foo` key. CLI option names are converted into the serialization object's fields. For example, `indent` maps to `output.serializationParameters.indent`, `indent-spaces` maps to `output.serializationParameters.indentSpaces`, and Spark writer options such as `compression` belong to `output.serializationParameters.sparkOptions`. API values use native types rather than CLI strings:
 
