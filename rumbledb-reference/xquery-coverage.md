@@ -17,7 +17,7 @@ To use XQuery, you can:
 * Create and execute files with the extension .xq or .xquery, which RumbleDB will assume is XQuery;
 * Or add
 
-`xquery version "3.1"`
+`xquery version "3.1";`
 
 at the beginning of your query;
 
