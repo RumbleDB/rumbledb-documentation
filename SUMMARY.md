@@ -48,6 +48,7 @@
     * [Primary updating expressions](the-jsoniq-language/jsoniq-update-facility/primary-updating-expressions.md)
 * [RumbleDB Reference](rumbledb-reference/README.md)
   * [JSONiq coverage](rumbledb-reference/jsoniq.md)
+  * [XQuery coverage](rumbledb-reference/xquery-coverage.md)
   * [Function library](rumbledb-reference/function-library.md)
   * [User-defined types](rumbledb-reference/types.md)
   * [Configuration parameters](rumbledb-reference/cli.md)
