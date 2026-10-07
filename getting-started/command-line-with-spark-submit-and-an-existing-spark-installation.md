@@ -14,6 +14,10 @@ The RumbleDB thin jars require an Apache Spark installation on Linux, Mac or Win
 
 It is straightforward to directly [download it](https://spark.apache.org/downloads.html), unpack it and put it at a location of your choosing. We recommend to pick Spark 4.0.
 
+{% hint style="warning" %}
+Reading/writing on Apache Iceberg is only supported with Spark 4.0 and 4.1. Apache Iceberg has not yet been released for Spark 4.2 as of October 7, 2026.
+{% endhint %}
+
 ### SPARK\_HOME and PATH (you need to check even if you already have an existing installation)
 
 You then need to point the SPARK\_HOME environment variable to this directory, and to additionally add the subdirectory "bin" within the unpacked directory to the PATH variable. On macOS this is done by adding.
