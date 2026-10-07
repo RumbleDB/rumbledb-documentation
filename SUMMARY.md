@@ -8,6 +8,7 @@
   * [With homebrew](getting-started/with-homebrew.md)
   * [Command line (java -jar)](getting-started/command-line-java-jar.md)
   * [Command line (with spark-submit and an existing Spark installation)](getting-started/command-line-with-spark-submit-and-an-existing-spark-installation.md)
+  * [In VS Code](getting-started/in-vs-code.md)
   * [With docker](getting-started/docker.md)
   * [Through the Java API with Maven](getting-started/through-the-java-api-with-maven.md)
   * [On a Spark cluster (e.g., AWS EMR)](getting-started/run-on-a-cluster.md)
