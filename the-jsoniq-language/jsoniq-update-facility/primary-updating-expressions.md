@@ -14,7 +14,7 @@ These expressions may appear in a copy-modify-return (transform) expression (for
 
 A JSON insert expression is used to insert new pairs into an object. It produces a _jupd:insert-into-object_ update primitive. If the target is not an object, JNUP0008 is raised. If the content is not a sequence of objects, JNUP0019 is raised. These objects are merged prior to inserting the pairs into the target, and JNDY0003 is raised if the content to be inserted has colliding keys.
 
-**Example**&#x20;
+**Example**
 
 ```
 copy $obj := { "foo" : "bar" }
@@ -24,8 +24,6 @@ return $obj
 ```
 
 **Result:** { "foo" : "bar", "bar" : 123, "foobar" : \[ true, false ] }
-
-
 
 A JSON insert expression is also used to insert a new member into an array. It produces a _jupd:insert-into-array_ update primitive. If the target is not an array, JNUP0008 is raised. If the position is not an integer, JNUP0007 is raised.
 
@@ -48,7 +46,7 @@ return $arr
 
 A JSON delete expression is used to remove a pair from an object. It produces a _jupd:delete-from-object_ update primitive. If the key is not a string, JNUP0007 is raised. If the key does not exist, JNUP0016 is raised.
 
-**Example**&#x20;
+**Example**
 
 ```
 copy $obj := { "foo" : "bar", "bar" : 123 }
@@ -59,11 +57,9 @@ return $obj
 
 **Result:** { "bar" : 123 }
 
-
-
 A JSON delete expression is also used to remove a member from an array. It produces a _jupd:insert-from-array_ update primitive. If the position is not an integer, JNUP0007 is raised. If the position is out of range, JNUP0016 is raised.
 
-**Example**&#x20;
+**Example**
 
 ```
 copy $arr := [1,2,3,4,5,6]
@@ -120,7 +116,7 @@ return $obj
 
 A JSON replace expression is used to replace the value associated with a certain key in an object. It produces a _jupd:replace-in-object_ update primitive. JNUP0007 is raised if the selector is not a single string. If the selector key does not exist, JNUP0016 is raised.
 
-**Example**&#x20;
+**Example**
 
 ```
 copy $obj := { "foo" : "bar", "bar" : [1,2,3] }
@@ -154,7 +150,7 @@ These expressions may not appear in a copy-modify-return (transform) expression 
 
 This expression creates an update primitive that creates a collection.
 
-**Example**&#x20;
+**Example**
 
 ```
 create collection table("mytable") with ({"foo":1},{"foo":2}),
@@ -167,7 +163,7 @@ create collection delta-file("/path/to/file.delta") with ({"foo":1},{"foo":2})
 
 This expression creates an update primitive that deletes a collection.
 
-**Example**&#x20;
+**Example**
 
 ```
 delete collection table("mytable"),
@@ -203,7 +199,7 @@ edit table("mytable")[1] into {"foo":3} in collection
 
 ### Deleting a value from a collection
 
-<figure><img src="../../.gitbook/assets/DeleteInCollectionExpr (2).svg" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/DeleteInCollectionExpr.svg" alt=""><figcaption></figcaption></figure>
 
 This expression creates an update primitive that deletes a specified value from its collection.
 
@@ -212,4 +208,3 @@ This expression creates an update primitive that deletes a specified value from 
 ```
 delete table("mytable")[1] from collection
 ```
-
