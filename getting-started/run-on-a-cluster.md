@@ -5,7 +5,7 @@
 After you have tried RumbleDB locally as explained in the getting started section, you can take RumbleDB to a real cluster simply by modifying the command line parameters as documented [here for spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html).
 
 {% hint style="info" %}
-Choose a cluster with a Spark version that matches the RumbleDB 3.0 jar you download. The commands below use Spark 4.0; substitute the matching jar name if your cluster uses another supported Spark version.
+Choose a cluster with a Spark version that matches the RumbleDB 3.0 jar you download. The commands below use Spark 4.0; substitute the matching jar name if your cluster uses another supported Spark version. RumbleDB 3.0 is compatible with Amazon EMR 8.x.
 {% endhint %}
 
 ## Creating a cluster
