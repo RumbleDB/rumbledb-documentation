@@ -6,7 +6,7 @@ You can use RumbleDB from within Python programmes by running
 pip install jsoniq
 ```
 
-With this package, you can run JSONiq and XQuery queries and process their outputs in Python (including Pandas). You can also pass Python values or Pandas DataFrames as JSONiq (or XQuery) variables. You can also even back and forth between JSONiq, XQuery, and SQL as you see fit and depending on your needs.
+With this package, you can run JSONiq and XQuery queries and process their outputs in Python (including Pandas). You can also pass Python values or Pandas DataFrames as JSONiq (or XQuery) variables. You can even go back and forth between JSONiq, XQuery, and SQL as a pipeline of query calls, as you see fit and depending on your needs.
 
 More information about how this package is used in Python code can be found [in this section](../writing-jsoniq-queries-in-python/).
 
