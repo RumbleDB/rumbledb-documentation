@@ -1,5 +1,9 @@
 # Command line (java -jar)
 
+{% hint style="warning" %}
+## The standalone jar for RumbleDB 3.0 is not available yet. You can use spark-submit with the thin jars instead for now.
+{% endhint %}
+
 ## Java version (important)
 
 You need to make sure that you have Java 17 or 21 and that, if you have several versions installed, JAVA\_HOME correctly points to Java 17 or 21.
