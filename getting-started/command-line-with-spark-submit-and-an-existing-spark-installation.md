@@ -5,7 +5,7 @@ This method gives you more control about the Spark configuration than the experi
 If you use Linux, Florian Kellner also kindly contributed an [installation script](https://github.com/fkellner/rumbledb-install-script) for Linux users that roughly takes care of what is described below for you.
 
 {% hint style="info" %}
-<mark style="color:$warning;">Users of the Python edition (pip install jsoniq) do not have to install Spark manually because the pip package automatically installs pyspark and this contains a Spark 4 installation. However, advanced users who have multiple Spark installations or encounter a Spark version conflict in Python may find the information below useful.</mark>
+Users of the Python edition (pip install jsoniq) do not have to install Spark manually because the pip package automatically installs pyspark and this contains a Spark 4 installation. However, advanced users who have multiple Spark installations or encounter a Spark version conflict in Python may find the information below useful.
 {% endhint %}
 
 ### Install Spark (if you do not have installed already)
