@@ -1,20 +1,26 @@
 # With homebrew
 
-It is possible to install RumbleDB with homebrew, however there is currently no way to adjust memory usage. To install RumbleDB with brew, type the command:
+It is possible to install RumbleDB with [homebrew](https://formulae.brew.sh/formula/rumbledb), however there is currently no way to adjust memory usage (we are working on finding and documenting a way, possibly through environment variables that influence the memory allocated to Spark upon its launch). To install RumbleDB with brew, type the command:
 
-```
+```shellscript
 brew install rumbledb
 ```
 
 You can test that it works with:
 
-```
+```shellscript
 rumbledb run -q '1+1'
+```
+
+For a list of all parameters available, you can use:
+
+```shellscript
+rumbledb run --help
 ```
 
 Then, launch a JSONiq shell with:
 
-```
+```shellscript
 rumbledb repl
 ```
 
@@ -48,4 +54,10 @@ or
 ```
  (3 * 4) div 5
  
+```
+
+For a list of all parameters available to the RumbleDB shell, you can type (outside the shell):
+
+```shellscript
+rumbledb repl --help
 ```
