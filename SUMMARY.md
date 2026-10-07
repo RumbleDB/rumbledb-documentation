@@ -3,7 +3,7 @@
 * [RumbleDB 3.0 "Coast Redwood"](README.md)
 * [Ways to install and use](getting-started/README.md)
   * [On the online sandbox](getting-started/on-the-online-sandbox.md)
-  * [As a pip package](getting-started/as-a-pip-package.md)
+  * [In Python as a pip package](getting-started/as-a-pip-package.md)
   * [In jupyter notebooks](getting-started/in-jupyter-notebooks.md)
   * [With homebrew](getting-started/with-homebrew.md)
   * [Command line (java -jar)](getting-started/command-line-java-jar.md)
