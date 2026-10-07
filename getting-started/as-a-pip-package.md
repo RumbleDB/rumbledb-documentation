@@ -1,4 +1,4 @@
-# As a pip package
+# In Python as a pip package
 
 You can use RumbleDB from within Python programmes by running
 
@@ -7,6 +7,8 @@ pip install jsoniq
 ```
 
 Information about how this package is used in Python code can be found [in this section](../writing-jsoniq-queries-in-python/).
+
+**There is no need to install Spark**, because our jsoniq package automatically installs the pyspark package as well, and uses it.
 
 ## Java version
 
