@@ -1,7 +1,7 @@
 # RumbleDB 3.0 "Coast Redwood"
 
 {% hint style="info" %}
-We are currently rolling out RumbleDB 3. This is expected to be done during the months of October and November 2026 in the various editions. The pip package, the thin jars, homebrew and docker editions are already available. The standalone jar as well as the Maven artefacts will follow soon. The documentation is also being updated and some parts may still refer to RumbleDB 2.
+We are currently rolling out RumbleDB 3. This is expected to be done during the months of October and November 2026 in the various editions. The pip package, the thin jars, the homebrew and docker editions, as well as the Maven artefacts and Javadoc are already available. The standalone jar will follow soon. The documentation is also being updated and some parts may still refer to RumbleDB 2.
 {% endhint %}
 
 RumbleDB is a querying engine that allows you to query your large, messy datasets with ease and productivity. It covers the entire data pipeline: clean up, structure, normalize, validate, convert to an efficient binary format, and feed it right into Machine Learning estimators and models
