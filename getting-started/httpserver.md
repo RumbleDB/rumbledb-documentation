@@ -1,7 +1,7 @@
 # As an HTTP server (legacy)
 
 {% hint style="warning" %}
-The `serve` command and the `--server`, `--port`, and `--host` CLI parameters were removed in RumbleDB 3.0. The instructions below apply only to older RumbleDB releases. For RumbleDB 3.0, use the [Python package](as-a-pip-package.md) or the Java API to integrate queries into an application.
+The `serve` command and the `--server`, `--port`, and `--host` CLI parameters are unavailable in RumbleDB 3.1. The instructions below apply only to older RumbleDB releases. For RumbleDB 3.1, use the [Python package](as-a-pip-package.md) or the Java API to integrate queries into an application.
 {% endhint %}
 
 ## Starting the HTTP server

@@ -39,7 +39,7 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.1.0 "Coast Redwood" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.1.0 "Pistachio Tree" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
 
 RumbleDB$
@@ -134,7 +134,7 @@ Mind the double parenthesis, as parallelize is a unary function to which we pass
 
 ## Legacy HTTP server
 
-RumbleDB 3.0 does not support `serve`, `--port`, or `--host`. The HTTP server requires an older RumbleDB image; see the [legacy HTTP server instructions](HTTPServer.md). Use `run` or `repl` with RumbleDB 3.0.
+RumbleDB 3.1 does not support `serve`, `--port`, or `--host`. The HTTP server requires an older RumbleDB image; see the [legacy HTTP server instructions](HTTPServer.md). Use `run` or `repl` with RumbleDB 3.1.
 
 ## Querying local files with the docker version of RumbleDB
 

@@ -6,7 +6,7 @@ We show here how to install RumbleDB from the GitHub repository and build it you
 
 The following software is required:
 
-* [Java SE](https://adoptium.net/temurin/releases/): Java 17 or 21 is required for RumbleDB 3.0. The source build on master targets Java 17 and Spark 4.0.
+* [Java SE](https://adoptium.net/temurin/releases/): Java 17 or 21 is required for RumbleDB 3.1. The source build on master targets Java 17 and Spark 4.0.
 * [Spark](https://spark.apache.org/), version 4.0.0 (matching the current source build)
 * [Ant](http://ant.apache.org/), version 1.10
 * [Maven](https://maven.apache.org/) 3.9.9
@@ -73,7 +73,7 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.1.0 "Coast Redwood" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.1.0 "Pistachio Tree" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
 
 rumble$

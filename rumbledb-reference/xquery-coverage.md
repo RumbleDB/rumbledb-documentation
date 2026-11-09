@@ -1,6 +1,6 @@
 # XQuery coverage
 
-RumbleDB 3.0 now officially supports XQuery with 95% of passing tests from the QT3 test suite. We are continuing to work on fixing the remaining 5%.
+RumbleDB 3.1 now officially supports XQuery with 95% of passing tests from the QT3 test suite. We are continuing to work on fixing the remaining 5%.
 
 RumbleDB supports in particular:
 

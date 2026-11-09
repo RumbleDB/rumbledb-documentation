@@ -1,6 +1,6 @@
 # Table of contents
 
-* [RumbleDB 3.0 "Coast Redwood"](README.md)
+* [RumbleDB 3.1 "Pistachio Tree"](README.md)
 * [Ways to install and use](getting-started/README.md)
   * [On the online sandbox](getting-started/on-the-online-sandbox.md)
   * [In Python as a pip package](getting-started/as-a-pip-package.md)
