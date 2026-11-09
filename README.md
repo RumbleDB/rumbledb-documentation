@@ -1,4 +1,4 @@
-# RumbleDB 3.0 "Coast Redwood"
+# RumbleDB 3.1 "Pistachio Tree"
 
 {% hint style="info" %}
 We are currently rolling out RumbleDB 3. This is expected to be done during the months of October and November 2026 in the various editions. The pip package, the thin jars, the homebrew and docker editions, as well as the Maven artefacts and Javadoc are already available. The standalone jar will follow soon. The documentation is also being updated and some parts may still refer to RumbleDB 2.

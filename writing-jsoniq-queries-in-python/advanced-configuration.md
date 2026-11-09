@@ -2,7 +2,7 @@
 
 ## RumbleDB's specific configuration
 
-In RumbleDB 3.0, configure a session with `.rumbleConfig(path, value)` when creating it:
+In RumbleDB 3.1, configure a session with `.rumbleConfig(path, value)` when creating it:
 
 ```python
 from jsoniq import RumbleSession

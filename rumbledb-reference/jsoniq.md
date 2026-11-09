@@ -140,7 +140,7 @@ All types specific to XML (e.g., NOTATION, NMTOKENS, NMTOKEN, ID, IDREF, ENTITY,
 | unsignedShort      | supported       |
 | yearMonthDuration  | supported       |
 
-## Newly supported features in RumbleDB 3.0
+## Newly supported features in RumbleDB 3
 
 ### Prolog
 

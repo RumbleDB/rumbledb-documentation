@@ -9,7 +9,7 @@ There are many ways to install and use RumbleDB. For example:
 * By installing Spark yourself on your laptop (for more control on Spark parameters) and use a small RumbleDB jar with spark-submit
 * By using our docker image on your laptop (go to the "Run with docker" section on the left menu)
 * By uploading the small RumbleDB jar to an existing Spark cluster (such as AWS EMR)
-* [Legacy releases only; unavailable in RumbleDB 3.0] By running RumbleDB as an HTTP server in the background and connecting to it in a Jupyter notebook with the %%jsoniq magic.
+* [Legacy releases only; unavailable in RumbleDB 3.1] By running RumbleDB as an HTTP server in the background and connecting to it in a Jupyter notebook with the %%jsoniq magic.
 * By installing it manually on your machine.
 
 ## Further steps

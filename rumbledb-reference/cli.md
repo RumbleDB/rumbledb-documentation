@@ -15,10 +15,10 @@ Select a mode with the first argument:
 For RumbleDB 3:
 
 ```sh
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar run file.jq -o output-dir -P 1
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q '1+1'
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar repl --result-size 10
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar run --help
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar run file.jq -o output-dir -P 1
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar run -q '1+1'
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar repl --result-size 10
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar run --help
 ```
 
 `run` requires exactly one query source: `--query`, `--query-path`, or a positional query file. `repl` does not take a query source. The other options below are shared by `run` and `repl`, except where their purpose is specific to one mode.
@@ -29,7 +29,7 @@ Boolean CLI options are flags: use `--static-typing` to enable static typing and
 
 ## Updating commands from RumbleDB 2
 
-These examples use the Spark 4.0 jar. For another Spark version, use the matching `rumbledb-3.0.0-for-spark-<version>.jar`. With the standalone jar, replace `spark-submit rumbledb-3.0.0-for-spark-4.0.jar` with `java -jar rumbledb-3.0.0-standalone.jar`.
+These examples use the Spark 4.0 jar. For another Spark version, use the matching `rumbledb-3.1.0-for-spark-<version>.jar`. With the standalone jar, replace `spark-submit rumbledb-3.1.0-for-spark-4.0.jar` with `java -jar rumbledb-3.1.0-standalone.jar`.
 
 * Select `run` or `repl` explicitly. The old `--shell` and `--server` options are no longer accepted; `serve` is unavailable in RumbleDB 3.
 * Output options now use `--output-format-option name=value`, and variable bindings use `--variable name=value` or `--variable-from-file name=path`. Repeat the option for each entry. The former colon-based option names are no longer accepted.
@@ -39,7 +39,7 @@ These examples use the Spark 4.0 jar. For another Spark version, use the matchin
 For example, bind a variable and configure serialization:
 
 ```sh
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar run \
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar run \
     -q 'declare variable $foo external; $foo' \
     --variable 'foo=hello world' \
     -f serialize-each-item --output-format-option method=json \
@@ -172,7 +172,7 @@ The default output format and method follow the query language (including versio
 Explicit format and method options override these defaults independently. The serialization parameter `item-separator` is absent by default in both languages; W3C sequence normalization inserts spaces between adjacent atomic values when serializing a whole sequence. Newlines between independently serialized items come from the `serialize-each-item` output format, rather than from this parameter. To serialize an entire sequence with a chosen method:
 
 ```sh
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q '1, [2, 3], 4' -o result.txt -f serialize \
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar run -q '1, [2, 3], 4' -o result.txt -f serialize \
     --output-format-option method=text --output-format-option 'item-separator=|'
 ```
 
@@ -183,7 +183,7 @@ This writes exactly `1|2|3|4`, without an extra trailing newline. Serialization 
 For example, to write multiple independent JSON values:
 
 ```sh
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q '1, 2, 3' -o results.jsonl -P 1 -f serialize-each-item \
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar run -q '1, 2, 3' -o results.jsonl -P 1 -f serialize-each-item \
     --output-format-option method=json --output-format-option 'item-separator=|'
 ```
 
@@ -266,6 +266,8 @@ When `--log-level` is omitted, `--debug`, `--print-iterator-tree`, or `--print-i
 | --- | --- | --- | --- | --- | --- |
 | `--default-language` | — | `semantics.queryLanguage` | string | `"jsoniq10"` | Default query language: `jsoniq10`, `jsoniq31`, or `xquery31`. |
 | `--xml-version` | — | `semantics.xmlVersion` | string | `"1.1"` | XML version: `1.0` or `1.1`. |
+| `--xsd-version` | — | `semantics.xsdVersion` | string | `"1.1"` | Selects XSD `1.0` or `1.1` datatype and regular-expression semantics. Schema validation uses Xerces XSD 1.0 in both modes. |
+| — (API only) | — | `semantics.allowScripting` | boolean | `True` | Allows the XQuery Scripting Extension grammar. Set to `False` for strict XQuery conformance. No CLI option is available. |
 | `--dates-with-timezone` | — | `semantics.datesWithTimeZone` | boolean | `False` | Enables timezone support for `xs:date`. |
 | `--lax-json-null-validation` | — | `semantics.laxJSONNullValidation` | boolean | `True` | Allows JSON nulls and absent values to be conflated when validating nillable object fields. |
 | `--static-base-uri` | — | `semantics.staticBaseUri` | string | `None` | Static base URI, for example `../data/`. Overrides the module location; a declaration in the query takes precedence. |
@@ -297,8 +299,8 @@ Bindings are separate from configuration and have no Python/Java configuration s
 For example:
 
 ```sh
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q 'declare variable $foo external; $foo' --variable foo=bar
-spark-submit rumbledb-3.0.0-for-spark-4.0.jar run -q 'declare context item external; $$' -i data.json
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar run -q 'declare variable $foo external; $foo' --variable foo=bar
+spark-submit rumbledb-3.1.0-for-spark-4.0.jar run -q 'declare context item external; $$' -i data.json
 ```
 
 In Python, use `rumble.bind(...)`, `rumble.bindOne(...)`, or keyword arguments to `rumble.jsoniq(...)` for variables; do not try to configure variable values through `conf.set(...)`. See [Binding JSONiq variables to Python values](../writing-jsoniq-queries-in-python/binding-jsoniq-variables-to-python-values.md).

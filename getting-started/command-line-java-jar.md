@@ -1,7 +1,7 @@
 # Command line (java -jar)
 
 {% hint style="warning" %}
-## The standalone jar for RumbleDB 3.0 is not available yet. You can use spark-submit with the thin jars instead for now.
+## The standalone jar for RumbleDB 3.1 is not available yet. You can use spark-submit with the thin jars instead for now.
 {% endhint %}
 
 ## Java version (important)
@@ -16,32 +16,32 @@ java -version
 
 If you do not have Java, you can download version 17 or 21 from [AdoptOpenJDK](https://adoptopenjdk.net/).
 
-Java 8 and Java 11 cannot run RumbleDB 3.0.
+Java 8 and Java 11 cannot run RumbleDB 3.1.
 
 ## Download RumbleDB
 
 RumbleDB is just a download and no installation is required.
 
-In order to run RumbleDB, you simply need to download rumbledb-3.0.0-standalone.jar from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
+In order to run RumbleDB, you simply need to download rumbledb-3.1.0-standalone.jar from the [download page](https://github.com/RumbleDB/rumble/releases) and put it in a directory of your choice, for example, right besides your data.
 
 Use the standalone jar with `java -jar`; use a matching thin jar with `spark-submit` as described on the next page.
 
 You can test that it works with:
 
 ```
-java -jar rumbledb-3.0.0-standalone.jar run -q '1+1'
+java -jar rumbledb-3.1.0-standalone.jar run -q '1+1'
 ```
 
 or launch a JSONiq shell with:
 
 ```
-java -jar rumbledb-3.0.0-standalone.jar repl
+java -jar rumbledb-3.1.0-standalone.jar repl
 ```
 
 If you run out of memory, allocate more memory with a JVM option before `-jar`, for example:
 
 ```sh
-java -Xmx10g -jar rumbledb-3.0.0-standalone.jar repl
+java -Xmx10g -jar rumbledb-3.1.0-standalone.jar repl
 ```
 
 The RumbleDB shell appears:
@@ -50,7 +50,7 @@ The RumbleDB shell appears:
     ____                  __    __     ____  ____ 
    / __ \__  ______ ___  / /_  / /__  / __ \/ __ )
   / /_/ / / / / __ `__ \/ __ \/ / _ \/ / / / __  |  The distributed JSONiq engine
- / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.0.0 "Coast Redwood" beta
+ / _, _/ /_/ / / / / / / /_/ / /  __/ /_/ / /_/ /   3.1.0 "Pistachio Tree" beta
 /_/ |_|\__,_/_/ /_/ /_/_.___/_/\___/_____/_____/  
 
 rumble$
